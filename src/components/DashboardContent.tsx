@@ -21,6 +21,16 @@ const PARTS = [
     { name: "Bass", color: "bg-indigo-600", icon: "🎻" },
 ]
 
+// Admin sees combined list
+const ADMIN_PARTS = [
+    { name: "Soprano A", color: "bg-amber-500", icon: "🎵", label: "Soprano A" },
+    { name: "Soprano B", color: "bg-orange-600", icon: "🎵", label: "Sop B & B+" },
+    { name: "Alto A", color: "bg-rose-500", icon: "🎼", label: "Alto A" },
+    { name: "Alto B", color: "bg-rose-600", icon: "🎼", label: "Alto B" },
+    { name: "Tenor", color: "bg-sky-500", icon: "🎹", label: "Tenor" },
+    { name: "Bass", color: "bg-indigo-600", icon: "🎻", label: "Bass" },
+]
+
 export default function DashboardContent({ notices }: DashboardContentProps) {
     const { user, loading } = useAuth()
     const router = useRouter()
@@ -37,7 +47,7 @@ export default function DashboardContent({ notices }: DashboardContentProps) {
     if (!user) return null // Will redirect
 
     const isAdmin = user.role === 'ADMIN'
-    const visibleParts = isAdmin ? PARTS : PARTS.filter(p => p.name === user.part)
+    const visibleParts = isAdmin ? ADMIN_PARTS : PARTS.filter(p => p.name === user.part).map(p => ({ ...p, label: p.name }))
 
     return (
         <div className={`min-h-screen bg-slate-900 text-white ${!isAdmin ? 'h-[100dvh] flex flex-col px-3 pt-2 overflow-hidden' : 'p-3 pb-20 md:p-6'}`}>
@@ -76,7 +86,7 @@ export default function DashboardContent({ notices }: DashboardContentProps) {
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <h3 className={`font-bold text-slate-100 truncate ${isAdmin ? 'text-xs' : 'text-lg text-amber-100'}`}>
-                                            {p.name}
+                                            {p.label}
                                         </h3>
                                         {!isAdmin && <span className="text-xs text-slate-400">출석체크 바로가기</span>}
                                     </div>

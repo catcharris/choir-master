@@ -21,3 +21,4 @@ export default async function ReportsPage({ searchParams }: PageProps) {
         </div>
     )
 }
+export const dynamic = 'force-dynamic'

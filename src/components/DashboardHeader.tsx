@@ -81,13 +81,22 @@ export default function DashboardHeader() {
                         </button>
                     </div>
                 ) : (
-                    <button
-                        onClick={() => setShowLoginModal(true)}
-                        className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-full"
-                        title="로그인"
-                    >
-                        <Settings size={20} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => router.push('/reports')}
+                            className="bg-teal-700/50 hover:bg-teal-600/50 text-teal-300 px-3 py-1.5 rounded-full text-xs font-bold border border-teal-500/30 flex items-center gap-1.5 transition-all"
+                            title="전체 통계 보기"
+                        >
+                            📊 출석 통계
+                        </button>
+                        <button
+                            onClick={() => setShowLoginModal(true)}
+                            className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-full"
+                            title="관리자 로그인"
+                        >
+                            <User size={20} />
+                        </button>
+                    </div>
                 )}
             </header>
 

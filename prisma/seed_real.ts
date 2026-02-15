@@ -62,7 +62,7 @@ async function main() {
 
     console.log(`📜 Found ${records.length} records in CSV.`)
 
-    for (const record of records) {
+    for (const record of records as any[]) {
         // Mapping
         // CSV Headers: member_id,파트,이름,직분,상태
         const koreanPart = record['파트']

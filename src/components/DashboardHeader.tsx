@@ -61,24 +61,12 @@ export default function DashboardHeader() {
                     <div className="flex items-center gap-1.5">
                         <button
                             onClick={() => router.push('/report')}
-                            className="bg-indigo-900/30 hover:bg-indigo-800/40 text-indigo-400 px-3 py-1.5 rounded-full text-xs font-bold border border-indigo-500/30 transition-all flex items-center justify-center"
-                            title="전체 통계 보기"
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${user.role === 'ADMIN' ? 'bg-amber-900/30 border-amber-500/30 text-amber-500 hover:bg-amber-800/40' : 'bg-indigo-900/30 border-indigo-500/30 text-indigo-400 hover:bg-indigo-800/40'}`}
+                            title="관리 및 통계"
                         >
-                            출석통계
-                        </button>
-                        {user.role === 'ADMIN' && (
-                            <button
-                                onClick={() => router.push('/admin')}
-                                className="text-amber-500 hover:text-amber-400 transition-colors p-2 hover:bg-slate-800 rounded-full"
-                                title="관리자 도구"
-                            >
-                                <Settings size={20} />
-                            </button>
-                        )}
-                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border ${user.role === 'ADMIN' ? 'bg-amber-900/30 border-amber-500/30 text-amber-500' : 'bg-indigo-900/30 border-indigo-500/30 text-indigo-400'}`}>
                             <User size={14} className="fill-current" />
-                            <span className="text-xs font-bold">{user.name}</span>
-                        </div>
+                            <span className="text-xs font-bold">관리/통계</span>
+                        </button>
                         <button
                             onClick={handleLogout}
                             className="text-slate-400 hover:text-rose-400 transition-colors p-2 hover:bg-slate-800 rounded-full"

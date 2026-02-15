@@ -60,7 +60,7 @@ export default function DashboardHeader() {
                 {user ? (
                     <div className="flex items-center gap-1.5">
                         <button
-                            onClick={() => router.push('/report')}
+                            onClick={() => router.push('/reports')}
                             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${user.role === 'ADMIN' ? 'bg-amber-900/30 border-amber-500/30 text-amber-500 hover:bg-amber-800/40' : 'bg-indigo-900/30 border-indigo-500/30 text-indigo-400 hover:bg-indigo-800/40'}`}
                             title="관리 및 통계"
                         >

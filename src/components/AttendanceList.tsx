@@ -15,6 +15,7 @@ interface Member {
     role: string;
     photoUrl: string | null;
     attendance?: { status: string; id: number }[];
+    part: string;
 }
 
 interface AttendanceListProps {

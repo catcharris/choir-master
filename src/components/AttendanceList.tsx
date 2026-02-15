@@ -195,15 +195,14 @@ export default function AttendanceList({ members, part, initialDate }: Attendanc
 
                                 <div className="flex flex-col">
                                     <div className="flex items-center gap-2">
-                                        <span className="font-bold text-slate-200 text-lg">{member.name}</span>
-                                        {member.role !== 'Regular' && (
-                                            <span className={`text-[10px] px-1.5 py-0.5 rounded border ${member.role === 'Soloist' ? 'border-amber-500/30 text-amber-500' :
-                                                member.role === 'New' ? 'border-green-500/30 text-green-400' :
-                                                    'border-slate-500 text-slate-500'
-                                                }`}>
-                                                {member.role === 'Soloist' ? '솔리스트' : member.role}
-                                            </span>
-                                        )}
+                                        <h3 className="font-bold text-lg text-slate-100">{member.name}</h3>
+                                        <div className="flex gap-1">
+                                            {member.role === 'PART_LEADER' && <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/30">파트장</span>}
+                                            {member.role === 'CLERK' && <span className="text-[10px] bg-green-500/20 text-green-300 px-1.5 py-0.5 rounded border border-green-500/30">서기</span>}
+                                            {member.role === 'Soloist' && <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30">솔리스트</span>}
+                                            {member.role === 'New' && <span className="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/30">신입</span>}
+                                            {member.part === 'Soprano B+' && <span className="text-[10px] bg-orange-500/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-500/30">B+</span>}
+                                        </div>
                                     </div>
                                     <span className="text-xs text-slate-500">터치하여 상세정보</span>
                                 </div>

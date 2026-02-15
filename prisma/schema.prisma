@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Users: Part leaders, Admins, Clerks
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  role      String
+  part      String?
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+// Members: The choir members
+model Member {
+  id          Int      @id @default(autoincrement())
+  name        String
+  part        String
+  role        String
+  churchTitle String
+  phone       String?
+  birthDate   String?
+  photoUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  attendance  Attendance[]
+}
+
+// Attendance Records
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  memberId  Int
+  date      DateTime
+  status    String
+  checkTime DateTime @default(now())
+  checkerId Int?
+  
+  member    Member   @relation(fields: [memberId], references: [id])
+}
+
+// Notices: Announcements
+model Notice {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  category  String   @default("NOTICE") // NOTICE, MUSIC
+  link      String?  // External link (Youtube, PDF)
+  createdAt DateTime @default(now())
+  authorId  Int?
+}

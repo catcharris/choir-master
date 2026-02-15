@@ -8,3 +8,5 @@ export default async function DashboardPage() {
         <DashboardContent notices={notices} />
     );
 }
+export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic'

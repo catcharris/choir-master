@@ -100,3 +100,4 @@ export default async function AttendancePage({
         </div>
     )
 }
+export const dynamic = 'force-dynamic'

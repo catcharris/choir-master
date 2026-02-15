@@ -58,13 +58,13 @@ export default function DashboardHeader() {
                 </h1>
 
                 {user ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                         <button
-                            onClick={() => router.push('/reports')}
-                            className="bg-teal-700/50 hover:bg-teal-600/50 text-teal-300 px-3 py-1.5 rounded-full text-xs font-bold border border-teal-500/30 flex items-center gap-1.5 transition-all mr-1"
+                            onClick={() => router.push('/report')}
+                            className="bg-indigo-900/30 hover:bg-indigo-800/40 text-indigo-400 px-3 py-1.5 rounded-full text-xs font-bold border border-indigo-500/30 transition-all flex items-center justify-center"
                             title="전체 통계 보기"
                         >
-                            📊
+                            출석통계
                         </button>
                         {user.role === 'ADMIN' && (
                             <button

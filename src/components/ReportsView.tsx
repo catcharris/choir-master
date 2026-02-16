@@ -279,12 +279,17 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
             {/* Content Area */}
             {activeTab === 'weekly' && (
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-6 border-b border-slate-700 pb-6">
-                            <h3 className="font-bold text-xl text-slate-100 flex items-center gap-2">
-                                <span className="text-2xl">📅</span> 일일/주간 출석 현황
+                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 relative overflow-hidden">
+                        {/* Decorative Icon */}
+                        <div className="absolute -top-6 -right-6 text-slate-700/20 rotate-12 pointer-events-none">
+                            <Calendar size={120} strokeWidth={1} />
+                        </div>
+
+                        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-6 border-b border-slate-700 pb-6 relative z-10">
+                            <h3 className="font-bold text-lg text-slate-200">
+                                일일/주간 출석 현황
                             </h3>
-                            <div className="flex items-center gap-3 bg-slate-900/50 p-2 rounded-xl border border-slate-700/50">
+                            <div className="flex items-center gap-3 bg-slate-900/50 p-1.5 pl-3 rounded-lg border border-slate-700/50 shadow-inner">
                                 <input
                                     type="date"
                                     value={format(reportDate, 'yyyy-MM-dd')}
@@ -293,15 +298,15 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                                         setReportDate(d)
                                         fetchDailyReport(d)
                                     }}
-                                    className="bg-transparent border-none text-white text-base focus:ring-0 cursor-pointer text-center font-bold tracking-wide"
+                                    className="bg-transparent border-none text-white text-sm focus:ring-0 cursor-pointer text-center font-bold tracking-wide"
                                 />
-                                <div className="h-6 w-px bg-slate-700"></div>
+                                <div className="h-5 w-px bg-slate-700"></div>
                                 <button
                                     onClick={() => fetchDailyReport(reportDate)}
-                                    className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-indigo-500/20 active:scale-95 transition-all flex items-center gap-2"
+                                    className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-md text-xs font-bold shadow-lg shadow-indigo-500/20 active:scale-95 transition-all flex items-center gap-1.5"
                                 >
                                     <span>조회</span>
-                                    <Search size={16} />
+                                    <Search size={14} />
                                 </button>
                             </div>
                         </div>

@@ -29,7 +29,7 @@ const ROLE_OPTIONS = [
     { label: '휴식대원', value: 'Resting' },
     { label: '솔리스트', value: 'Soloist' }
 ]
-const TITLES = ['성도', '집사', '권사', '장로']
+const TITLES = ['성도', '집사', '안수집사', '권사', '장로']
 
 export default function AddMemberModal({ onClose, part, initialData }: AddMemberModalProps) {
     const [submitting, setSubmitting] = useState(false)

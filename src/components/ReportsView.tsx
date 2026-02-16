@@ -135,6 +135,9 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
             {/* Header / Month Nav */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
                 <div className="flex items-center gap-4">
+                    <button onClick={() => router.push('/')} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 mr-2 border border-slate-600">
+                        <ChevronLeft /> <span className="sr-only">뒤로가기</span>
+                    </button>
                     <button onClick={handlePrevMonth} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400">
                         <ChevronLeft />
                     </button>

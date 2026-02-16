@@ -45,9 +45,9 @@ export default function AttendanceList({ members, part, initialDate }: Attendanc
         }
     }
 
-    // Check if it's a service day (Sat/Sun)
+    // Check if it's a service day (Sat/Sun) - FORCED TRUE FOR TESTING
     const dayOfWeek = date.getDay()
-    const isServiceDay = dayOfWeek === 0 || dayOfWeek === 6
+    const isServiceDay = true // dayOfWeek === 0 || dayOfWeek === 6
 
     const handleToggle = async (memberId: number) => {
         if (!user) return

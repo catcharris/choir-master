@@ -18,7 +18,7 @@ interface AdminMemberViewProps {
     initialMembers: Member[]
 }
 
-const PARTS = ['Soprano A', 'Soprano B', 'Soprano B+', 'Alto A', 'Alto B', 'Tenor', 'Bass']
+const PARTS = ['Sop A', 'Sop B', 'Sop B+', 'Alto A', 'Alto B', 'Tenor', 'Bass']
 
 export default function AdminMemberView({ initialMembers }: AdminMemberViewProps) {
     const router = useRouter()

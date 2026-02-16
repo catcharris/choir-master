@@ -162,7 +162,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                 {/* Date Navigation - Always Visible */}
                 <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-2">
-                        <button onClick={() => router.push('/')} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 border border-slate-600">
+                        <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 border border-slate-600">
                             <ChevronLeft size={20} /> <span className="sr-only">뒤로가기</span>
                         </button>
                     </div>

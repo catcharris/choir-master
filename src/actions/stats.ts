@@ -44,7 +44,7 @@ export async function getSoloistStats(year: number, month: number) {
 }
 
 // Fetch Yearly Overview (Trend)
-export async function getYearlyReport(year: number) {
+export async function getYearlyReport(year: number, part?: string) {
     const months = Array.from({ length: 12 }, (_, i) => i + 1)
 
     // This might be heavy if done naively. Optimized query would be better but Prisma groupBy is fine.
@@ -55,11 +55,17 @@ export async function getYearlyReport(year: number) {
         const end = endOfMonth(new Date(year, m - 1))
 
         // Count total attendance ticks
+        const whereClause: any = {
+            date: { gte: start, lte: end },
+            status: { in: ['PRESENT', 'LATE'] }
+        }
+
+        if (part) {
+            whereClause.member = { part: part }
+        }
+
         const attendances = await prisma.attendance.count({
-            where: {
-                date: { gte: start, lte: end },
-                status: { in: ['PRESENT', 'LATE'] }
-            }
+            where: whereClause
         })
 
         // Denominator approximation (Active Members * Service Days)

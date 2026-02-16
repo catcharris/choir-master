@@ -90,12 +90,13 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
             getSoloistStats(year, month).then(setSoloistStats)
         }
         if (activeTab === 'yearly' && yearlyStats.length === 0) {
-            getYearlyReport(year).then(setYearlyStats)
+            const targetPart = isLeader ? myPart : undefined
+            getYearlyReport(year, targetPart).then(setYearlyStats)
         }
         if (activeTab === 'weekly') {
             fetchDailyReport(reportDate)
         }
-    }, [activeTab, year, month, reportDate, isAdmin]) // Added isAdmin to dependency array
+    }, [activeTab, year, month, reportDate, isAdmin, isLeader, myPart]) // Added dependencies
 
     const fetchDailyReport = async (date: Date) => {
         const dateStr = format(date, 'yyyy-MM-dd')
@@ -242,14 +243,12 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
 
             {/* Tabs */}
             <div className="grid grid-cols-2 md:flex gap-2 bg-slate-800 p-1 rounded-xl w-full md:w-fit mx-auto border border-slate-700">
-                {isAdmin && (
-                    <button
-                        onClick={() => setActiveTab('weekly')}
-                        className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'weekly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
-                    >
-                        📝 주간 리포트
-                    </button>
-                )}
+                <button
+                    onClick={() => setActiveTab('weekly')}
+                    className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'weekly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
+                >
+                    📝 주간 리포트
+                </button>
                 <button
                     onClick={() => setActiveTab('monthly')}
                     className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'monthly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
@@ -277,7 +276,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                     <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
                         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                             <h3 className="font-bold text-lg text-slate-200 flex items-center gap-2">
-                                📅 일일/주간 출석 리포트
+                                📅 일일/주간 출석 현황
                             </h3>
                             <div className="flex items-center gap-2">
                                 <input
@@ -300,16 +299,16 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                         </div>
 
                         {dailyReport ? (
-                            <div className="grid md:grid-cols-2 gap-6">
+                            <div className={`grid ${isAdmin ? 'md:grid-cols-2' : 'grid-cols-1'} gap-6`}>
                                 {/* Preview Card */}
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-2 gap-3">
                                         <div className="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                                            <div className="text-xs text-slate-400">총 출석</div>
+                                            <div className="text-xs text-slate-400">전체 출석</div>
                                             <div className="text-xl font-bold text-green-400">{dailyReport.totalPresent}명</div>
                                         </div>
                                         <div className="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                                            <div className="text-xs text-slate-400">결석/미체크</div>
+                                            <div className="text-xs text-slate-400">전체 결석/미체크</div>
                                             <div className="text-xl font-bold text-rose-400">
                                                 {dailyReport.totalMembers - dailyReport.totalPresent - dailyReport.totalLate}명
                                             </div>
@@ -319,7 +318,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                                     <div className="bg-slate-900 rounded-lg border border-slate-700 p-4 max-h-[400px] overflow-y-auto custom-scrollbar">
                                         <h4 className="font-bold text-slate-300 mb-3 text-sm">파트별 상세</h4>
                                         <div className="space-y-3">
-                                            {dailyReport.parts.map(p => (
+                                            {(isAdmin ? dailyReport.parts : dailyReport.parts.filter(p => p.part === myPart)).map(p => (
                                                 <div key={p.part} className="border-b border-slate-800 pb-2 last:border-0 last:pb-0">
                                                     <div className="flex justify-between items-center mb-1">
                                                         <span className="text-indigo-300 font-bold text-sm">{shortenPartName(p.part)}</span>
@@ -334,31 +333,38 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                                                     )}
                                                 </div>
                                             ))}
+                                            {!isAdmin && dailyReport.parts.filter(p => p.part === myPart).length === 0 && (
+                                                <div className="text-center text-slate-500 text-sm py-4">
+                                                    해당 파트 데이터가 없습니다.
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Text Generator */}
-                                <div className="flex flex-col h-full">
-                                    <h4 className="font-bold text-slate-300 mb-2 flex justify-between items-center">
-                                        <span>📋 카톡 공유용 텍스트</span>
-                                        <button
-                                            onClick={handleCopyText}
-                                            className="text-xs bg-amber-500 text-black px-2 py-1 rounded font-bold hover:bg-amber-400 active:scale-95 transition-all"
-                                        >
-                                            복사하기
-                                        </button>
-                                    </h4>
-                                    <textarea
-                                        className="flex-1 w-full bg-slate-900 border border-slate-600 rounded-xl p-4 text-sm text-slate-300 font-mono leading-relaxed resize-none focus:outline-none focus:border-amber-500"
-                                        value={generatedText}
-                                        onChange={(e) => setGeneratedText(e.target.value)}
-                                        readOnly={false} // Allow manual edit
-                                    />
-                                    <p className="text-xs text-slate-500 mt-2 text-right">
-                                        * 내용은 수정 가능합니다. 수정 후 복사하세요.
-                                    </p>
-                                </div>
+                                {/* Text Generator - Only for Admin */}
+                                {isAdmin && (
+                                    <div className="flex flex-col h-full">
+                                        <h4 className="font-bold text-slate-300 mb-2 flex justify-between items-center">
+                                            <span>📋 카톡 공유용 텍스트</span>
+                                            <button
+                                                onClick={handleCopyText}
+                                                className="text-xs bg-amber-500 text-black px-2 py-1 rounded font-bold hover:bg-amber-400 active:scale-95 transition-all"
+                                            >
+                                                복사하기
+                                            </button>
+                                        </h4>
+                                        <textarea
+                                            className="flex-1 w-full bg-slate-900 border border-slate-600 rounded-xl p-4 text-sm text-slate-300 font-mono leading-relaxed resize-none focus:outline-none focus:border-amber-500"
+                                            value={generatedText}
+                                            onChange={(e) => setGeneratedText(e.target.value)}
+                                            readOnly={false} // Allow manual edit
+                                        />
+                                        <p className="text-xs text-slate-500 mt-2 text-right">
+                                            * 내용은 수정 가능합니다. 수정 후 복사하세요.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className="p-10 text-center text-slate-500">데이터를 불러오는 중...</div>

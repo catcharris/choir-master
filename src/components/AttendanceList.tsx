@@ -445,8 +445,6 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                     memberName={viewingMember.name}
                     onClose={() => {
                         setViewingMember(null)
-                        // Auto-turn off stats mode for safety
-                        if (isStatsMode) setIsStatsMode(false)
                     }}
                 />
             )}

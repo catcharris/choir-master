@@ -26,17 +26,48 @@ export default async function AttendancePage({
     console.log(`[DEBUG] Fetching members for: "${decodedPart}". Target parts:`, targetParts);
 
     // Date handling: query param or current server date
+    // We need to be consistent with UTC handling
     const targetDate = date ? new Date(date) : new Date()
-    // Validate date
+
+    // Fallback if invalid date
     if (isNaN(targetDate.getTime())) {
-        // Fallback if invalid date
         targetDate.setTime(Date.now())
     }
 
-    const startOfDay = new Date(targetDate)
-    startOfDay.setHours(0, 0, 0, 0)
-    const endOfDay = new Date(targetDate)
-    endOfDay.setHours(23, 59, 59, 999)
+    // Construct UTC range for the target day
+    // If date string is YYYY-MM-DD
+    let year, month, day;
+    if (date) {
+        // If coming from query param YYYY-MM-DD
+        const parts = date.split('-').map(Number);
+        year = parts[0];
+        month = parts[1] - 1;
+        day = parts[2];
+    } else {
+        // If loading default today, use current server date
+        // CAUTION: Server might be UTC. To get "Korean Today", we might need offset?
+        // But for consistency let's stick to simple Date object properties which are local to server.
+        // Ideally we want KST. If server is UTC, new Date() is correct instant.
+        // But getFullYear() on UTC server returns UTC year.
+        // Let's assume input date string is the source of truth for "Day".
+
+        // For default load (no date param):
+        // We want "Today in Korea".
+        // Vercel server is UTC.
+        // UTC+9 is Korea.
+        const kstOffset = 9 * 60 * 60 * 1000;
+        const kstDate = new Date(Date.now() + kstOffset);
+        year = kstDate.getUTCFullYear();
+        month = kstDate.getUTCMonth();
+        day = kstDate.getUTCDate();
+    }
+
+    // Create UTC Range for Query
+    const startOfDay = new Date(Date.UTC(year, month, day, 0, 0, 0, 0))
+    const endOfDay = new Date(Date.UTC(year, month, day, 23, 59, 59, 999))
+
+    // Log for debugging
+    console.log(`[DEBUG] AttendancePage Query: ${year}-${month + 1}-${day} Range: ${startOfDay.toISOString()} ~ ${endOfDay.toISOString()}`);
 
     const members = await prisma.member.findMany({
         where: {

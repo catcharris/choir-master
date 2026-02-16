@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { format, isToday } from 'date-fns'
 import { ko } from 'date-fns/locale'
-import { Check, X, Calendar, ChevronLeft, ChevronRight, UserPlus, Cake } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight, Cake, UserPlus, Check, X, Settings } from 'lucide-react'
 import { getMemberAttendanceStats, toggleAttendance } from '@/actions/members'
 import { useAuth } from '@/contexts/AuthContext'
 import AddMemberModal from './AddMemberModal'
@@ -95,17 +95,17 @@ export default function AttendanceList({ part, initialDate }: AttendanceListProp
             ? optimisticStatus[memberId]
             : member.todayStatus
 
-        // Logic: NULL -> P -> A -> NULL
+        // Logic: NULL -> P -> L -> A -> NULL
         let nextStatus: string | null = null
         if (!currentStatus || currentStatus === 'DELETE') nextStatus = 'P'
-        else if (currentStatus === 'P') nextStatus = 'A'
+        else if (currentStatus === 'P') nextStatus = 'L'
+        else if (currentStatus === 'L') nextStatus = 'A'
         else nextStatus = null
 
         setOptimisticStatus(prev => ({ ...prev, [memberId]: nextStatus }))
 
         try {
-            const apiStatus = nextStatus === null ? 'DELETE' : nextStatus
-            await toggleAttendance(memberId, selectedDate, apiStatus)
+            await toggleAttendance(memberId, selectedDate, nextStatus === null ? 'DELETE' : nextStatus)
         } catch (e) {
             console.error("Failed to update attendance", e)
             setOptimisticStatus(prev => {
@@ -127,17 +127,39 @@ export default function AttendanceList({ part, initialDate }: AttendanceListProp
 
     const getStatusColor = (status: string | null | undefined) => {
         switch (status) {
-            case 'P': return 'bg-green-500/20 text-green-400 border-green-500/50 hover:bg-green-500/30';
+            case 'P': return 'bg-green-500/20 text-green-400 border-green-500/50 hover:bg-green-500/30 shadow-[0_0_10px_rgba(34,197,94,0.2)]';
+            case 'L': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50 hover:bg-yellow-500/30';
             case 'A': return 'bg-rose-500/20 text-rose-400 border-rose-500/50 hover:bg-rose-500/30';
             default: return 'bg-slate-800 text-slate-500 border-slate-700 hover:bg-slate-700';
         }
     }
 
-    const getStatusIcon = (status: string | null | undefined) => {
+    const getStatusContent = (status: string | null | undefined) => {
         switch (status) {
-            case 'P': return <Check size={18} className="stroke-[3]" />;
-            case 'A': return <X size={18} className="stroke-[3]" />;
-            default: return <div className="w-4 h-4 rounded-full border-2 border-slate-600" />;
+            case 'P': return (
+                <div className="flex flex-col items-center">
+                    <Check size={20} className="stroke-[3]" />
+                    <span className="text-[10px] font-bold mt-0.5">출석</span>
+                </div>
+            );
+            case 'L': return (
+                <div className="flex flex-col items-center">
+                    <div className="text-lg font-bold">⚠️</div>
+                    <span className="text-[10px] font-bold mt-0.5">지각</span>
+                </div>
+            );
+            case 'A': return (
+                <div className="flex flex-col items-center">
+                    <X size={20} className="stroke-[3]" />
+                    <span className="text-[10px] font-bold mt-0.5">결석</span>
+                </div>
+            );
+            default: return (
+                <div className="flex flex-col items-center opacity-50">
+                    <div className="w-3 h-3 rounded-full border-2 border-slate-500 mb-1" />
+                    <span className="text-[10px]">미체크</span>
+                </div>
+            );
         }
     }
 
@@ -216,15 +238,13 @@ export default function AttendanceList({ part, initialDate }: AttendanceListProp
                     return (
                         <div
                             key={member.id}
+                            onClick={() => handleToggle(member.id)} // Row click toggles attendance
                             className={`
-                                flex items-center justify-between p-4 rounded-2xl border transition-all duration-200
+                                flex items-center justify-between p-4 rounded-2xl border transition-all duration-200 cursor-pointer active:scale-[0.98] select-none
                                 ${status === 'P' ? 'bg-slate-800/80 border-slate-700 shadow-md' : 'bg-slate-900 border-slate-800'}
                             `}
                         >
-                            <div
-                                className="flex items-center gap-4 flex-1 cursor-pointer"
-                                onClick={() => isAdmin && setViewingMember({ id: member.id, name: member.name })}
-                            >
+                            <div className="flex items-center gap-4 flex-1">
                                 <div className={`
                                     w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-inner
                                     ${member.role === 'Soloist' ? 'bg-amber-900/50 text-amber-500 border border-amber-500/30' :
@@ -233,13 +253,26 @@ export default function AttendanceList({ part, initialDate }: AttendanceListProp
                                 `}>
                                     {member.name.charAt(0)}
                                 </div>
-                                <div>
+                                <div className="flex-1">
                                     <div className="flex items-center gap-2">
                                         <span className="font-bold text-lg text-slate-200">{member.name}</span>
                                         <span className="text-xs text-slate-500 font-medium px-1.5 py-0.5 bg-slate-800 rounded">
                                             {member.churchTitle}
                                         </span>
                                         {isNew && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30">신입</span>}
+
+                                        {/* Admin Edit Button - Stops Propagation */}
+                                        {isAdmin && (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setViewingMember({ id: member.id, name: member.name });
+                                                }}
+                                                className="ml-2 p-1.5 text-slate-500 hover:text-amber-400 hover:bg-slate-700/50 rounded-full transition-colors"
+                                            >
+                                                <Settings size={14} />
+                                            </button>
+                                        )}
                                     </div>
                                     <div className="text-xs text-slate-500 mt-0.5">
                                         {member.role === 'Soloist' && '솔리스트'}
@@ -249,13 +282,12 @@ export default function AttendanceList({ part, initialDate }: AttendanceListProp
                             </div>
 
                             <button
-                                onClick={() => handleToggle(member.id)}
                                 className={`
-                                    w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-200 border-2
+                                    w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-200 border-2 ml-4
                                     ${getStatusColor(status)}
                                 `}
                             >
-                                {getStatusIcon(status)}
+                                {getStatusContent(status)}
                             </button>
                         </div>
                     )

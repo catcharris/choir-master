@@ -1,30 +1,78 @@
 
 > choir-master@0.1.0 dev
-> next dev -p 3005
+> next dev --webpack --port 3000
 
 ⚠ `eslint` configuration in next.config.js is no longer supported. See more info here: https://nextjs.org/docs/app/api-reference/cli/next#next-lint-options
 ⚠ Invalid next.config.js options detected: 
 ⚠     Unrecognized key(s) in object: 'eslint'
 ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
-▲ Next.js 16.1.6 (Turbopack)
-- Local:         http://localhost:3005
-- Network:       http://192.168.0.8:3005
+▲ Next.js 16.1.6 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.8:3000
 - Environments: .env.local, .env
 
 ✓ Starting...
-✓ Ready in 2.4s
-⨯ ERROR: This build is using Turbopack, with a `webpack` config and no `turbopack` config.
-   This may be a mistake.
-
-   As of Next.js 16 Turbopack is enabled by default and
-   custom webpack configurations may need to be migrated to Turbopack.
-
-   NOTE: your `webpack` config may have been added by a configuration plugin.
-
-   To configure Turbopack, see https://nextjs.org/docs/app/api-reference/next-config-js/turbopack
-
-   TIP: Many applications work fine under Turbopack with no configuration,
-   if that is the case for you, you can silence this error by passing the
-   `--turbopack` or `--webpack` flag explicitly or simply setting an 
-   empty turbopack config in your Next config file (e.g. `turbopack: {}`).
-[?25h
+ ○ (pwa) PWA support is disabled.
+✓ Ready in 2.6s
+○ Compiling /reports ...
+ GET /reports 200 in 6.0s (compile: 3.7s, render: 2.3s)
+ GET /dashboard 200 in 1513ms (compile: 760ms, render: 754ms)
+ GET /dashboard 200 in 1366ms (compile: 1224µs, render: 1365ms)
+ GET /reports 200 in 1563ms (compile: 22ms, render: 1541ms)
+ GET /dashboard 200 in 177ms (compile: 7ms, render: 169ms)
+[DEBUG] Fetching members for: "Soprano A". Target parts: [ 'Soprano A' ]
+[DEBUG] Page Query: Part=Soprano A, DateString=2026-02-16, Range=2026-02-16T00:00:00.000Z~2026-02-16T23:59:59.999Z
+ GET /attendance/Soprano%20A 200 in 1515ms (compile: 1135ms, render: 381ms)
+[DEBUG] getMemberAttendanceStats: 2026-2-16 UTC Range: 2026-02-16T00:00:00.000Z ~ 2026-02-16T23:59:59.999Z
+ POST /attendance/Soprano%20A 200 in 1055ms (compile: 4ms, render: 1051ms)
+[DEBUG] getMemberAttendanceStats: 2026-2-16 UTC Range: 2026-02-16T00:00:00.000Z ~ 2026-02-16T23:59:59.999Z
+ POST /attendance/Soprano%20A 200 in 162ms (compile: 7ms, render: 155ms)
+ POST /attendance/Soprano%20A 200 in 240ms (compile: 6ms, render: 234ms)
+ POST /attendance/Soprano%20A 200 in 154ms (compile: 2ms, render: 152ms)
+ GET /dashboard 200 in 123ms (compile: 25ms, render: 98ms)
+ GET /reports 200 in 1620ms (compile: 25ms, render: 1595ms)
+ GET /reports 200 in 887ms (compile: 9ms, render: 878ms)
+ GET /dashboard 200 in 256ms (compile: 4ms, render: 252ms)
+ GET /reports 200 in 748ms (compile: 14ms, render: 733ms)
+ GET /reports 200 in 682ms (compile: 3ms, render: 679ms)
+ POST /reports 200 in 837ms (compile: 5ms, render: 833ms)
+ POST /reports 200 in 1459ms (compile: 4ms, render: 1455ms)
+ GET /reports 200 in 1037ms (compile: 13ms, render: 1023ms)
+ GET /reports 200 in 745ms (compile: 5ms, render: 740ms)
+ GET /dashboard 200 in 164ms (compile: 4ms, render: 160ms)
+ GET /dashboard 200 in 126ms (compile: 4ms, render: 122ms)
+ GET /dashboard 200 in 105ms (compile: 5ms, render: 101ms)
+ GET /dashboard 200 in 194ms (compile: 5ms, render: 189ms)
+ GET /dashboard 200 in 89ms (compile: 1678µs, render: 88ms)
+ GET /dashboard 200 in 84ms (compile: 1491µs, render: 83ms)
+ GET /dashboard 200 in 162ms (compile: 1706µs, render: 161ms)
+ GET /dashboard 200 in 88ms (compile: 1190µs, render: 87ms)
+ GET /dashboard 200 in 84ms (compile: 1292µs, render: 83ms)
+ GET /dashboard 200 in 82ms (compile: 1367µs, render: 81ms)
+ GET /dashboard 200 in 92ms (compile: 1182µs, render: 91ms)
+ GET /dashboard 200 in 89ms (compile: 1227µs, render: 88ms)
+ GET /dashboard 200 in 84ms (compile: 1626µs, render: 82ms)
+ GET /reports 200 in 733ms (compile: 8ms, render: 725ms)
+ GET /dashboard 200 in 182ms (compile: 10ms, render: 172ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 1702ms (compile: 729ms, render: 973ms)
+ POST /admin/members 200 in 421ms (compile: 13ms, render: 408ms)
+ POST /admin/members 200 in 167ms (compile: 6ms, render: 161ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 952ms (compile: 42ms, render: 911ms)

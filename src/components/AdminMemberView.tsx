@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, Edit2, Trash2, Check, X, ShieldAlert } from 'lucide-react'
 import { deleteMember, updateMember } from '@/actions/members'
+import BirthdayListModal from './BirthdayListModal'
 
 interface Member {
     id: number
@@ -24,6 +25,7 @@ const PARTS = ['Sop A', 'Sop B', 'Sop B+', 'Alto A', 'Alto B', 'Tenor', 'Bass']
 export default function AdminMemberView({ initialMembers, backUrl }: AdminMemberViewProps) {
     const router = useRouter()
     const [members, setMembers] = useState(initialMembers)
+    const [showBirthdayModal, setShowBirthdayModal] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [editingId, setEditingId] = useState<number | null>(null)
     const [editForm, setEditForm] = useState<{ part: string, name: string }>({ part: '', name: '' })
@@ -65,8 +67,28 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
         }
     }
 
+
+
     return (
         <div className="max-w-4xl mx-auto p-4 pb-20">
+            {/* Header Actions */}
+            <div className="flex justify-between items-center mb-6">
+                <button
+                    onClick={() => router.push(backUrl)}
+                    className="text-slate-400 hover:text-white flex items-center gap-1 transition-colors"
+                >
+                    ← 돌아가기
+                </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setShowBirthdayModal(true)}
+                        className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-lg shadow-amber-900/20 transition-all active:scale-95"
+                    >
+                        🎂 생일자 명단
+                    </button>
+                </div>
+            </div>
+
             {/* Search Bar */}
             <div className="relative mb-6">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
@@ -175,11 +197,10 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
                 </table>
             </div>
 
-            <div className="mt-6 text-center">
-                <button onClick={() => router.push(backUrl)} className="text-slate-500 hover:text-slate-300 text-sm font-medium hover:underline decoration-slate-600 underline-offset-4 transition-all">
-                    ← 돌아가기
-                </button>
-            </div>
+            {/* Modals */}
+            {showBirthdayModal && (
+                <BirthdayListModal onClose={() => setShowBirthdayModal(false)} />
+            )}
         </div>
     )
 }

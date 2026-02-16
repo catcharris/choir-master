@@ -247,20 +247,20 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                     onClick={() => setActiveTab('weekly')}
                     className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'weekly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
-                    📝 주간 리포트
+                    📝 주간리포트
                 </button>
                 <button
                     onClick={() => setActiveTab('monthly')}
                     className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'monthly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
-                    📆 월간 통계
+                    📆 월간통계
                 </button>
                 {/* Yearly and Soloist tabs can remain visible to all or restricted similarly */}
                 <button
                     onClick={() => setActiveTab('yearly')}
                     className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'yearly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
-                    📈 연간 흐름
+                    📈 연간리포트
                 </button>
                 <button
                     onClick={() => setActiveTab('soloist')}

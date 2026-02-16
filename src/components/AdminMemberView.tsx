@@ -175,8 +175,8 @@ export default function AdminMemberView({ initialMembers }: AdminMemberViewProps
             </div>
 
             <div className="mt-6 text-center">
-                <button onClick={() => router.push('/reports')} className="text-slate-500 hover:text-slate-300 text-sm font-medium hover:underline decoration-slate-600 underline-offset-4 transition-all">
-                    ← 통계 페이지로 돌아가기
+                <button onClick={() => router.push('/dashboard')} className="text-slate-500 hover:text-slate-300 text-sm font-medium hover:underline decoration-slate-600 underline-offset-4 transition-all">
+                    ← 돌아가기
                 </button>
             </div>
         </div>

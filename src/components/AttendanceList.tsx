@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { format, isToday } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import Link from 'next/link'
-import { Calendar, ChevronLeft, ChevronRight, Cake, UserPlus, Check, X, Settings } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight, Cake, UserPlus, Check, X, Settings, Pencil, Shield, ShieldCheck, Phone } from 'lucide-react'
 import { getMemberAttendanceStats, toggleAttendance } from '@/actions/members'
 import { useAuth } from '@/contexts/AuthContext'
 import AddMemberModal from './AddMemberModal'
@@ -52,6 +52,7 @@ export default function AttendanceList({ members: initialMembers, part, initialD
     const [viewingMember, setViewingMember] = useState<{ id: number, name: string } | null>(null)
     const [showAddMember, setShowAddMember] = useState(false)
     const [showBirthday, setShowBirthday] = useState(false)
+    const [isEditMode, setIsEditMode] = useState(false)
 
     // Derived
     const formattedDate = format(selectedDate, 'M월 d일 (EEE)', { locale: ko })
@@ -263,6 +264,20 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                     </button>
                     {isAdmin && (
                         <button
+                            onClick={() => setIsEditMode(!isEditMode)}
+                            className={`
+                                flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg shadow-lg active:scale-95 transition-all
+                                ${isEditMode
+                                    ? 'bg-amber-500 text-white shadow-amber-900/20'
+                                    : 'bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700'}
+                            `}
+                        >
+                            {isEditMode ? <ShieldCheck size={14} /> : <Settings size={14} />}
+                            <span className="hidden xs:inline">{isEditMode ? '수정 ON' : '관리'}</span>
+                        </button>
+                    )}
+                    {isAdmin && (
+                        <button
                             onClick={() => setShowAddMember(true)}
                             className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow-lg active:scale-95 transition-all whitespace-nowrap"
                         >
@@ -274,6 +289,16 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                 </div>
             </header>
 
+            {/* Edit Mode Notice */}
+            {isEditMode && (
+                <div className="mx-1 mb-2 bg-amber-500/10 border border-amber-500/20 rounded-lg p-2 text-center">
+                    <p className="text-xs text-amber-200 font-bold flex items-center justify-center gap-2">
+                        <Pencil size={12} />
+                        대원 이름을 누르면 정보를 수정합니다
+                    </p>
+                </div>
+            )}
+
             {/* List */}
             <div className="grid grid-cols-1 gap-3">
                 {members.map((member) => {
@@ -283,10 +308,16 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                     return (
                         <div
                             key={member.id}
-                            onClick={() => handleToggle(member.id)} // Row click toggles attendance
+                            onClick={() => {
+                                if (isEditMode) {
+                                    setViewingMember({ id: member.id, name: member.name });
+                                } else {
+                                    handleToggle(member.id);
+                                }
+                            }}
                             className={`
                                 flex items-center justify-between p-4 rounded-2xl border transition-all duration-200 cursor-pointer active:scale-[0.98] select-none
-                                ${status === 'P' ? 'bg-slate-800/80 border-slate-700 shadow-md' : 'bg-slate-900 border-slate-800'}
+                                ${isEditMode ? 'border-amber-500/30 bg-amber-950/10' : status === 'P' ? 'bg-slate-800/80 border-slate-700 shadow-md' : 'bg-slate-900 border-slate-800'}
                             `}
                         >
                             <div className="flex items-center gap-4 flex-1">
@@ -308,16 +339,28 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                                         )}
                                         {isNew && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30 whitespace-nowrap">신입</span>}
 
+                                        {/* Missing Data Indicators (Edit Mode Only) */}
+                                        {isEditMode && !member.phone && (
+                                            <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
+                                                <Phone size={10} /> <span className="text-[9px]">미등록</span>
+                                            </span>
+                                        )}
+                                        {isEditMode && !member.birthDate && (
+                                            <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
+                                                <Cake size={10} /> <span className="text-[9px]">미등록</span>
+                                            </span>
+                                        )}
+
                                         {/* Admin Edit Button - Stops Propagation */}
-                                        {isAdmin && (
+                                        {isAdmin && isEditMode && (
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     setViewingMember({ id: member.id, name: member.name });
                                                 }}
-                                                className="p-1 text-slate-500 hover:text-amber-400 hover:bg-slate-700/50 rounded-full transition-colors shrink-0"
+                                                className="p-1 text-amber-400 hover:bg-amber-900/30 rounded-full transition-colors shrink-0"
                                             >
-                                                <Settings size={14} />
+                                                <Pencil size={14} />
                                             </button>
                                         )}
                                     </div>

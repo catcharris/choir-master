@@ -50,7 +50,7 @@ export default function DashboardContent({ notices }: DashboardContentProps) {
     const visibleParts = isAdmin ? ADMIN_PARTS : PARTS.filter(p => p.name === user.part).map(p => ({ ...p, label: p.name }))
 
     return (
-        <div className={`min-h-screen bg-slate-900 text-white ${!isAdmin ? 'h-[100dvh] flex flex-col px-3 pt-2 overflow-hidden' : 'p-3 pb-20 md:p-6'}`}>
+        <div className={`min-h-screen bg-slate-900 text-white ${!isAdmin ? 'h-[100dvh] flex flex-col px-3 pt-2 overflow-hidden' : 'p-3 pb-32 md:p-6 md:pb-24'}`}>
             <div className="flex-shrink-0 mb-4">
                 <DashboardHeader />
             </div>

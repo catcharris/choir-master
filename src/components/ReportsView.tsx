@@ -188,61 +188,63 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6">
             {/* Header / Month Nav */}
-            <div className="flex flex-col gap-4 bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
-                {/* Date Navigation - Always Visible */}
-                <div className="flex items-center justify-between w-full relative">
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
-                        <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 border border-slate-600 shadow-sm transition-colors flex items-center gap-1 group">
-                            <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
-                            <span className="hidden md:inline text-sm font-medium">뒤로</span>
-                        </button>
-                    </div>
+            <div className="relative">
+                {/* Back Button - Floating/Distinct */}
+                <button
+                    onClick={() => router.push('/dashboard')}
+                    className="absolute -top-12 left-0 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-full shadow-lg shadow-indigo-500/30 transition-all hover:scale-105 active:scale-95 font-bold z-10"
+                >
+                    <ChevronLeft size={18} strokeWidth={3} />
+                    <span>대시보드</span>
+                </button>
 
-                    <div className="flex items-center justify-center gap-6 w-full">
-                        <button onClick={handlePrevMonth} className="p-2 hover:bg-slate-700/50 rounded-full text-slate-400 hover:text-white transition-all active:scale-95">
-                            <ChevronLeft size={24} />
+                <div className="flex flex-col gap-4 bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl mt-14">
+                    {/* Date Navigation - Centered */}
+                    <div className="flex items-center justify-center gap-8 w-full relative py-2">
+                        <button onClick={handlePrevMonth} className="p-3 hover:bg-slate-700/50 rounded-full text-slate-400 hover:text-white transition-all active:scale-90 hover:bg-slate-700">
+                            <ChevronLeft size={28} />
                         </button>
-                        <h1 className="text-2xl md:text-3xl font-bold text-amber-100 min-w-[160px] text-center whitespace-nowrap tracking-tight">
+                        <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500 min-w-[200px] text-center tracking-tight drop-shadow-sm">
                             {year}년 {month}월
                         </h1>
-                        <button onClick={handleNextMonth} className="p-2 hover:bg-slate-700/50 rounded-full text-slate-400 hover:text-white transition-all active:scale-95">
-                            <ChevronRight size={24} />
+                        <button onClick={handleNextMonth} className="p-3 hover:bg-slate-700/50 rounded-full text-slate-400 hover:text-white transition-all active:scale-90 hover:bg-slate-700">
+                            <ChevronRight size={28} />
                         </button>
                     </div>
-                </div>
 
-                {/* Admin Tools - Only for ADMIN */}
-                {user?.role === 'ADMIN' && (
-                    <div className="flex flex-col md:flex-row gap-3 pt-4 border-t border-slate-700/50 mt-2">
-                        <div className="flex-1 flex gap-2">
-                            <input
-                                type="text"
-                                className="bg-slate-900 text-white px-3 py-3 rounded-xl text-sm border border-slate-600 focus:outline-none focus:border-amber-500 w-full md:w-40 placeholder-slate-500 text-center md:text-left"
-                                placeholder="담당자 이름"
-                                value={reportAuthor}
-                                onChange={(e) => setReportAuthor(e.target.value)}
-                            />
+                    {/* Admin Tools - Only for ADMIN */}
+                    {user?.role === 'ADMIN' && (
+                        <div className="flex flex-col md:flex-row gap-3 pt-4 border-t border-slate-700/50 mt-2">
+                            <div className="flex-1 flex gap-2">
+                                <input
+                                    type="text"
+                                    className="bg-slate-900 text-white px-3 py-3 rounded-xl text-sm border border-slate-600 focus:outline-none focus:border-amber-500 w-full md:w-40 placeholder-slate-500 text-center md:text-left"
+                                    placeholder="담당자 이름"
+                                    value={reportAuthor}
+                                    onChange={(e) => setReportAuthor(e.target.value)}
+                                />
+                            </div>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => handlePrint()}
+                                    className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-3 rounded-xl font-bold shadow-lg transition-all active:scale-95 text-sm whitespace-nowrap"
+                                >
+                                    <Printer size={18} />
+                                    <span className="hidden md:inline">보고서 출력</span>
+                                    <span className="md:hidden">출력</span>
+                                </button>
+                                <button
+                                    onClick={handleDownloadExcel}
+                                    className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-4 py-3 rounded-xl font-bold shadow-lg transition-all active:scale-95 text-sm whitespace-nowrap"
+                                >
+                                    <FileSpreadsheet size={18} />
+                                    <span className="hidden md:inline">엑셀 저장</span>
+                                    <span className="md:hidden">엑셀</span>
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => handlePrint()}
-                                className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-3 rounded-xl font-bold shadow-lg transition-all active:scale-95 text-sm whitespace-nowrap"
-                            >
-                                <Printer size={18} />
-                                <span className="hidden md:inline">보고서 출력</span>
-                                <span className="md:hidden">출력</span>
-                            </button>
-                            <button
-                                onClick={handleDownloadExcel}
-                                className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-4 py-3 rounded-xl font-bold shadow-lg transition-all active:scale-95 text-sm whitespace-nowrap"
-                            >
-                                <FileSpreadsheet size={18} />
-                                <span className="hidden md:inline">엑셀 저장</span>
-                                <span className="md:hidden">엑셀</span>
-                            </button>
-                        </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
 
             {/* Tabs */}

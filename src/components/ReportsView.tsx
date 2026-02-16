@@ -192,9 +192,9 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                 {/* Back Button - Floating/Distinct */}
                 <button
                     onClick={() => router.push('/dashboard')}
-                    className="absolute -top-12 left-0 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-full shadow-lg shadow-indigo-500/30 transition-all hover:scale-105 active:scale-95 font-bold z-10"
+                    className="absolute -top-10 left-0 flex items-center gap-1.5 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 px-3 py-1.5 rounded-full shadow-sm transition-all active:scale-95 text-xs font-bold"
                 >
-                    <ChevronLeft size={18} strokeWidth={3} />
+                    <ChevronLeft size={14} strokeWidth={3} />
                     <span>대시보드</span>
                 </button>
 

@@ -27,17 +27,22 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
     const [members, setMembers] = useState<BirthdayMember[]>([])
     const [months, setMonths] = useState<number[]>([])
     const [copied, setCopied] = useState(false)
-    const [kakaoKey, setKakaoKey] = useState('') // Temp state for testing
+    const [kakaoKey, setKakaoKey] = useState('')
     const [isKakaoInitialized, setIsKakaoInitialized] = useState(false)
+    const [isSdkLoaded, setIsSdkLoaded] = useState(false)
 
     useEffect(() => {
         // Load Kakao SDK
+        if (window.Kakao) {
+            setIsSdkLoaded(true)
+            return
+        }
+
         const script = document.createElement('script')
         script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js'
-        script.integrity = 'sha384-l+xbElFSnPZ2rOaPrU//2FF5B4LB8FiX5q4fXYTl1HSzrJ/aX+CcTvFwz39SvzJm'
-        script.crossOrigin = 'anonymous'
         script.onload = () => {
             console.log('Kakao SDK loaded')
+            setIsSdkLoaded(true)
         }
         document.head.appendChild(script)
 
@@ -69,6 +74,7 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
             alert('API 키를 입력해주세요!')
             return
         }
+
         if (window.Kakao && !window.Kakao.isInitialized()) {
             try {
                 window.Kakao.init(kakaoKey)
@@ -80,6 +86,9 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
         } else if (window.Kakao && window.Kakao.isInitialized()) {
             setIsKakaoInitialized(true)
             alert('이미 초기화되었습니다.')
+        } else {
+            alert('카카오 SDK가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.')
+            console.error('Kakao SDK not found on window object')
         }
     }
 
@@ -177,7 +186,12 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
 
                             {/* Kakao Test Section */}
                             <div className="bg-yellow-400/10 border border-yellow-400/30 p-4 rounded-lg">
-                                <label className="block text-xs font-bold text-yellow-500 mb-2">🟡 카카오 API 키 테스트 (저장안됨)</label>
+                                <label className="block text-xs font-bold text-yellow-500 mb-2 flex justify-between">
+                                    <span>🟡 카카오 API 키 테스트 (저장안됨)</span>
+                                    <span className={isSdkLoaded ? "text-green-400" : "text-red-400"}>
+                                        {isSdkLoaded ? "SDK 준비됨" : "SDK 로딩중..."}
+                                    </span>
+                                </label>
                                 <div className="flex gap-2">
                                     <input
                                         type="text"

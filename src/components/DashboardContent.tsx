@@ -23,7 +23,7 @@ const PARTS = [
 
 // Admin sees combined list
 const ADMIN_PARTS = [
-    { name: "Soprano A", color: "bg-amber-500", icon: "🎵", label: "Soprano A" },
+    { name: "Soprano A", color: "bg-amber-500", icon: "🎵", label: "Sop A" },
     { name: "Soprano B", color: "bg-orange-600", icon: "🎵", label: "Sop B & B+" },
     { name: "Alto A", color: "bg-rose-500", icon: "🎼", label: "Alto A" },
     { name: "Alto B", color: "bg-rose-600", icon: "🎼", label: "Alto B" },

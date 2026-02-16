@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Lock, Settings, LogOut, Check, User } from 'lucide-react'
 
 const ROLES = [
-    { label: '관리자 (Admin)', value: 'ADMIN' },
+    { label: '관리자', value: 'ADMIN' },
     { label: 'Soprano A 파트장', value: 'Soprano A' },
     { label: 'Soprano B 파트장', value: 'Soprano B' },
     { label: 'Alto A 파트장', value: 'Alto A' },

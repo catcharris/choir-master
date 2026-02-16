@@ -9,6 +9,7 @@ const ROLES = [
     { label: '관리자 (Admin)', value: 'ADMIN' },
     { label: 'Soprano A 파트장', value: 'Soprano A' },
     { label: 'Soprano B 파트장', value: 'Soprano B' },
+    { label: 'Soprano B+ 파트장', value: 'Soprano B+' },
     { label: 'Alto A 파트장', value: 'Alto A' },
     { label: 'Alto B 파트장', value: 'Alto B' },
     { label: 'Tenor 파트장', value: 'Tenor' },

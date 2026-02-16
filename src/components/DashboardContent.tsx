@@ -51,20 +51,20 @@ export default function DashboardContent({ notices }: DashboardContentProps) {
 
     return (
         <div className={`min-h-screen bg-slate-900 text-white ${!isAdmin ? 'h-[100dvh] flex flex-col px-3 pt-2 overflow-hidden' : 'p-3 pb-32 md:p-6 md:pb-24'}`}>
-            <div className="flex-shrink-0 mb-4">
+            <div className="flex-shrink-0 mb-2">
                 <DashboardHeader />
             </div>
 
-            <div className={`gap-4 max-w-lg mx-auto w-full flex flex-col ${!isAdmin ? 'flex-1 min-h-0 pb-2' : ''}`}>
+            <div className={`gap-2 max-w-lg mx-auto w-full flex flex-col ${!isAdmin ? 'flex-1 min-h-0 pb-2' : ''}`}>
                 {/* Part Links Area */}
-                <div className={`${!isAdmin ? 'flex-shrink-0 order-1 mb-2' : 'order-2 mb-6'}`}>
+                <div className={`${!isAdmin ? 'flex-shrink-0 order-1 mb-2' : 'order-2 mb-2'}`}>
                     {!isAdmin && (
                         <h2 className="text-lg font-bold text-slate-300 mb-2 px-1 flex items-center gap-2">
                             <span>👋 안녕하세요, {user?.part} 파트장님!</span>
                         </h2>
                     )}
                     {isAdmin && (
-                        <div className="flex items-center justify-between mb-4 px-1 mt-4">
+                        <div className="flex items-center justify-between mb-2 px-1 mt-2">
                             <h2 className="text-lg font-bold text-slate-300">
                                 출석부 (파트 선택)
                             </h2>

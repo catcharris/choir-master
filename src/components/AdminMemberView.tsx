@@ -15,12 +15,13 @@ interface Member {
 }
 
 interface AdminMemberViewProps {
-    initialMembers: Member[]
+    initialMembers: Member[];
+    backUrl: string;
 }
 
 const PARTS = ['Sop A', 'Sop B', 'Sop B+', 'Alto A', 'Alto B', 'Tenor', 'Bass']
 
-export default function AdminMemberView({ initialMembers }: AdminMemberViewProps) {
+export default function AdminMemberView({ initialMembers, backUrl }: AdminMemberViewProps) {
     const router = useRouter()
     const [members, setMembers] = useState(initialMembers)
     const [searchTerm, setSearchTerm] = useState('')
@@ -175,7 +176,7 @@ export default function AdminMemberView({ initialMembers }: AdminMemberViewProps
             </div>
 
             <div className="mt-6 text-center">
-                <button onClick={() => router.push('/dashboard')} className="text-slate-500 hover:text-slate-300 text-sm font-medium hover:underline decoration-slate-600 underline-offset-4 transition-all">
+                <button onClick={() => router.push(backUrl)} className="text-slate-500 hover:text-slate-300 text-sm font-medium hover:underline decoration-slate-600 underline-offset-4 transition-all">
                     ← 돌아가기
                 </button>
             </div>

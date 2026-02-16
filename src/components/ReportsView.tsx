@@ -379,7 +379,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                     {/* Refresh Control & Admin Link */}
                     <div className="flex justify-end mb-2 gap-2">
                         <button
-                            onClick={() => router.push('/admin/members')}
+                            onClick={() => router.push('/admin/members?back=/reports')}
                             className="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                         >
                             <Users size={14} />

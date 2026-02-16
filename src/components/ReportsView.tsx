@@ -430,7 +430,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                                 <thead className="bg-slate-900/50 text-slate-400 text-sm">
                                     <tr>
                                         <th className="px-2 py-3 font-medium whitespace-nowrap">파트</th>
-                                        <th className="px-2 py-3 font-medium text-center whitespace-nowrap">률(%)</th>
+                                        <th className="px-2 py-3 font-medium text-center whitespace-nowrap" title="활동 대원 기준 출석률">률(%)<span className="text-[10px] text-slate-500 block leading-none font-normal">활동기준</span></th>
                                         <th className="px-2 py-3 font-medium text-center whitespace-nowrap">활동</th>
                                         <th className="px-2 py-3 font-medium text-center whitespace-nowrap">휴식</th>
                                         <th className="px-2 py-3 font-medium text-center whitespace-nowrap">계</th>

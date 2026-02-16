@@ -161,13 +161,24 @@ export async function getMemberAttendanceStats(part: string, dateString: string)
 
     // 2. Get Attendance Records for that Date
     // dateString format: "YYYY-MM-DD"
-    // We need to match precise date or range depending on DB storage.
-    // Assuming DB stores DateTime.
-    const targetDateStart = new Date(dateString)
-    targetDateStart.setHours(0, 0, 0, 0);
+    // We parse YYYY-MM-DD and create UTC start/end range
 
-    const targetDateEnd = new Date(dateString)
-    targetDateEnd.setHours(23, 59, 59, 999);
+    let year, month, day;
+    if (dateString.includes('-')) {
+        const parts = dateString.split('-').map(Number);
+        year = parts[0];
+        month = parts[1] - 1;
+        day = parts[2];
+    } else {
+        // Safe fallback
+        const d = new Date(dateString);
+        year = d.getFullYear();
+        month = d.getMonth();
+        day = d.getDate();
+    }
+
+    const targetDateStart = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+    const targetDateEnd = new Date(Date.UTC(year, month, day, 23, 59, 59, 999));
 
     const attendances = await prisma.attendance.findMany({
         where: {

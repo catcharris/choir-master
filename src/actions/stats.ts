@@ -22,7 +22,7 @@ export async function getSoloistStats(year: number, month: number) {
             where: {
                 memberId: s.id,
                 date: { gte: start, lte: end },
-                status: { in: ['PRESENT', 'LATE'] }
+                status: { in: ['P', 'L', 'PRESENT', 'LATE'] }
             }
         })
 
@@ -57,7 +57,7 @@ export async function getYearlyReport(year: number, part?: string) {
         // Count total attendance ticks
         const whereClause: any = {
             date: { gte: start, lte: end },
-            status: { in: ['PRESENT', 'LATE'] }
+            status: { in: ['P', 'L', 'PRESENT', 'LATE'] }
         }
 
         if (part) {
@@ -123,12 +123,12 @@ export async function getMemberAttendanceStats(memberId: number, year: number, m
     // 4. Calculate Attendance Counts
     const attendedSat = attendance.filter(a => {
         const d = new Date(a.date)
-        return getDay(d) === 6 && (a.status === 'PRESENT' || a.status === 'LATE')
+        return getDay(d) === 6 && ['P', 'L', 'PRESENT', 'LATE'].includes(a.status)
     }).length
 
     const attendedSun = attendance.filter(a => {
         const d = new Date(a.date)
-        return getDay(d) === 0 && (a.status === 'PRESENT' || a.status === 'LATE')
+        return getDay(d) === 0 && ['P', 'L', 'PRESENT', 'LATE'].includes(a.status)
     }).length
 
     const totalAttended = attendedSat + attendedSun
@@ -152,7 +152,7 @@ export async function getMemberAttendanceStats(memberId: number, year: number, m
             sun: { attended: attendedSun, total: possibleSun }
         },
         attendedDates: attendance // Return raw records or simplified
-            .filter(a => a.status === 'PRESENT' || a.status === 'LATE')
+            .filter(a => ['P', 'L', 'PRESENT', 'LATE'].includes(a.status))
             .map(a => format(new Date(a.date), 'yyyy-MM-dd'))
     }
 }

@@ -192,22 +192,35 @@ export async function getMemberAttendanceStats(part: string, dateString: string)
 }
 
 // 6. Toggle Attendance
-export async function toggleAttendance(memberId: number, dateObj: Date, status: string | null) {
+export async function toggleAttendance(memberId: number, dateInput: Date | string, status: string | null) {
     // status: 'P', 'A', 'L', or 'DELETE' (to remove record)
 
-    // Safety check date
-    const targetDate = new Date(dateObj)
-    // Normalize time to noon to avoid timezone shift issues on day boundary
-    targetDate.setHours(12, 0, 0, 0);
+    // Ensure we work with a Date object that represents the intended day
+    // If string is passed (ISO), convert.
+    let targetDate = new Date(dateInput)
 
-    // We want to upsert based on (memberId, date).
-    // Prisma composite key is usually ID. But here we might check existence first.
+    // CRITICAL: When saving to DB, if we use UTC, it might shift day.
+    // We should normalize the time component to ensure it falls within the intended day in the server's timezone (or consistent UTC representation).
+    // A safe bet for "Date Only" storage in DateTime fields is setting time to Noon (12:00) UTC or Local, 
+    // to avoid boundary shifts.
 
-    // Calculate Search Range for "That Day"
-    const startOfDay = new Date(targetDate)
-    startOfDay.setHours(0, 0, 0, 0)
-    const endOfDay = new Date(targetDate)
-    endOfDay.setHours(23, 59, 59, 999)
+    // However, the `dateInput` from client `new Date()` is usually in local time.
+    // When passed to server action, it is serialized. 
+    // If it's a string '2026-02-16T...', `new Date()` parses it.
+
+    // Let's rely on finding existing record by a generous 24h range derived from the input date's YYYY-MM-DD.
+
+    // 1. Format input to YYYY-MM-DD string to anchor the day
+    const year = targetDate.getFullYear()
+    const month = targetDate.getMonth()
+    const day = targetDate.getDate()
+
+    // 2. Construct Start and End of that day
+    const startOfDay = new Date(year, month, day, 0, 0, 0, 0)
+    const endOfDay = new Date(year, month, day, 23, 59, 59, 999)
+
+    // 3. For creation, use a safe middle-of-day time
+    const saveDate = new Date(year, month, day, 12, 0, 0, 0)
 
     // Check existing record
     const existing = await prisma.attendance.findFirst({
@@ -240,7 +253,7 @@ export async function toggleAttendance(memberId: number, dateObj: Date, status: 
                 await prisma.attendance.create({
                     data: {
                         memberId: memberId,
-                        date: targetDate,
+                        date: saveDate,
                         status: status!,
                         checkTime: new Date()
                     }

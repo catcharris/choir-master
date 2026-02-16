@@ -75,6 +75,23 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
         fetchBirthdays()
     }, [])
 
+    // Auto-initialize if key exists and SDK is loaded
+    useEffect(() => {
+        if (isSdkLoaded && kakaoKey && !isKakaoInitialized) {
+            if (window.Kakao && !window.Kakao.isInitialized()) {
+                try {
+                    window.Kakao.init(kakaoKey)
+                    setIsKakaoInitialized(true)
+                    console.log('Kakao SDK auto-initialized')
+                } catch (e) {
+                    console.error('Auto-init failed', e)
+                }
+            } else if (window.Kakao && window.Kakao.isInitialized()) {
+                setIsKakaoInitialized(true)
+            }
+        }
+    }, [isSdkLoaded, kakaoKey, isKakaoInitialized])
+
     const initKakao = () => {
         if (!kakaoKey) {
             alert('API 키를 입력해주세요!')

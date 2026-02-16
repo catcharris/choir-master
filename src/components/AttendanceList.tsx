@@ -58,21 +58,8 @@ export default function AttendanceList({ members: initialMembers, part, initialD
     const dbDateString = format(selectedDate, 'yyyy-MM-dd')
     const isAdmin = user?.role === 'ADMIN'
 
-    // Track first render to avoid double fetching on mount
-    const isFirstRun = useRef(true)
-
     // Fetch Data on Date Change
     useEffect(() => {
-        // Validation: If the current selected date matches the initial date from server,
-        // and we are on the first run (or we have initialMembers), we should SKIP fetching.
-        // The server already provided the correct data for this date.
-
-        if (initialDate && dbDateString === initialDate && isFirstRun.current) {
-            isFirstRun.current = false
-            return
-        }
-
-        // If we moved to a new date, or it's not the initial run anymore
         const fetchAttendance = async () => {
             if (!user) return
 
@@ -86,16 +73,8 @@ export default function AttendanceList({ members: initialMembers, part, initialD
             }
         }
 
-        if (isFirstRun.current) {
-            isFirstRun.current = false
-            // If initialDate was not provided or didn't match (rare), we might fetch.
-            // But usually for today/initialDate we skip.
-            if (initialDate && dbDateString === initialDate) return;
-        }
-
         fetchAttendance()
-
-    }, [part, user, dbDateString, initialDate])
+    }, [part, user, dbDateString])
 
     // Date Navigation
     const handlePrevDay = () => {
@@ -221,170 +200,170 @@ export default function AttendanceList({ members: initialMembers, part, initialD
     }).length
 
     return (
-            <div className="max-w-md mx-auto p-4 space-y-6 pb-24">
-                {/* Dynamic Top Header (Moved from page.tsx) */}
-                <header className="mb-2 flex items-center justify-between sticky top-0 bg-slate-900/95 backdrop-blur-md z-20 py-4 -mt-4 border-b border-slate-800">
-                    <Link href="/dashboard" className="text-slate-400 hover:text-white flex items-center gap-2 font-medium px-2 py-1 rounded-lg hover:bg-slate-800 transition-colors">
-                        ← 뒤로가기
-                    </Link>
-                    <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-yellow-400">
-                        {part}
-                    </h1>
-                    <div className="w-auto text-right text-xs text-slate-500 font-mono bg-slate-800 px-2 py-1 rounded border border-slate-700">
-                        {presentCount} / {totalCount} 명
-                    </div>
-                </header>
-
-                {/* Date Nav (Adjusted z-index slightly lower if needed, but sticky stacking works) */}
-                <div className="flex items-center justify-between bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-lg sticky top-[60px] z-10">
-                    <button onClick={handlePrevDay} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 active:scale-95">
-                        <ChevronLeft />
-                    </button>
-                    <div className="flex flex-col items-center">
-                        <div className="relative group">
-                            <label className="flex items-center gap-2 text-lg font-bold text-amber-100 cursor-pointer">
-                                <Calendar size={18} className="text-amber-500" />
-                                {formattedDate}
-                            </label>
-                            <input
-                                type="date"
-                                value={dbDateString}
-                                onChange={handleDateChange}
-                                className="absolute opacity-0 inset-0 cursor-pointer"
-                            />
-                        </div>
-                        {!isToday(selectedDate) && (
-                            <button onClick={() => setSelectedDate(new Date())} className="text-xs text-indigo-400 font-bold mt-1">
-                                오늘로 이동
-                            </button>
-                        )}
-                    </div>
-                    <button onClick={handleNextDay} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 active:scale-95">
-                        <ChevronRight />
-                    </button>
+        <div className="max-w-md mx-auto p-4 space-y-6 pb-24">
+            {/* Dynamic Top Header (Moved from page.tsx) */}
+            <header className="mb-2 flex items-center justify-between sticky top-0 bg-slate-900/95 backdrop-blur-md z-20 py-4 -mt-4 border-b border-slate-800">
+                <Link href="/dashboard" className="text-slate-400 hover:text-white flex items-center gap-2 font-medium px-2 py-1 rounded-lg hover:bg-slate-800 transition-colors">
+                    ← 뒤로가기
+                </Link>
+                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-yellow-400">
+                    {part}
+                </h1>
+                <div className="w-auto text-right text-xs text-slate-500 font-mono bg-slate-800 px-2 py-1 rounded border border-slate-700">
+                    {presentCount} / {totalCount} 명
                 </div>
+            </header>
 
-                {/* Header */}
-                <header className="flex items-center justify-between px-1 mb-2">
-                    <div className="flex flex-col">
-                        <h2 className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-200 to-indigo-400 flex items-center gap-2">
-                            <span>{part.replace('Soprano', 'Sop')}</span>
-                            <span className="hidden sm:inline">대원 명단</span>
-                            <span className="text-sm font-medium text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded-full border border-slate-700">
-                                {members.length}명
-                            </span>
-                        </h2>
+            {/* Date Nav (Adjusted z-index slightly lower if needed, but sticky stacking works) */}
+            <div className="flex items-center justify-between bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-lg sticky top-[60px] z-10">
+                <button onClick={handlePrevDay} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 active:scale-95">
+                    <ChevronLeft />
+                </button>
+                <div className="flex flex-col items-center">
+                    <div className="relative group">
+                        <label className="flex items-center gap-2 text-lg font-bold text-amber-100 cursor-pointer">
+                            <Calendar size={18} className="text-amber-500" />
+                            {formattedDate}
+                        </label>
+                        <input
+                            type="date"
+                            value={dbDateString}
+                            onChange={handleDateChange}
+                            className="absolute opacity-0 inset-0 cursor-pointer"
+                        />
                     </div>
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => setShowBirthday(true)}
-                            className="p-2 bg-slate-800 text-pink-400 rounded-lg border border-slate-700 hover:bg-slate-700 active:scale-95 transition-all"
-                        >
-                            <Cake size={18} />
+                    {!isToday(selectedDate) && (
+                        <button onClick={() => setSelectedDate(new Date())} className="text-xs text-indigo-400 font-bold mt-1">
+                            오늘로 이동
                         </button>
-                        {isAdmin && (
-                            <button
-                                onClick={() => setShowAddMember(true)}
-                                className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow-lg active:scale-95 transition-all whitespace-nowrap"
-                            >
-                                <UserPlus size={14} />
-                                <span className="hidden xs:inline">추가</span>
-                                <span className="inline xs:hidden">+</span>
-                            </button>
-                        )}
-                    </div>
-                </header>
+                    )}
+                </div>
+                <button onClick={handleNextDay} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 active:scale-95">
+                    <ChevronRight />
+                </button>
+            </div>
 
-                {/* List */}
-                <div className="grid grid-cols-1 gap-3">
-                    {members.map((member) => {
-                        const status = getRenderStatus(member)
-                        const isNew = member.role === 'New'
+            {/* Header */}
+            <header className="flex items-center justify-between px-1 mb-2">
+                <div className="flex flex-col">
+                    <h2 className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-200 to-indigo-400 flex items-center gap-2">
+                        <span>{part.replace('Soprano', 'Sop')}</span>
+                        <span className="hidden sm:inline">대원 명단</span>
+                        <span className="text-sm font-medium text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded-full border border-slate-700">
+                            {members.length}명
+                        </span>
+                    </h2>
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setShowBirthday(true)}
+                        className="p-2 bg-slate-800 text-pink-400 rounded-lg border border-slate-700 hover:bg-slate-700 active:scale-95 transition-all"
+                    >
+                        <Cake size={18} />
+                    </button>
+                    {isAdmin && (
+                        <button
+                            onClick={() => setShowAddMember(true)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow-lg active:scale-95 transition-all whitespace-nowrap"
+                        >
+                            <UserPlus size={14} />
+                            <span className="hidden xs:inline">추가</span>
+                            <span className="inline xs:hidden">+</span>
+                        </button>
+                    )}
+                </div>
+            </header>
 
-                        return (
-                            <div
-                                key={member.id}
-                                onClick={() => handleToggle(member.id)} // Row click toggles attendance
-                                className={`
+            {/* List */}
+            <div className="grid grid-cols-1 gap-3">
+                {members.map((member) => {
+                    const status = getRenderStatus(member)
+                    const isNew = member.role === 'New'
+
+                    return (
+                        <div
+                            key={member.id}
+                            onClick={() => handleToggle(member.id)} // Row click toggles attendance
+                            className={`
                                 flex items-center justify-between p-4 rounded-2xl border transition-all duration-200 cursor-pointer active:scale-[0.98] select-none
                                 ${status === 'P' ? 'bg-slate-800/80 border-slate-700 shadow-md' : 'bg-slate-900 border-slate-800'}
                             `}
-                            >
-                                <div className="flex items-center gap-4 flex-1">
-                                    <div className={`
+                        >
+                            <div className="flex items-center gap-4 flex-1">
+                                <div className={`
                                     w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-inner
                                     ${member.role === 'Soloist' ? 'bg-amber-900/50 text-amber-500 border border-amber-500/30' :
-                                            member.role === 'PartLeader' ? 'bg-indigo-900/50 text-indigo-400 border border-indigo-500/30' :
-                                                'bg-slate-800 text-slate-400'}
+                                        member.role === 'PartLeader' ? 'bg-indigo-900/50 text-indigo-400 border border-indigo-500/30' :
+                                            'bg-slate-800 text-slate-400'}
                                 `}>
-                                        {member.name.charAt(0)}
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2">
-                                            <span className="font-bold text-lg text-slate-200">{member.name}</span>
-                                            <span className="text-xs text-slate-500 font-medium px-1.5 py-0.5 bg-slate-800 rounded">
-                                                {member.churchTitle}
-                                            </span>
-                                            {isNew && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30">신입</span>}
+                                    {member.name.charAt(0)}
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold text-lg text-slate-200">{member.name}</span>
+                                        <span className="text-xs text-slate-500 font-medium px-1.5 py-0.5 bg-slate-800 rounded">
+                                            {member.churchTitle}
+                                        </span>
+                                        {isNew && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30">신입</span>}
 
-                                            {/* Admin Edit Button - Stops Propagation */}
-                                            {isAdmin && (
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setViewingMember({ id: member.id, name: member.name });
-                                                    }}
-                                                    className="ml-2 p-1.5 text-slate-500 hover:text-amber-400 hover:bg-slate-700/50 rounded-full transition-colors"
-                                                >
-                                                    <Settings size={14} />
-                                                </button>
-                                            )}
-                                        </div>
-                                        <div className="text-xs text-slate-500 mt-0.5">
-                                            {member.role === 'Soloist' && '솔리스트'}
-                                            {member.role === 'PartLeader' && '파트장'}
-                                        </div>
+                                        {/* Admin Edit Button - Stops Propagation */}
+                                        {isAdmin && (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setViewingMember({ id: member.id, name: member.name });
+                                                }}
+                                                className="ml-2 p-1.5 text-slate-500 hover:text-amber-400 hover:bg-slate-700/50 rounded-full transition-colors"
+                                            >
+                                                <Settings size={14} />
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="text-xs text-slate-500 mt-0.5">
+                                        {member.role === 'Soloist' && '솔리스트'}
+                                        {member.role === 'PartLeader' && '파트장'}
                                     </div>
                                 </div>
+                            </div>
 
-                                <button
-                                    className={`
+                            <button
+                                className={`
                                     w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-200 border-2 ml-4
                                     ${getStatusColor(status)}
                                 `}
-                                >
-                                    {getStatusContent(status)}
-                                </button>
-                            </div>
-                        )
-                    })}
-
-                    {members.length === 0 && (
-                        <div className="text-center py-10 text-slate-500 bg-slate-800/30 rounded-2xl border border-slate-800 border-dashed">
-                            등록된 대원이 없습니다.
+                            >
+                                {getStatusContent(status)}
+                            </button>
                         </div>
-                    )}
-                </div>
+                    )
+                })}
 
-                {/* Modals */}
-                {showAddMember && (
-                    <AddMemberModal
-                        part={part}
-                        onClose={() => setShowAddMember(false)}
-                    />
-                )}
-
-                {viewingMember && (
-                    <MemberStatsModal
-                        memberId={viewingMember.id}
-                        memberName={viewingMember.name}
-                        onClose={() => setViewingMember(null)}
-                    />
-                )}
-
-                {showBirthday && (
-                    <BirthdayModal onClose={() => setShowBirthday(false)} />
+                {members.length === 0 && (
+                    <div className="text-center py-10 text-slate-500 bg-slate-800/30 rounded-2xl border border-slate-800 border-dashed">
+                        등록된 대원이 없습니다.
+                    </div>
                 )}
             </div>
-        )
-    }
+
+            {/* Modals */}
+            {showAddMember && (
+                <AddMemberModal
+                    part={part}
+                    onClose={() => setShowAddMember(false)}
+                />
+            )}
+
+            {viewingMember && (
+                <MemberStatsModal
+                    memberId={viewingMember.id}
+                    memberName={viewingMember.name}
+                    onClose={() => setViewingMember(null)}
+                />
+            )}
+
+            {showBirthday && (
+                <BirthdayModal onClose={() => setShowBirthday(false)} />
+            )}
+        </div>
+    )
+}

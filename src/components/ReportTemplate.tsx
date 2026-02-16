@@ -4,21 +4,30 @@ import React, { forwardRef } from 'react'
 
 interface ReportData {
     overall: {
+        totalRegistered: number;
         totalActive: number;
         totalResting: number;
+        totalNew: number;
         rate: number;
+        rateSat: number;
+        rateSun: number;
     };
     byPart: {
         part: string;
         totalMembers: number;
         activeMembers: number;
         restingMembers: number;
+        newMembers: number;
         attendCount: number;
-        totalSlots: number;
+        attendSat: number;
+        attendSun: number;
         rate: number;
+        rateSat: number;
+        rateSun: number;
     }[];
     withdrawnList: { name: string; part: string; date: Date }[];
     restingList: { name: string; part: string }[];
+    newMemberList: { name: string; part: string }[];
 }
 
 interface ReportTemplateProps {
@@ -59,17 +68,29 @@ export const ReportTemplate = forwardRef<HTMLDivElement, ReportTemplateProps>((p
                 <table className="w-full border-collapse border border-black text-center text-sm">
                     <thead>
                         <tr className="bg-gray-100">
-                            <th className="border border-black p-2 w-1/4">구분</th>
-                            <th className="border border-black p-2 w-1/4">재적 대원</th>
-                            <th className="border border-black p-2 w-1/4">활동 대원</th>
-                            <th className="border border-black p-2 w-1/4">출석률 (종합)</th>
+                            <th rowSpan={2} className="border border-black p-2 w-[10%]">구분</th>
+                            <th colSpan={4} className="border border-black p-2">대원 현황</th>
+                            <th colSpan={3} className="border border-black p-2">출석률 (%)</th>
+                        </tr>
+                        <tr className="bg-gray-50">
+                            <th className="border border-black p-1">재적</th>
+                            <th className="border border-black p-1">활동</th>
+                            <th className="border border-black p-1">신입</th>
+                            <th className="border border-black p-1">휴식</th>
+                            <th className="border border-black p-1 text-indigo-700">토요</th>
+                            <th className="border border-black p-1 text-rose-700">주일</th>
+                            <th className="border border-black p-1 font-bold">종합</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td className="border border-black p-2 font-bold">합계</td>
-                            <td className="border border-black p-2">{data.overall.totalActive + data.overall.totalResting}명</td>
+                            <td className="border border-black p-2">{data.overall.totalRegistered}명</td>
                             <td className="border border-black p-2">{data.overall.totalActive}명</td>
+                            <td className="border border-black p-2">{data.overall.totalNew}명</td>
+                            <td className="border border-black p-2">{data.overall.totalResting}명</td>
+                            <td className="border border-black p-2 text-indigo-900">{data.overall.rateSat}%</td>
+                            <td className="border border-black p-2 text-rose-900">{data.overall.rateSun}%</td>
                             <td className="border border-black p-2 font-bold text-base">{data.overall.rate}%</td>
                         </tr>
                     </tbody>
@@ -82,11 +103,18 @@ export const ReportTemplate = forwardRef<HTMLDivElement, ReportTemplateProps>((p
                 <table className="w-full border-collapse border border-black text-center text-xs">
                     <thead>
                         <tr className="bg-gray-100">
-                            <th className="border border-black p-1.5">파트</th>
-                            <th className="border border-black p-1.5">재적</th>
-                            <th className="border border-black p-1.5">활동</th>
-                            <th className="border border-black p-1.5">휴식</th>
-                            <th className="border border-black p-1.5">출석률</th>
+                            <th className="border border-black p-1.5" rowSpan={2}>파트</th>
+                            <th className="border border-black p-1.5" colSpan={4}>인원 현황</th>
+                            <th className="border border-black p-1.5" colSpan={3}>출석률</th>
+                        </tr>
+                        <tr className="bg-gray-50">
+                            <th className="border border-black p-1">재적</th>
+                            <th className="border border-black p-1">활동</th>
+                            <th className="border border-black p-1">신입</th>
+                            <th className="border border-black p-1">휴식</th>
+                            <th className="border border-black p-1 text-indigo-700">토(연습)</th>
+                            <th className="border border-black p-1 text-rose-700">일(예배)</th>
+                            <th className="border border-black p-1 font-bold">전체</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,7 +123,10 @@ export const ReportTemplate = forwardRef<HTMLDivElement, ReportTemplateProps>((p
                                 <td className="border border-black p-1.5 font-bold">{p.part}</td>
                                 <td className="border border-black p-1.5">{p.totalMembers}</td>
                                 <td className="border border-black p-1.5">{p.activeMembers}</td>
-                                <td className="border border-black p-1.5 text-gray-500">{p.restingMembers}</td>
+                                <td className="border border-black p-1.5 text-emerald-600">{p.newMembers}</td>
+                                <td className="border border-black p-1.5 text-gray-400">{p.restingMembers}</td>
+                                <td className="border border-black p-1.5 text-indigo-900">{p.rateSat}%</td>
+                                <td className="border border-black p-1.5 text-rose-900">{p.rateSun}%</td>
                                 <td className="border border-black p-1.5 font-bold">{p.rate}%</td>
                             </tr>
                         ))}
@@ -107,6 +138,15 @@ export const ReportTemplate = forwardRef<HTMLDivElement, ReportTemplateProps>((p
             <div className="mb-8">
                 <h3 className="text-base font-bold mb-2 border-l-4 border-black pl-2">3. 특이사항 (변동 내역)</h3>
                 <div className="border border-black p-3 min-h-[100px] text-xs">
+                    {/* New Members */}
+                    <div className="mb-3">
+                        <h4 className="font-bold mb-1">∎ 신입 대원 명단:</h4>
+                        <p className="pl-2 leading-relaxed">
+                            {data.newMemberList.length > 0
+                                ? data.newMemberList.map(m => `${m.name}(${m.part})`).join(', ')
+                                : '없음'}
+                        </p>
+                    </div>
                     {/* Resting Members */}
                     <div className="mb-3">
                         <h4 className="font-bold mb-1">∎ 휴식 대원 명단:</h4>

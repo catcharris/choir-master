@@ -14,21 +14,30 @@ import { ReportTemplate } from './ReportTemplate'
 
 interface ReportData {
     overall: {
+        totalRegistered: number;
         totalActive: number;
         totalResting: number;
+        totalNew: number;
         rate: number;
+        rateSat: number;
+        rateSun: number;
     };
     byPart: {
         part: string;
         totalMembers: number;
         activeMembers: number;
         restingMembers: number;
+        newMembers: number;
         attendCount: number;
-        totalSlots: number;
+        attendSat: number;
+        attendSun: number;
         rate: number;
+        rateSat: number;
+        rateSun: number;
     }[];
     withdrawnList: { name: string; part: string; date: Date }[];
     restingList: { name: string; part: string }[];
+    newMemberList: { name: string; part: string }[];
 }
 
 interface ReportsViewProps {

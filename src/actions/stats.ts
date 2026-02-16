@@ -164,11 +164,13 @@ export async function getMonthlyReport(year: number, month: number) {
 
     // 1. Get All Active Members
     const members = await prisma.member.findMany({
-        where: { isActive: true } // Only track currently active for denominator?
-        // Ideally should include those active *during* the month, but simplifing for now.
+        where: { isActive: true }
     })
 
-    // 2. Get All Withdrawn Members (Inactive)
+    // 2. Get All Withdrawn Members within this month (approximately) or just all inactive for report?
+    // User wants "Withdrawn List". Usually means recent ones. But let's fetch all inactive and filter by updatedAt if needed for precise monthly reports.
+    // For now, let's list all recently inactive or just use existing logic.
+    // To match user request "Withdrawn/Expelled Stats", let's keep list logic.
     const withdrawnMembers = await prisma.member.findMany({
         where: { isActive: false }
     })
@@ -182,52 +184,92 @@ export async function getMonthlyReport(year: number, month: number) {
         include: { member: true }
     })
 
+    const allDays = eachDayOfInterval({ start, end })
+    const saturdays = allDays.filter(d => getDay(d) === 6)
+    const sundays = allDays.filter(d => getDay(d) === 0)
+    const satCount = saturdays.length
+    const sunCount = sundays.length
+
     // 4. Calculate Stats by Part
     const parts = ['Soprano A', 'Soprano B', 'Soprano B+', 'Alto A', 'Alto B', 'Tenor', 'Bass']
     const partStats = parts.map(part => {
         const partMembers = members.filter(m => m.part === part)
-        const totalMembers = partMembers.length
+        const totalMembers = partMembers.length // Registered
 
-        // Calculate possible attendance slots for this part
-        // (Total Members * Total Sat/Sun in month)
-        // Note: Resting members should be excluded?
         const activeSingers = partMembers.filter(m => m.role !== 'Resting')
         const restingSingers = partMembers.filter(m => m.role === 'Resting')
+        const newSingers = partMembers.filter(m => m.role === 'New') // New members are usually active too
 
-        const allDays = eachDayOfInterval({ start, end })
-        const serviceDays = allDays.filter(d => getDay(d) === 0 || getDay(d) === 6).length
+        // Statistics
+        const partAttendance = totalAttendance.filter(a => a.member.part === part)
 
-        const totalSlots = activeSingers.length * serviceDays
+        // Split Sat/Sun
+        const attendSat = partAttendance.filter(a => getDay(new Date(a.date)) === 6).length
+        const attendSun = partAttendance.filter(a => getDay(new Date(a.date)) === 0).length
 
-        const attendCount = totalAttendance.filter(a => a.member.part === part).length
+        // Denominators (Active Members * Days)
+        // Note: New members join mid-month, but for simple stats we use current active count.
+        const effectiveActiveCount = activeSingers.length
+
+        const slotsSat = effectiveActiveCount * satCount
+        const slotsSun = effectiveActiveCount * sunCount
+        const totalSlots = slotsSat + slotsSun
+        const attendCount = attendSat + attendSun
 
         return {
             part,
-            totalMembers, // Include resting? Yes, total registered.
-            activeMembers: activeSingers.length,
+            totalMembers,
+            activeMembers: effectiveActiveCount,
             restingMembers: restingSingers.length,
+            newMembers: newSingers.length,
             attendCount,
-            totalSlots,
-            rate: totalSlots > 0 ? Math.round((attendCount / totalSlots) * 100) : 0
+            attendSat,
+            attendSun,
+            rate: totalSlots > 0 ? Math.round((attendCount / totalSlots) * 100) : 0,
+            rateSat: slotsSat > 0 ? Math.round((attendSat / slotsSat) * 100) : 0,
+            rateSun: slotsSun > 0 ? Math.round((attendSun / slotsSun) * 100) : 0
         }
     })
 
     // 5. Overall Stats
     const totalActiveMembers = partStats.reduce((acc, p) => acc + p.activeMembers, 0)
     const totalRestingMembers = partStats.reduce((acc, p) => acc + p.restingMembers, 0)
+    const totalNewMembers = partStats.reduce((acc, p) => acc + p.newMembers, 0)
+    const totalRegistered = partStats.reduce((acc, p) => acc + p.totalMembers, 0)
     const totalAttendCount = partStats.reduce((acc, p) => acc + p.attendCount, 0)
-    const totalSlots = partStats.reduce((acc, p) => acc + p.totalSlots, 0)
 
-    const overallRate = totalSlots > 0 ? Math.round((totalAttendCount / totalSlots) * 100) : 0
+    // Weighted Average Rates
+    // Sum of all numerators / Sum of all denominators is more accurate than average of averages
+    const totalSlotsSat = partStats.reduce((acc, p) => acc + (p.activeMembers * satCount), 0)
+    const totalSlotsSun = partStats.reduce((acc, p) => acc + (p.activeMembers * sunCount), 0)
+    const totalAttendSat = partStats.reduce((acc, p) => acc + p.attendSat, 0)
+    const totalAttendSun = partStats.reduce((acc, p) => acc + p.attendSun, 0)
+
+    const overallRate = (totalSlotsSat + totalSlotsSun) > 0
+        ? Math.round((totalAttendCount / (totalSlotsSat + totalSlotsSun)) * 100)
+        : 0
+
+    const overallRateSat = totalSlotsSat > 0
+        ? Math.round((totalAttendSat / totalSlotsSat) * 100)
+        : 0
+
+    const overallRateSun = totalSlotsSun > 0
+        ? Math.round((totalAttendSun / totalSlotsSun) * 100)
+        : 0
 
     return {
         overall: {
+            totalRegistered,
             totalActive: totalActiveMembers,
             totalResting: totalRestingMembers,
-            rate: overallRate
+            totalNew: totalNewMembers,
+            rate: overallRate,
+            rateSat: overallRateSat,
+            rateSun: overallRateSun
         },
         byPart: partStats,
-        withdrawnList: withdrawnMembers.map(m => ({ name: m.name, part: m.part, date: m.updatedAt })), // Approx date
-        restingList: members.filter(m => m.role === 'Resting').map(m => ({ name: m.name, part: m.part }))
+        withdrawnList: withdrawnMembers.map(m => ({ name: m.name, part: m.part, date: m.updatedAt })),
+        restingList: members.filter(m => m.role === 'Resting').map(m => ({ name: m.name, part: m.part })),
+        newMemberList: members.filter(m => m.role === 'New').map(m => ({ name: m.name, part: m.part }))
     }
 }

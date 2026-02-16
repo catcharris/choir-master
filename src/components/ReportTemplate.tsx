@@ -36,7 +36,14 @@ export const ReportTemplate = forwardRef<HTMLDivElement, ReportTemplateProps>((p
         <div ref={ref} className="p-8 bg-white text-black font-serif" style={{ width: '210mm', margin: '0 auto' }}>
             <style type="text/css" media="print">
                 {`
-                    @page { size: A4; margin: 15mm; }
+                    @page { size: A4; margin: 25mm; }
+                    body { font-family: "Malgun Gothic", sans-serif; }
+                    table { border-collapse: collapse; width: 100%; border-top: 2px solid #000; border-bottom: 2px solid #000; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 11pt; border-left: none; border-right: none; }
+                    th { background-color: #f7f7f7; font-weight: bold; border-bottom: 1px solid #000; }
+                    h1 { font-size: 20pt; text-align: center; margin-bottom: 20px; font-weight: bold; }
+                    h2 { font-size: 14pt; text-align: center; margin-bottom: 40px; font-weight: normal; }
+                    h3 { font-size: 12pt; margin-top: 30px; margin-bottom: 10px; font-weight: bold; border-left: 5px solid #555; padding-left: 10px; }
                 `}
             </style>
 

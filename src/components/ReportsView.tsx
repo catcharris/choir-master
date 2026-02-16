@@ -58,12 +58,9 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
 
     // Set default tab based on role on mount
     useEffect(() => {
-        if (isAdmin) {
-            setActiveTab('weekly')
-        } else {
-            setActiveTab('monthly')
-        }
-    }, [isAdmin])
+        // Admin prefers Monthly view
+        setActiveTab('monthly')
+    }, [])
 
     // Filter data for Leaders
     const filteredByPart = isAdmin

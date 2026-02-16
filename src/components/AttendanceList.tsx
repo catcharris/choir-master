@@ -131,7 +131,7 @@ export default function AttendanceList({ members: initialMembers, part, initialD
         setOptimisticStatus(prev => ({ ...prev, [memberId]: nextStatus }))
 
         try {
-            await toggleAttendance(memberId, selectedDate, nextStatus === null ? 'DELETE' : nextStatus)
+            await toggleAttendance(memberId, dbDateString, nextStatus === null ? 'DELETE' : nextStatus)
         } catch (e) {
             console.error("Failed to update attendance", e)
             setOptimisticStatus(prev => {

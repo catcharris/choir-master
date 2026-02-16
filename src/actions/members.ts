@@ -192,35 +192,42 @@ export async function getMemberAttendanceStats(part: string, dateString: string)
 }
 
 // 6. Toggle Attendance
-export async function toggleAttendance(memberId: number, dateInput: Date | string, status: string | null) {
-    // status: 'P', 'A', 'L', or 'DELETE' (to remove record)
+export async function toggleAttendance(memberId: number, dateInput: string | Date, status: string | null) {
+    // We expect dateInput to be "YYYY-MM-DD" string ideally. 
+    // If it's a Date object, it might have timezone issues, so we prefer string.
 
-    // Ensure we work with a Date object that represents the intended day
-    // If string is passed (ISO), convert.
-    let targetDate = new Date(dateInput)
+    let year, month, day;
 
-    // CRITICAL: When saving to DB, if we use UTC, it might shift day.
-    // We should normalize the time component to ensure it falls within the intended day in the server's timezone (or consistent UTC representation).
-    // A safe bet for "Date Only" storage in DateTime fields is setting time to Noon (12:00) UTC or Local, 
-    // to avoid boundary shifts.
+    if (typeof dateInput === 'string') {
+        // If format is YYYY-MM-DD
+        if (dateInput.includes('-') && dateInput.length >= 10) {
+            const parts = dateInput.substring(0, 10).split('-').map(Number);
+            year = parts[0];
+            month = parts[1] - 1; // JS Month is 0-indexed
+            day = parts[2];
+        } else {
+            // Fallback try parse
+            const d = new Date(dateInput);
+            year = d.getFullYear();
+            month = d.getMonth();
+            day = d.getDate();
+        }
+    } else {
+        // Warning: using Date object directly might use server local time or UTC of the object
+        // Assuming the Date object is correct for the intended day
+        year = dateInput.getFullYear();
+        month = dateInput.getMonth();
+        day = dateInput.getDate();
+    }
 
-    // However, the `dateInput` from client `new Date()` is usually in local time.
-    // When passed to server action, it is serialized. 
-    // If it's a string '2026-02-16T...', `new Date()` parses it.
+    // Construct dates using UTC to avoid any server local time offset
+    // 00:00:00 UTC
+    const startOfDay = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+    // 23:59:59 UTC
+    const endOfDay = new Date(Date.UTC(year, month, day, 23, 59, 59, 999));
 
-    // Let's rely on finding existing record by a generous 24h range derived from the input date's YYYY-MM-DD.
-
-    // 1. Format input to YYYY-MM-DD string to anchor the day
-    const year = targetDate.getFullYear()
-    const month = targetDate.getMonth()
-    const day = targetDate.getDate()
-
-    // 2. Construct Start and End of that day
-    const startOfDay = new Date(year, month, day, 0, 0, 0, 0)
-    const endOfDay = new Date(year, month, day, 23, 59, 59, 999)
-
-    // 3. For creation, use a safe middle-of-day time
-    const saveDate = new Date(year, month, day, 12, 0, 0, 0)
+    // Save at Noon UTC to be safe
+    const saveDate = new Date(Date.UTC(year, month, day, 12, 0, 0, 0));
 
     // Check existing record
     const existing = await prisma.attendance.findFirst({

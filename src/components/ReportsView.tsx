@@ -189,15 +189,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                         <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 border border-slate-600 shadow-sm transition-colors">
                             <ChevronLeft size={20} /> <span className="sr-only">뒤로가기</span>
                         </button>
-                        {isAdmin && (
-                            <button
-                                onClick={() => router.push('/admin/members')}
-                                className="flex items-center gap-2 px-3 py-2 bg-slate-700 hover:bg-slate-600 text-amber-500 rounded-lg border border-slate-600 hover:border-amber-500/50 shadow-sm transition-all"
-                            >
-                                <Users size={18} />
-                                <span className="text-xs font-bold hidden sm:inline">대원 관리</span>
-                            </button>
-                        )}
+
                     </div>
 
                     <div className="flex items-center gap-4">

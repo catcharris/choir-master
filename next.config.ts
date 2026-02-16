@@ -15,7 +15,14 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 });
 
 const nextConfig: NextConfig = {
-  // eslint: {
+  experimental: {
+    // turbo: {
+    //   rules: {
+    //     'canvas-confetti': ['loader'],
+    //   },
+    // },
+    // For now, let's just make it pass
+  },
   //   ignoreDuringBuilds: true,
   // },
 };

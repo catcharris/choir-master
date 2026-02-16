@@ -49,7 +49,30 @@ import { useAuth } from '@/contexts/AuthContext'
 export default function ReportsView({ data, year, month }: ReportsViewProps) {
     const { user } = useAuth()
     const router = useRouter()
-    const [activeTab, setActiveTab] = useState<'monthly' | 'yearly' | 'soloist' | 'weekly'>('weekly') // Default to Weekly for now
+
+    const isAdmin = user?.role === 'ADMIN'
+    const isLeader = user?.role === 'LEADER'
+    const myPart = user?.part
+
+    const [activeTab, setActiveTab] = useState<'monthly' | 'yearly' | 'soloist' | 'weekly'>('monthly')
+
+    // Set default tab based on role on mount
+    useEffect(() => {
+        if (isAdmin) {
+            setActiveTab('weekly')
+        } else {
+            setActiveTab('monthly')
+        }
+    }, [isAdmin])
+
+    // Filter data for Leaders
+    const filteredByPart = isAdmin
+        ? data.byPart
+        : data.byPart.filter(p => p.part === myPart)
+
+    // Hide overall stats for leaders if desired, or keep them? 
+    // Usually leaders want to see their part vs others, but user asked for "only their part".
+    // Let's safe-guard: if strict, hide other parts.
 
     // Weekly Report State
     const [reportDate, setReportDate] = useState(new Date())
@@ -72,7 +95,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
         if (activeTab === 'weekly') {
             fetchDailyReport(reportDate)
         }
-    }, [activeTab, year, month])
+    }, [activeTab, year, month, reportDate, isAdmin]) // Added isAdmin to dependency array
 
     const fetchDailyReport = async (date: Date) => {
         const dateStr = format(date, 'yyyy-MM-dd')
@@ -219,18 +242,21 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
 
             {/* Tabs */}
             <div className="grid grid-cols-2 md:flex gap-2 bg-slate-800 p-1 rounded-xl w-full md:w-fit mx-auto border border-slate-700">
-                <button
-                    onClick={() => setActiveTab('weekly')}
-                    className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'weekly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
-                >
-                    📝 주간 리포트
-                </button>
+                {isAdmin && (
+                    <button
+                        onClick={() => setActiveTab('weekly')}
+                        className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'weekly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
+                    >
+                        📝 주간 리포트
+                    </button>
+                )}
                 <button
                     onClick={() => setActiveTab('monthly')}
                     className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'monthly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
                     📆 월간 통계
                 </button>
+                {/* Yearly and Soloist tabs can remain visible to all or restricted similarly */}
                 <button
                     onClick={() => setActiveTab('yearly')}
                     className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'yearly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
@@ -380,7 +406,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-700">
-                                    {data.byPart.map((part) => (
+                                    {filteredByPart.map((part) => (
                                         <tr key={part.part} className="hover:bg-slate-700/30 transition-colors">
                                             <td className="px-2 py-3 font-medium text-slate-200 whitespace-nowrap text-sm">{shortenPartName(part.part)}</td>
                                             <td className="px-2 py-3 text-center">

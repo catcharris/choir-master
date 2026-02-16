@@ -249,29 +249,29 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
             </div>
 
             {/* Tabs */}
-            <div className="grid grid-cols-2 md:flex gap-2 bg-slate-800 p-1 rounded-xl w-full md:w-fit mx-auto border border-slate-700">
+            <div className="grid grid-cols-2 md:flex gap-2 bg-slate-800 p-1 rounded-xl w-full border border-slate-700">
                 <button
                     onClick={() => setActiveTab('weekly')}
-                    className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'weekly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
+                    className={`flex-1 px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'weekly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
                     📝 주간리포트
                 </button>
                 <button
                     onClick={() => setActiveTab('monthly')}
-                    className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'monthly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
+                    className={`flex-1 px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'monthly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
                     📆 월간통계
                 </button>
                 {/* Yearly and Soloist tabs can remain visible to all or restricted similarly */}
                 <button
                     onClick={() => setActiveTab('yearly')}
-                    className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'yearly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
+                    className={`flex-1 px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'yearly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
                     📈 연간리포트
                 </button>
                 <button
                     onClick={() => setActiveTab('soloist')}
-                    className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'soloist' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
+                    className={`flex-1 px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'soloist' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
                     🎤 솔리스트
                 </button>

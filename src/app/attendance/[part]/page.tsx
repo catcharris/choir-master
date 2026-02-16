@@ -2,6 +2,8 @@ import prisma from '@/lib/prisma'
 import AttendanceList from '@/components/AttendanceList'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AttendancePage({
     params,
     searchParams
@@ -20,6 +22,8 @@ export default async function AttendancePage({
     } else if (decodedPart === 'Alto A') {
         // Just in case, future extensibility
     }
+
+    console.log(`[DEBUG] Fetching members for: "${decodedPart}". Target parts:`, targetParts);
 
     // Date handling: query param or current server date
     const targetDate = date ? new Date(date) : new Date()

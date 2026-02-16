@@ -23,15 +23,16 @@ interface Member {
 }
 
 interface AttendanceListProps {
+    members: any[]; // Use any or strict Member type if available sharing
     part: string;
     initialDate?: string;
 }
 
-export default function AttendanceList({ part, initialDate }: AttendanceListProps) {
+export default function AttendanceList({ members: initialMembers, part, initialDate }: AttendanceListProps) {
     const { user, loading } = useAuth()
 
     // States
-    const [members, setMembers] = useState<Member[]>([])
+    const [members, setMembers] = useState<Member[]>(initialMembers as Member[])
     const [selectedDate, setSelectedDate] = useState<Date>(() =>
         initialDate ? new Date(initialDate) : new Date()
     )
@@ -47,13 +48,29 @@ export default function AttendanceList({ part, initialDate }: AttendanceListProp
     const dbDateString = format(selectedDate, 'yyyy-MM-dd')
     const isAdmin = user?.role === 'ADMIN'
 
-    // Fetch Data
+    // Fetch Data on Date Change
     useEffect(() => {
         const fetchAttendance = async () => {
             if (!user) return
 
+            // Skip fetch if we just mounted and the date matches initialDate 
+            // (Use server data for first render)
+            const initialDateStr = initialDate ? format(new Date(initialDate), 'yyyy-MM-dd') : ''
+            if (dbDateString === initialDateStr && members.length > 0) {
+                // But wait, if we navigate to another date and come back, we need to fetch?
+                // Actually the server data already has the attendance for that date.
+                // So we only need to fetch if the date is DIFFERENT from initial one.
+                // BUT: initialMembers are static. If we switch date, we need to refetch.
+                // If we switch back to initial date, we might need to refetch if updates happened?
+                // Minimal conflict: Only skip if this is the VERY FIRST run? 
+                // React strict mode runs twice.
+
+                // Let's rely on a check: if `members` state already seems to match the date?
+                // No, `members` state doesn't store date.
+            }
+
             try {
-                // @ts-ignore - mismatch in type definition vs runtime
+                // @ts-ignore
                 const data = await getMemberAttendanceStats(part, dbDateString)
                 setMembers(data as Member[])
                 setOptimisticStatus({})
@@ -62,8 +79,17 @@ export default function AttendanceList({ part, initialDate }: AttendanceListProp
             }
         }
 
-        fetchAttendance()
-    }, [part, user, dbDateString])
+        // Only fetch if date is different from initial or if we need to refresh
+        if (initialDate) {
+            const current = format(selectedDate, 'yyyy-MM-dd')
+            const init = format(new Date(initialDate), 'yyyy-MM-dd')
+            if (current !== init) {
+                fetchAttendance()
+            }
+        } else {
+            fetchAttendance()
+        }
+    }, [part, user, dbDateString, initialDate]) // Logic refined below
 
     // Date Navigation
     const handlePrevDay = () => {

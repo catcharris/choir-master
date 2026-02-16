@@ -33,9 +33,18 @@ export default function AttendanceList({ members: initialMembers, part, initialD
 
     // States
     const [members, setMembers] = useState<Member[]>(initialMembers as Member[])
-    const [selectedDate, setSelectedDate] = useState<Date>(() =>
-        initialDate ? new Date(initialDate) : new Date()
-    )
+
+    // Initialize date from server string (YYYY-MM-DD) to ensure consistency
+    // We must parse it as LOCAL time components so that 'format' returns the same string.
+    const [selectedDate, setSelectedDate] = useState<Date>(() => {
+        if (initialDate) {
+            // initialDate is "YYYY-MM-DD"
+            const parts = initialDate.split('-').map(Number)
+            return new Date(parts[0], parts[1] - 1, parts[2])
+        }
+        return new Date()
+    })
+
     const [optimisticStatus, setOptimisticStatus] = useState<Record<number, string | null>>({})
 
     // Modals
@@ -53,6 +62,16 @@ export default function AttendanceList({ members: initialMembers, part, initialD
 
     // Fetch Data on Date Change
     useEffect(() => {
+        // Validation: If the current selected date matches the initial date from server,
+        // and we are on the first run (or we have initialMembers), we should SKIP fetching.
+        // The server already provided the correct data for this date.
+
+        if (initialDate && dbDateString === initialDate && isFirstRun.current) {
+            isFirstRun.current = false
+            return
+        }
+
+        // If we moved to a new date, or it's not the initial run anymore
         const fetchAttendance = async () => {
             if (!user) return
 
@@ -66,16 +85,16 @@ export default function AttendanceList({ members: initialMembers, part, initialD
             }
         }
 
-        // Skip the very first run because we have initialMembers from server
         if (isFirstRun.current) {
             isFirstRun.current = false
-            return
+            // If initialDate was not provided or didn't match (rare), we might fetch.
+            // But usually for today/initialDate we skip.
+            if (initialDate && dbDateString === initialDate) return;
         }
 
-        // For any subsequent change in date (or part), fetch fresh data
         fetchAttendance()
 
-    }, [part, user, dbDateString])
+    }, [part, user, dbDateString, initialDate])
 
     // Date Navigation
     const handlePrevDay = () => {

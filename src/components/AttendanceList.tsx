@@ -213,26 +213,14 @@ export default function AttendanceList({ members: initialMembers, part, initialD
         )
     }
 
-    import Link from 'next/link'
+    // Calculate Dynamic Present Count
+    const totalCount = members.length
+    const presentCount = members.filter(m => {
+        const status = optimisticStatus[m.id] !== undefined ? optimisticStatus[m.id] : m.todayStatus
+        return status === 'P' || status === 'L'
+    }).length
 
-    // ... imports
-
-    export default function AttendanceList({ members: initialMembers, part, initialDate }: AttendanceListProps) {
-        // ... context and state
-
-        // ... useEffects
-
-        // Calculate Dynamic Present Count
-        const totalCount = members.length
-        const presentCount = members.filter(m => {
-            const status = optimisticStatus[m.id] !== undefined ? optimisticStatus[m.id] : m.todayStatus
-            return status === 'P' || status === 'L'
-        }).length
-
-        // ... handlers
-
-        // ... render
-        return (
+    return (
             <div className="max-w-md mx-auto p-4 space-y-6 pb-24">
                 {/* Dynamic Top Header (Moved from page.tsx) */}
                 <header className="mb-2 flex items-center justify-between sticky top-0 bg-slate-900/95 backdrop-blur-md z-20 py-4 -mt-4 border-b border-slate-800">

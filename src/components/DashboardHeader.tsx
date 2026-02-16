@@ -58,46 +58,57 @@ export default function DashboardHeader() {
 
                 {user ? (
                     <div className="flex items-center gap-1.5">
-                        {/* KakaoTalk Shortcut */}
-                        <button
-                            onClick={() => {
-                                const key = `kakao_link_${user.part || 'default'}`
-                                const saved = localStorage.getItem(key)
-                                if (saved) {
-                                    window.location.href = saved
-                                } else {
-                                    const link = prompt("단톡방 링크를 입력해주세요 (예: https://open.kakao.com/...)\n\n* 링크는 기기에 저장되며, 수정하려면 버튼을 길게 누르거나 우클릭하세요.")
-                                    if (link) {
-                                        localStorage.setItem(key, link)
-                                        window.location.href = link
+                        <div className="flex items-center gap-1 bg-[#FAE100] rounded-full px-1 py-0.5 shadow-sm">
+                            <button
+                                onClick={() => {
+                                    const key = `kakao_link_${user.part || 'default'}`
+                                    const saved = localStorage.getItem(key)
+                                    if (saved) {
+                                        window.location.href = saved
+                                    } else {
+                                        const link = prompt("단톡방 링크를 입력해주세요 (예: https://open.kakao.com/...)")
+                                        if (link) {
+                                            localStorage.setItem(key, link)
+                                            window.location.href = link
+                                        }
                                     }
-                                }
-                            }}
-                            onContextMenu={(e) => {
-                                e.preventDefault()
-                                const key = `kakao_link_${user.part || 'default'}`
-                                const saved = localStorage.getItem(key) || ''
-                                const link = prompt("단톡방 링크 수정:", saved)
-                                if (link !== null) { // Allow empty string to clear
-                                    if (link) localStorage.setItem(key, link)
-                                    else localStorage.removeItem(key)
-                                    alert("링크가 수정되었습니다.")
-                                }
-                            }}
-                            className="bg-[#FAE100] text-[#371D1E] px-3 py-1.5 rounded-full hover:bg-[#F9E000] transition-colors shadow-sm active:scale-95 flex items-center gap-1.5 font-bold text-xs"
-                            title="클릭: 열기 / 우클릭: 수정"
-                        >
-                            <MessageCircle size={14} fill="currentColor" />
-                            카톡
-                        </button>
+                                }}
+                                className="text-[#371D1E] px-2 py-1 rounded-full hover:bg-[#F9E000] transition-colors flex items-center gap-1 font-bold text-xs"
+                                title="카톡방 열기"
+                            >
+                                <MessageCircle size={14} fill="currentColor" />
+                                카톡
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    const key = `kakao_link_${user.part || 'default'}`
+                                    const saved = localStorage.getItem(key) || ''
+                                    const link = prompt("단톡방 링크 수정:", saved)
+                                    if (link !== null) {
+                                        if (link) localStorage.setItem(key, link)
+                                        else localStorage.removeItem(key)
+                                        alert("링크가 수정되었습니다.")
+                                    }
+                                }}
+                                className="p-1 rounded-full hover:bg-black/10 text-[#371D1E]/50 hover:text-[#371D1E] transition-colors"
+                                title="링크 설정"
+                            >
+                                <Settings size={10} />
+                            </button>
+                        </div>
 
-                        <button onClick={() => router.push('/reports')}
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${user.role === 'ADMIN' ? 'bg-amber-900/30 border-amber-500/30 text-amber-500 hover:bg-amber-800/40' : 'bg-indigo-900/30 border-indigo-500/30 text-indigo-400 hover:bg-indigo-800/40'}`}
-                            title={user.role === 'ADMIN' ? "관리 및 통계" : "통계 보기"}
-                        >
-                            <User size={14} className="fill-current" />
-                            <span className="text-xs font-bold">{user.role === 'ADMIN' ? '관리/통계' : '통계 보기'}</span>
-                        </button>
+                        {user.role === 'ADMIN' && (
+                            <button
+                                onClick={() => router.push('/reports')}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all bg-amber-900/30 border-amber-500/30 text-amber-500 hover:bg-amber-800/40"
+                                title="관리 및 통계"
+                            >
+                                <Settings size={14} className="fill-current" />
+                                <span className="text-xs font-bold">관리/통계</span>
+                            </button>
+                        )}
+
                         <button
                             onClick={handleLogout}
                             className="text-slate-400 hover:text-rose-400 transition-colors p-2 hover:bg-slate-800 rounded-full"

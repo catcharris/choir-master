@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { format, isToday } from 'date-fns'
 import { ko } from 'date-fns/locale'
+import Link from 'next/link'
 import { Calendar, ChevronLeft, ChevronRight, Cake, UserPlus, Check, X, Settings } from 'lucide-react'
 import { getMemberAttendanceStats, toggleAttendance } from '@/actions/members'
 import { useAuth } from '@/contexts/AuthContext'

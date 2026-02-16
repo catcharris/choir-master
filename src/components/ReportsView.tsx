@@ -375,6 +375,17 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
 
             {activeTab === 'monthly' && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                    {/* Refresh Control */}
+                    <div className="flex justify-end -mb-4">
+                        <button
+                            onClick={() => router.refresh()}
+                            className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                        >
+                            <span className="text-lg leading-none">↻</span>
+                            통계 새로고침
+                        </button>
+                    </div>
+
                     {/* Overview Cards */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">

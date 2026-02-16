@@ -263,19 +263,21 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                     >
                         <Cake size={18} />
                     </button>
-                    {/* Stats Mode Toggle */}
-                    <button
-                        onClick={() => setIsStatsMode(!isStatsMode)}
-                        className={`
-                            flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-md active:scale-95 border
-                            ${isStatsMode
-                                ? 'bg-indigo-500 text-white border-indigo-400 shadow-indigo-500/20'
-                                : 'bg-slate-800 text-indigo-300 border-indigo-500/30 hover:bg-slate-700'}
-                        `}
-                    >
-                        <BarChart2 size={14} />
-                        <span>개인현황</span>
-                    </button>
+                    {/* Stats Mode Toggle (Hidden for Admin) */}
+                    {!isAdmin && (
+                        <button
+                            onClick={() => setIsStatsMode(!isStatsMode)}
+                            className={`
+                                flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-md active:scale-95 border
+                                ${isStatsMode
+                                    ? 'bg-indigo-500 text-white border-indigo-400 shadow-indigo-500/20'
+                                    : 'bg-slate-800 text-indigo-300 border-indigo-500/30 hover:bg-slate-700'}
+                            `}
+                        >
+                            <BarChart2 size={14} />
+                            <span>개인현황</span>
+                        </button>
+                    )}
                     {isAdmin && (
                         <button
                             onClick={() => setIsEditMode(!isEditMode)}

@@ -51,7 +51,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-900 text-white`}
       >
         <AuthProvider>
-          <NextTopLoader color="#EAB308" showSpinner={false} />
+          <NextTopLoader
+            color="#F59E0B"
+            height={3}
+            showSpinner={true}
+            zIndex={9999}
+            shadow="0 0 10px #F59E0B,0 0 5px #F59E0B"
+          />
           {children}
         </AuthProvider>
       </body>

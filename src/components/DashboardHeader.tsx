@@ -58,7 +58,8 @@ export default function DashboardHeader() {
 
                 {user ? (
                     <div className="flex items-center gap-1.5">
-                        <div className="flex items-center gap-1 bg-[#FAE100] rounded-full px-1 py-0.5 shadow-sm">
+                        {/* KakaoTalk Group Button */}
+                        <div className="flex items-center bg-[#FAE100] text-[#371D1E] rounded-full shadow-sm">
                             <button
                                 onClick={() => {
                                     const key = `kakao_link_${user.part || 'default'}`
@@ -73,12 +74,13 @@ export default function DashboardHeader() {
                                         }
                                     }
                                 }}
-                                className="text-[#371D1E] px-2 py-1 rounded-full hover:bg-[#F9E000] transition-colors flex items-center gap-1 font-bold text-xs"
+                                className="pl-3 pr-2 py-1.5 hover:bg-[#F9E000] rounded-l-full transition-colors flex items-center gap-1.5 font-bold text-xs"
                                 title="카톡방 열기"
                             >
                                 <MessageCircle size={14} fill="currentColor" />
                                 카톡
                             </button>
+                            <div className="w-[1px] h-3 bg-[#371D1E]/20"></div>
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation()
@@ -91,10 +93,10 @@ export default function DashboardHeader() {
                                         alert("링크가 수정되었습니다.")
                                     }
                                 }}
-                                className="p-1 rounded-full hover:bg-black/10 text-[#371D1E]/50 hover:text-[#371D1E] transition-colors"
+                                className="pl-1.5 pr-2 py-1.5 hover:bg-[#F9E000] rounded-r-full transition-colors flex items-center justify-center"
                                 title="링크 설정"
                             >
-                                <Settings size={10} />
+                                <Settings size={12} className="opacity-70" />
                             </button>
                         </div>
 

@@ -37,7 +37,6 @@ export const ReportTemplate = forwardRef<HTMLDivElement, ReportTemplateProps>((p
             <style type="text/css" media="print">
                 {`
                     @page { size: A4; margin: 15mm; }
-                    html, body { height: auto; }
                 `}
             </style>
 

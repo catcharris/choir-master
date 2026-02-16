@@ -393,3 +393,13 @@ Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Prom
   12 |     return (
   13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
  GET /admin/members 200 in 941ms (compile: 21ms, render: 920ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 975ms (compile: 16ms, render: 959ms)

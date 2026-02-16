@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Lock, Settings, LogOut, Check, User, MessageCircle } from 'lucide-react'
+import { Lock, Settings, LogOut, Check, User, MessageCircle, ClipboardList } from 'lucide-react'
+import PartMonthlyStatsModal from './PartMonthlyStatsModal'
 
 const ROLES = [
     { label: '관리자', value: 'ADMIN' },
@@ -18,6 +19,7 @@ const ROLES = [
 export default function DashboardHeader() {
     const { user, login, logout } = useAuth()
     const router = useRouter()
+    const [showPartStats, setShowPartStats] = useState(false)
     const [showLoginModal, setShowLoginModal] = useState(false)
     const [selectedRole, setSelectedRole] = useState(ROLES[0].value)
     const [password, setPassword] = useState('')
@@ -59,6 +61,19 @@ export default function DashboardHeader() {
                 <div className="flex items-center gap-2 shrink-0">
                     {user ? (
                         <>
+                            {/* Part Monthly Stats Button - For Part Leaders */}
+                            {user.role !== 'ADMIN' && (
+                                <button
+                                    onClick={() => setShowPartStats(true)}
+                                    className="bg-indigo-900/30 hover:bg-indigo-800/40 text-indigo-400 border border-indigo-500/30 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm flex items-center gap-1.5 active:scale-95 transition-all mr-1"
+                                    title="파트 월간 출석 현황"
+                                >
+                                    <ClipboardList size={14} />
+                                    <span className="hidden md:inline">출석현황</span>
+                                    <span className="md:hidden">현황</span>
+                                </button>
+                            )}
+
                             {/* KakaoTalk Group Button (Right-click to edit) */}
                             <button
                                 onClick={() => {
@@ -132,6 +147,14 @@ export default function DashboardHeader() {
                     )}
                 </div>
             </header>
+
+            {/* Part Monthly Stats Modal */}
+            {showPartStats && user?.part && (
+                <PartMonthlyStatsModal
+                    part={user.part}
+                    onClose={() => setShowPartStats(false)}
+                />
+            )}
 
             {/* Login Modal */}
             {showLoginModal && (

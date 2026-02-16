@@ -273,3 +273,68 @@ export async function getMonthlyReport(year: number, month: number) {
         newMemberList: members.filter(m => m.role === 'New').map(m => ({ name: m.name, part: m.part }))
     }
 }
+// Fetch Monthly Stats for a Specific Part (for Part Leaders)
+export async function getPartMonthlyStats(part: string, year: number, month: number) {
+    const start = startOfMonth(new Date(year, month - 1))
+    const end = endOfMonth(new Date(year, month - 1))
+
+    // Handle "Soprano B" case (includes "Soprano B+")
+    let parts = [part]
+    if (part === 'Soprano B') {
+        parts.push('Soprano B+')
+    }
+
+    const members = await prisma.member.findMany({
+        where: {
+            part: { in: parts },
+            isActive: true
+        },
+        orderBy: { name: 'asc' }
+    })
+
+    // Fetch all attendance for these members in this range
+    const attendance = await prisma.attendance.findMany({
+        where: {
+            memberId: { in: members.map(m => m.id) },
+            date: { gte: start, lte: end }
+        }
+    })
+
+    // Calculate Service Days (Sat & Sun)
+    const allDays = eachDayOfInterval({ start, end })
+    const serviceDays = allDays
+        .filter(d => getDay(d) === 0 || getDay(d) === 6)
+        .map(d => format(d, 'yyyy-MM-dd'))
+
+    // Map to structure
+    const stats = members.map(member => {
+        const records = attendance.filter(a => a.memberId === member.id)
+
+        // Create a map of date -> status
+        const attendanceMap: Record<string, string> = {}
+        records.forEach(r => {
+            const dateStr = format(new Date(r.date), 'yyyy-MM-dd')
+            attendanceMap[dateStr] = r.status
+        })
+
+        const attendedCount = records.filter(a => ['PRESENT', 'LATE', 'P', 'L'].includes(a.status)).length
+        const rate = serviceDays.length > 0 ? Math.round((attendedCount / serviceDays.length) * 100) : 0
+
+        return {
+            id: member.id,
+            name: member.name,
+            role: member.role,
+            attendanceMap, // { '2026-02-01': 'PRESENT', ... }
+            attendedCount,
+            rate
+        }
+    })
+
+    return {
+        part,
+        year,
+        month,
+        serviceDays,
+        members: stats
+    }
+}

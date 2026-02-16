@@ -51,92 +51,119 @@ export default function DashboardHeader() {
 
     return (
         <>
-            <header className="mb-4 mt-4 flex items-center justify-between">
-                <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-yellow-400">
-                    갈보리 찬양대
-                </h1>
+            <header className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                {/* Mobile: Top Row (Title + Logout/Login Icon) */}
+                <div className="flex items-center justify-between w-full md:w-auto">
+                    <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-yellow-400">
+                        갈보리 찬양대
+                    </h1>
 
-                {user ? (
-                    <div className="flex items-center gap-1.5">
-                        {/* KakaoTalk Group Button */}
-                        <div className="flex items-center bg-[#FAE100] text-[#371D1E] rounded-full shadow-sm">
+                    {/* Logout/Login Icon for Mobile Only (to save space in row 2) */}
+                    <div className="md:hidden">
+                        {user ? (
                             <button
-                                onClick={() => {
-                                    const key = `kakao_link_${user.part || 'default'}`
-                                    const saved = localStorage.getItem(key)
-                                    if (saved) {
-                                        window.location.href = saved
-                                    } else {
-                                        const link = prompt("단톡방 링크를 입력해주세요 (예: https://open.kakao.com/...)")
-                                        if (link) {
-                                            localStorage.setItem(key, link)
-                                            window.location.href = link
-                                        }
-                                    }
-                                }}
-                                className="pl-3 pr-2 py-1.5 hover:bg-[#F9E000] rounded-l-full transition-colors flex items-center gap-1.5 font-bold text-xs"
-                                title="카톡방 열기"
+                                onClick={handleLogout}
+                                className="text-slate-400 hover:text-rose-400 p-2 rounded-full active:bg-slate-800"
                             >
-                                <MessageCircle size={14} fill="currentColor" />
-                                카톡
+                                <LogOut size={20} />
                             </button>
-                            <div className="w-[1px] h-3 bg-[#371D1E]/20"></div>
+                        ) : (
                             <button
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    const key = `kakao_link_${user.part || 'default'}`
-                                    const saved = localStorage.getItem(key) || ''
-                                    const link = prompt("단톡방 링크 수정:", saved)
-                                    if (link !== null) {
-                                        if (link) localStorage.setItem(key, link)
-                                        else localStorage.removeItem(key)
-                                        alert("링크가 수정되었습니다.")
-                                    }
-                                }}
-                                className="pl-1.5 pr-2 py-1.5 hover:bg-[#F9E000] rounded-r-full transition-colors flex items-center justify-center"
-                                title="링크 설정"
+                                onClick={() => setShowLoginModal(true)}
+                                className="text-slate-400 hover:text-white p-2 rounded-full active:bg-slate-800"
                             >
-                                <Settings size={12} className="opacity-70" />
-                            </button>
-                        </div>
-
-                        {user.role === 'ADMIN' && (
-                            <button
-                                onClick={() => router.push('/reports')}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all bg-amber-900/30 border-amber-500/30 text-amber-500 hover:bg-amber-800/40"
-                                title="관리 및 통계"
-                            >
-                                <Settings size={14} className="fill-current" />
-                                <span className="text-xs font-bold">관리/통계</span>
+                                <User size={20} />
                             </button>
                         )}
+                    </div>
+                </div>
 
-                        <button
-                            onClick={handleLogout}
-                            className="text-slate-400 hover:text-rose-400 transition-colors p-2 hover:bg-slate-800 rounded-full"
-                            title="로그아웃"
-                        >
-                            <LogOut size={20} />
-                        </button>
-                    </div>
-                ) : (
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => router.push('/reports')}
-                            className="bg-teal-700/50 hover:bg-teal-600/50 text-teal-300 px-3 py-1.5 rounded-full text-xs font-bold border border-teal-500/30 flex items-center gap-1.5 transition-all"
-                            title="전체 통계 보기"
-                        >
-                            📊 출석 통계
-                        </button>
-                        <button
-                            onClick={() => setShowLoginModal(true)}
-                            className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-full"
-                            title="관리자 로그인"
-                        >
-                            <User size={20} />
-                        </button>
-                    </div>
-                )}
+                {/* Action Buttons Row */}
+                <div className="flex items-center gap-2 self-end md:self-auto">
+                    {user ? (
+                        <>
+                            {/* KakaoTalk Group Button */}
+                            <div className="flex items-center bg-[#FAE100] text-[#371D1E] rounded-full shadow-sm">
+                                <button
+                                    onClick={() => {
+                                        const key = `kakao_link_${user.part || 'default'}`
+                                        const saved = localStorage.getItem(key)
+                                        if (saved) {
+                                            window.location.href = saved
+                                        } else {
+                                            const link = prompt("단톡방 링크를 입력해주세요 (예: https://open.kakao.com/...)")
+                                            if (link) {
+                                                localStorage.setItem(key, link)
+                                                window.location.href = link
+                                            }
+                                        }
+                                    }}
+                                    className="pl-3 pr-2 py-1.5 hover:bg-[#F9E000] rounded-l-full transition-colors flex items-center gap-1.5 font-bold text-xs"
+                                    title="카톡방 열기"
+                                >
+                                    <MessageCircle size={14} fill="currentColor" />
+                                    카톡
+                                </button>
+                                <div className="w-[1px] h-3 bg-[#371D1E]/20"></div>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        const key = `kakao_link_${user.part || 'default'}`
+                                        const saved = localStorage.getItem(key) || ''
+                                        const link = prompt("단톡방 링크 수정:", saved)
+                                        if (link !== null) {
+                                            if (link) localStorage.setItem(key, link)
+                                            else localStorage.removeItem(key)
+                                            alert("링크가 수정되었습니다.")
+                                        }
+                                    }}
+                                    className="pl-1.5 pr-2 py-1.5 hover:bg-[#F9E000] rounded-r-full transition-colors flex items-center justify-center"
+                                    title="링크 설정"
+                                >
+                                    <Settings size={12} className="opacity-70" />
+                                </button>
+                            </div>
+
+                            {user.role === 'ADMIN' && (
+                                <button
+                                    onClick={() => router.push('/reports')}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all bg-amber-900/30 border-amber-500/30 text-amber-500 hover:bg-amber-800/40"
+                                    title="관리 및 통계"
+                                >
+                                    <Settings size={14} className="fill-current" />
+                                    <span className="text-xs font-bold">관리/통계</span>
+                                </button>
+                            )}
+
+                            {/* Desktop Logout (Hidden on mobile as it's in top row) */}
+                            <button
+                                onClick={handleLogout}
+                                className="hidden md:block text-slate-400 hover:text-rose-400 transition-colors p-2 hover:bg-slate-800 rounded-full"
+                                title="로그아웃"
+                            >
+                                <LogOut size={20} />
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                onClick={() => router.push('/reports')}
+                                className="bg-teal-700/50 hover:bg-teal-600/50 text-teal-300 px-3 py-1.5 rounded-full text-xs font-bold border border-teal-500/30 flex items-center gap-1.5 transition-all"
+                                title="전체 통계 보기"
+                            >
+                                📊 출석 통계
+                            </button>
+                            {/* Desktop Login */}
+                            <button
+                                onClick={() => setShowLoginModal(true)}
+                                className="hidden md:block text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-full"
+                                title="관리자 로그인"
+                            >
+                                <User size={20} />
+                            </button>
+                        </>
+                    )}
+                </div>
             </header>
 
             {/* Login Modal */}

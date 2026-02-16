@@ -179,7 +179,7 @@ export async function getMonthlyReport(year: number, month: number) {
     const totalAttendance = await prisma.attendance.findMany({
         where: {
             date: { gte: start, lte: end },
-            status: { in: ['PRESENT', 'LATE'] }
+            status: { in: ['PRESENT', 'LATE', 'P', 'L'] }
         },
         include: { member: true }
     })

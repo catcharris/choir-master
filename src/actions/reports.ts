@@ -69,19 +69,22 @@ export async function getDailyReport(dateString: string): Promise<DailyReportDat
         partMembers.forEach(member => {
             const record = attendances.find(a => a.memberId === member.id)
             if (record) {
-                if (record.status === 'P') presentCount++
-                else if (record.status === 'L') {
+                const s = record.status;
+                if (s === 'P' || s === 'PRESENT') {
+                    presentCount++
+                } else if (s === 'L' || s === 'LATE') {
                     lateCount++
                     lateNames.push(member.name)
-                } else if (record.status === 'A') {
+                } else if (s === 'A' || s === 'ABSENT') {
                     absentCount++
                     absentNames.push(member.name)
+                } else {
+                    // Unknown status -> Treat as absent but show status
+                    absentCount++
+                    absentNames.push(`${member.name}(?)`)
                 }
             } else {
-                // No record = Unchecked (Treat as Absent or separate?)
-                // Usually for daily report, unchecked means absent or late check.
-                // Let's treat as 'Unchecked' but for simple report, maybe count as Absent?
-                // User requirement: "Unchecked should be treated as absent for statistics"
+                // No record = Unchecked (Treat as Absent)
                 absentCount++
                 absentNames.push(member.name)
             }

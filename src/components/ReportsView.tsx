@@ -311,13 +311,13 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                                 {/* Preview Card */}
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-2 gap-3">
-                                        <div className="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                                            <div className="text-xs text-slate-400">전체 출석</div>
-                                            <div className="text-xl font-bold text-green-400">{dailyReport.totalPresent}명</div>
+                                        <div className="bg-slate-900 p-4 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-1 shadow-sm">
+                                            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider">전체 출석</div>
+                                            <div className="text-2xl font-black text-green-400">{dailyReport.totalPresent}명</div>
                                         </div>
-                                        <div className="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                                            <div className="text-xs text-slate-400">전체 결석/미체크</div>
-                                            <div className="text-xl font-bold text-rose-400">
+                                        <div className="bg-slate-900 p-4 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-1 shadow-sm">
+                                            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider">결석/미체크</div>
+                                            <div className="text-2xl font-black text-rose-400">
                                                 {dailyReport.totalMembers - dailyReport.totalPresent - dailyReport.totalLate}명
                                             </div>
                                         </div>

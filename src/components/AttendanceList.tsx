@@ -341,7 +341,11 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                             }}
                             className={`
                                 flex items-center justify-between p-4 rounded-2xl border transition-all duration-200 cursor-pointer active:scale-[0.98] select-none
-                                ${isEditMode ? 'border-amber-500/30 bg-amber-950/10' : status === 'P' ? 'bg-slate-800/80 border-slate-700 shadow-md' : 'bg-slate-900 border-slate-800'}
+                                ${isEditMode
+                                    ? 'border-amber-500/30 bg-amber-950/10'
+                                    : isStatsMode
+                                        ? 'border-indigo-500/30 bg-indigo-950/10'
+                                        : status === 'P' ? 'bg-slate-800/80 border-slate-700 shadow-md' : 'bg-slate-900 border-slate-800'}
                             `}
                         >
                             <div className="flex items-center gap-4 flex-1">
@@ -363,16 +367,20 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                                         )}
                                         {isNew && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30 whitespace-nowrap">신입</span>}
 
-                                        {/* Missing Data Indicators (Edit Mode Only - Horizontal) */}
-                                        {isEditMode && !member.phone && (
-                                            <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
-                                                <Phone size={10} /> <span className="text-[9px]">미등록</span>
-                                            </span>
-                                        )}
-                                        {isEditMode && !member.birthDate && (
-                                            <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
-                                                <Cake size={10} /> <span className="text-[9px]">미등록</span>
-                                            </span>
+                                        {/* Missing Data Indicators (Edit Mode Only - Stacked) */}
+                                        {isEditMode && (!member.phone || !member.birthDate) && (
+                                            <div className="flex flex-col gap-1 ml-1">
+                                                {!member.phone && (
+                                                    <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
+                                                        <Phone size={10} /> <span className="text-[9px]">연락처</span>
+                                                    </span>
+                                                )}
+                                                {!member.birthDate && (
+                                                    <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
+                                                        <Cake size={10} /> <span className="text-[9px]">생일</span>
+                                                    </span>
+                                                )}
+                                            </div>
                                         )}
 
                                         {/* Admin Edit Button - Stops Propagation */}
@@ -398,10 +406,17 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                             <button
                                 className={`
                                     w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-200 border-2 ml-4
-                                    ${getStatusColor(status)}
+                                    ${isStatsMode
+                                        ? 'bg-indigo-900/40 border-indigo-500/30 text-indigo-300'
+                                        : getStatusColor(status)}
                                 `}
                             >
-                                {getStatusContent(status)}
+                                {isStatsMode ? (
+                                    <div className="flex flex-col items-center">
+                                        <BarChart2 size={24} />
+                                        <span className="text-[9px] font-bold mt-0.5">통계</span>
+                                    </div>
+                                ) : getStatusContent(status)}
                             </button>
                         </div>
                     )
@@ -426,7 +441,11 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                 <MemberStatsModal
                     memberId={viewingMember.id}
                     memberName={viewingMember.name}
-                    onClose={() => setViewingMember(null)}
+                    onClose={() => {
+                        setViewingMember(null)
+                        // Auto-turn off stats mode for safety
+                        if (isStatsMode) setIsStatsMode(false)
+                    }}
                 />
             )}
 

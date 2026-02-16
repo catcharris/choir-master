@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { format, isToday } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import Link from 'next/link'
-import { Calendar, ChevronLeft, ChevronRight, Cake, UserPlus, Check, X, Settings, Pencil, Shield, ShieldCheck, Phone } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight, Cake, UserPlus, Check, X, Settings, Pencil, Shield, ShieldCheck, Phone, BarChart2 } from 'lucide-react'
 import { getMemberAttendanceStats, toggleAttendance } from '@/actions/members'
 import { useAuth } from '@/contexts/AuthContext'
 import AddMemberModal from './AddMemberModal'
@@ -53,6 +53,7 @@ export default function AttendanceList({ members: initialMembers, part, initialD
     const [showAddMember, setShowAddMember] = useState(false)
     const [showBirthday, setShowBirthday] = useState(false)
     const [isEditMode, setIsEditMode] = useState(false)
+    const [isStatsMode, setIsStatsMode] = useState(false)
 
     // Derived
     const formattedDate = format(selectedDate, 'M월 d일 (EEE)', { locale: ko })
@@ -262,6 +263,18 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                     >
                         <Cake size={18} />
                     </button>
+                    {/* Stats Mode Toggle */}
+                    <button
+                        onClick={() => setIsStatsMode(!isStatsMode)}
+                        className={`
+                            p-2 rounded-lg border transition-all active:scale-95
+                            ${isStatsMode
+                                ? 'bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-900/20'
+                                : 'bg-slate-800 text-indigo-400 border-slate-700 hover:bg-slate-700'}
+                        `}
+                    >
+                        <BarChart2 size={18} />
+                    </button>
                     {isAdmin && (
                         <button
                             onClick={() => setIsEditMode(!isEditMode)}
@@ -299,6 +312,16 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                 </div>
             )}
 
+            {/* Stats Mode Notice */}
+            {isStatsMode && !isEditMode && (
+                <div className="mx-1 mb-2 bg-indigo-500/10 border border-indigo-500/20 rounded-lg p-2 text-center">
+                    <p className="text-xs text-indigo-200 font-bold flex items-center justify-center gap-2">
+                        <BarChart2 size={12} />
+                        대원 이름을 누르면 출석 통계를 확인합니다
+                    </p>
+                </div>
+            )}
+
             {/* List */}
             <div className="grid grid-cols-1 gap-3">
                 {members.map((member) => {
@@ -309,7 +332,7 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                         <div
                             key={member.id}
                             onClick={() => {
-                                if (isEditMode) {
+                                if (isEditMode || isStatsMode) {
                                     setViewingMember({ id: member.id, name: member.name });
                                 } else {
                                     handleToggle(member.id);

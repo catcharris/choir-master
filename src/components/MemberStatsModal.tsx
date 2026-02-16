@@ -67,67 +67,64 @@ export default function MemberStatsModal({ memberId, memberName, onClose }: Memb
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="w-full max-w-md bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col">
 
-                {/* Header */}
-                <div className="flex justify-between items-center p-5 border-b border-slate-700 bg-slate-900 text-slate-100">
-                    <h3 className="text-xl font-bold flex items-center gap-2">
-                        📊 {memberName} <span className="text-sm font-normal text-slate-400">출석 현황</span>
-                    </h3>
-                    <div className="flex items-center gap-2">
+                {/* Header (Integrated Profile) */}
+                <div className="flex justify-between items-start p-5 border-b border-slate-700 bg-slate-900 text-slate-100 min-h-[80px]">
+                    <div className="flex-1">
+                        <h3 className="text-lg font-bold flex items-center gap-2">
+                            {memberName}
+                            <span className="text-xs font-normal text-slate-500">출석 현황</span>
+                        </h3>
+                        {stats?.member ? (
+                            <div className="flex flex-wrap items-center gap-2 mt-1.5 animate-in fade-in slide-in-from-left-2 duration-300">
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded border ${stats.member.role === 'PartLeader' ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' : 'bg-slate-800 text-slate-300 border-slate-700'}`}>
+                                    {stats.member.role === 'Regular' ? '정대원' : stats.member.role === 'Soloist' ? '솔리스트' : stats.member.role === 'PartLeader' ? '파트장' : stats.member.role}
+                                </span>
+                                {stats.member.churchTitle && (
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                                        {stats.member.churchTitle}
+                                    </span>
+                                )}
+                                <div className="text-[10px] text-slate-500 ml-1 flex items-center gap-2">
+                                    <span className="flex items-center gap-0.5">📞 {stats.member.phone || '-'}</span>
+                                    <span className="w-px h-2 bg-slate-700"></span>
+                                    <span className="flex items-center gap-0.5">🎂 {stats.member.birthDate || '-'}</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="h-5 w-32 bg-slate-800 rounded mt-1.5 animate-pulse"></div>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0 ml-2">
                         {isAdmin && (
                             <button
                                 onClick={() => setIsEditing(true)}
-                                className="p-2 hover:bg-slate-700 rounded-full text-slate-400 hover:text-amber-400 transition-colors"
-                                title="정보 수정"
+                                className="p-2 hover:bg-slate-800 rounded-full text-slate-500 hover:text-amber-400 transition-colors"
                             >
-                                <Pencil size={18} />
+                                <Pencil size={16} />
                             </button>
                         )}
-                        <button onClick={onClose} className="p-2 hover:bg-slate-700 rounded-full text-slate-400 hover:text-white transition-colors">
+                        <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-full text-slate-500 hover:text-white transition-colors">
                             <X size={20} />
                         </button>
                     </div>
                 </div>
 
-                {/* Body - Scrollable */}
-                <div className="p-4 space-y-4 overflow-y-auto">
-                    {/* Member Profile Info (Compact) */}
-                    {stats?.member && (
-                        <div className="bg-slate-700/30 p-3 rounded-xl border border-slate-700 flex flex-col sm:flex-row gap-2 sm:items-center justify-between text-sm">
-                            <div className="flex items-center gap-2">
-                                <span className="px-2 py-0.5 bg-slate-600/50 rounded text-slate-300 text-xs">
-                                    {stats.member.churchTitle || '-'}
-                                </span>
-                                <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded text-xs border border-indigo-500/30">
-                                    {stats.member.role === 'Regular' ? '정대원' : stats.member.role === 'Soloist' ? '솔리스트' : stats.member.role}
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-4 text-xs sm:text-sm text-slate-400">
-                                <div className="flex items-center gap-1">
-                                    <span>📞</span>
-                                    <span className="text-slate-200">{stats.member.phone || '-'}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <span>🎂</span>
-                                    <span className="text-slate-200">{stats.member.birthDate || '-'}</span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
+                {/* Body - Compact Layout */}
+                <div className="p-4 space-y-3 overflow-y-auto">
                     {/* Month Selector */}
-                    <div className="flex justify-center items-center gap-4 py-2">
+                    <div className="flex justify-between items-center bg-slate-800/50 rounded-lg p-1 border border-slate-700/50">
                         <button
                             onClick={() => setMonthOffset(prev => prev - 1)}
-                            className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 transition-colors"
+                            className="p-1 px-3 hover:bg-slate-700 rounded text-slate-400 transition-colors"
                         >
                             ◀
                         </button>
-                        <span className="text-xl font-bold text-amber-100 min-w-[100px] text-center">
+                        <span className="font-bold text-amber-400 text-sm tracking-wide">
                             {stats?.month || 'Loading...'}
                         </span>
                         <button
                             onClick={() => setMonthOffset(prev => prev + 1)}
-                            className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 transition-colors"
+                            className="p-1 px-3 hover:bg-slate-700 rounded text-slate-400 transition-colors"
                         >
                             ▶
                         </button>
@@ -139,53 +136,56 @@ export default function MemberStatsModal({ memberId, memberName, onClose }: Memb
                         </div>
                     ) : (
                         <>
-                            {/* Visualization: Calendar Grid + Bars */}
-                            <div className="space-y-6">
-                                {/* Overall Rate */}
-                                <div className="text-center relative">
-                                    <div className="text-sm text-slate-400 mb-2">월간 통합 출석률</div>
-                                    <div className="relative inline-block">
-                                        <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-yellow-500 relative z-10">
-                                            {stats?.totalRate}%
-                                        </div>
+                            {/* Stats Summary Card */}
+                            <div className="bg-slate-800/40 rounded-xl border border-slate-700/50 p-3 flex items-center justify-between">
+                                {/* Circular Progress */}
+                                <div className="flex items-center gap-3">
+                                    <div className="relative w-12 h-12 flex items-center justify-center">
+                                        <svg className="absolute w-full h-full -rotate-90" viewBox="0 0 36 36">
+                                            <path className="text-slate-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" />
+                                            <path className="text-amber-500 drop-shadow-[0_0_2px_rgba(245,158,11,0.5)] transition-all duration-1000 ease-out" strokeDasharray={`${stats?.totalRate || 0}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" />
+                                        </svg>
+                                        <span className="text-[10px] font-bold text-white">{stats?.totalRate}%</span>
                                     </div>
-                                    <div className="mt-4 h-3 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-700">
-                                        <div
-                                            className="h-full bg-gradient-to-r from-amber-400 to-orange-600 transition-all duration-1000 ease-out"
-                                            style={{ width: `${stats?.totalRate}%` }}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Counts */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-slate-700/30 p-4 rounded-xl border border-slate-700 text-center">
-                                        <div className="text-indigo-400 font-bold mb-1 flex justify-center items-center gap-1"><Moon size={14} />토요일</div>
-                                        <div className="text-2xl font-bold text-white">{stats?.stats.sat.attended} <span className="text-sm text-slate-500 font-normal">/ {stats?.stats.sat.total}</span></div>
-                                    </div>
-                                    <div className="bg-slate-700/30 p-4 rounded-xl border border-slate-700 text-center">
-                                        <div className="text-rose-400 font-bold mb-1 flex justify-center items-center gap-1"><Sun size={14} />주일</div>
-                                        <div className="text-2xl font-bold text-white">{stats?.stats.sun.attended} <span className="text-sm text-slate-500 font-normal">/ {stats?.stats.sun.total}</span></div>
+                                    <div className="flex flex-col">
+                                        <span className="text-xs font-bold text-slate-300">통합 출석률</span>
+                                        <span className="text-[10px] text-slate-500">이번 달 전체</span>
                                     </div>
                                 </div>
 
-                                {/* Calendar Grid */}
-                                <div className="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                                    <div className="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-500 mb-3" style={{ gridTemplateColumns: 'repeat(7, 1fr)' }}>
-                                        <div className="text-rose-500">일</div>
-                                        <div>월</div>
-                                        <div>화</div>
-                                        <div>수</div>
-                                        <div>목</div>
-                                        <div>금</div>
-                                        <div className="text-indigo-400">토</div>
+                                {/* Sat/Sun Mini Stats */}
+                                <div className="flex gap-2">
+                                    <div className="flex flex-col items-center justify-center bg-indigo-950/30 border border-indigo-500/20 rounded px-2 py-1 min-w-[50px]">
+                                        <span className="text-[9px] text-indigo-400 mb-0.5 flex items-center gap-0.5"><Moon size={8} /> 토</span>
+                                        <span className="text-xs font-bold text-indigo-100">
+                                            {stats?.stats.sat.attended}<span className="text-[9px] text-indigo-500/70 font-normal">/{stats?.stats.sat.total}</span>
+                                        </span>
                                     </div>
-                                    <CalendarGrid
-                                        year={stats ? parseInt(stats.month.split('-')[0]) : 0}
-                                        month={stats ? parseInt(stats.month.split('-')[1]) : 0}
-                                        attendedDates={stats?.attendedDates || []}
-                                    />
+                                    <div className="flex flex-col items-center justify-center bg-rose-950/30 border border-rose-500/20 rounded px-2 py-1 min-w-[50px]">
+                                        <span className="text-[9px] text-rose-400 mb-0.5 flex items-center gap-0.5"><Sun size={8} /> 주일</span>
+                                        <span className="text-xs font-bold text-rose-100">
+                                            {stats?.stats.sun.attended}<span className="text-[9px] text-rose-500/70 font-normal">/{stats?.stats.sun.total}</span>
+                                        </span>
+                                    </div>
                                 </div>
+                            </div>
+
+                            {/* Calendar Grid */}
+                            <div className="bg-slate-900/50 p-2 rounded-xl border border-slate-700/50">
+                                <div className="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-500 mb-2" style={{ gridTemplateColumns: 'repeat(7, 1fr)' }}>
+                                    <div className="text-rose-500/80">일</div>
+                                    <div>월</div>
+                                    <div>화</div>
+                                    <div>수</div>
+                                    <div>목</div>
+                                    <div>금</div>
+                                    <div className="text-indigo-400/80">토</div>
+                                </div>
+                                <CalendarGrid
+                                    year={stats ? parseInt(stats.month.split('-')[0]) : 0}
+                                    month={stats ? parseInt(stats.month.split('-')[1]) : 0}
+                                    attendedDates={stats?.attendedDates || []}
+                                />
                             </div>
                         </>
                     )}

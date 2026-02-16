@@ -1,3 +1,14 @@
+<style>
+    body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; padding: 20px; line-height: 1.6; }
+    h1 { text-align: center; margin-top: 50px; margin-bottom: 50px; color: #333; }
+    h2 { margin-top: 30px; border-bottom: 2px solid #f59e0b; padding-bottom: 10px; color: #444; page-break-before: always; }
+    h2:first-of-type { page-break-before: auto; }
+    p { margin-bottom: 15px; color: #555; font-size: 16px; }
+    img { display: block; margin: 30px auto; max-width: 90%; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    blockquote { border-left: 4px solid #fbbf24; background: #fffbeb; padding: 15px; border-radius: 8px; margin: 20px 0; }
+    hr { border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0; }
+</style>
+
 # 🎵 갈보리 찬양대 스마트 출석부 사용 가이드
 
 **버전**: 1.0  

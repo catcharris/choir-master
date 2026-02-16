@@ -85,13 +85,7 @@ export async function deactivateMember(id: number, reason: string = 'WITHDRAWN')
 }
 
 // 3.5 Completely Delete Member (For cleanup)
-export async function deleteMember(id: number, password?: string) {
-    const adminPassword = process.env.ADMIN_PASSWORD || '0000'
-
-    if (password !== adminPassword) {
-        throw new Error("관리자 비밀번호가 일치하지 않습니다.")
-    }
-
+export async function deleteMember(id: number) {
     // 1. Delete Attendance First
     await prisma.attendance.deleteMany({
         where: { memberId: id }
@@ -291,47 +285,4 @@ export async function toggleAttendance(memberId: number, dateInput: string | Dat
 
     revalidatePath('/attendance/[part]')
     revalidatePath('/reports')
-}
-
-// 7. Bulk Update Members
-export async function updateMembersBulk(data: { name: string; part: string; churchTitle?: string; birthDate?: string; role?: string }[]) {
-    let successCount = 0;
-    let failCount = 0;
-    const errors: string[] = [];
-
-    for (const item of data) {
-        try {
-            // Find member by Name + Part (Assuming unique combination)
-            const member = await prisma.member.findFirst({
-                where: {
-                    name: item.name,
-                    part: item.part
-                }
-            })
-
-            if (member) {
-                await prisma.member.update({
-                    where: { id: member.id },
-                    data: {
-                        churchTitle: item.churchTitle || undefined,
-                        birthDate: item.birthDate || undefined,
-                        role: item.role || undefined
-                    }
-                })
-                successCount++;
-            } else {
-                failCount++;
-                errors.push(`${item.name} (${item.part}): Member not found`);
-            }
-        } catch (e: any) {
-            failCount++;
-            errors.push(`${item.name} (${item.part}): Error - ${e.message || e}`);
-        }
-    }
-
-    revalidatePath('/admin/members')
-    revalidatePath('/dashboard')
-    revalidatePath('/reports')
-
-    return { successCount, failCount, errors }
 }

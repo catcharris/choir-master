@@ -403,3 +403,560 @@ Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Prom
   12 |     return (
   13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
  GET /admin/members 200 in 975ms (compile: 16ms, render: 959ms)
+ GET / 200 in 754ms (compile: 700ms, render: 54ms)
+⚠ Cross origin request detected from 192.168.0.8 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET /dashboard 200 in 214ms (compile: 23ms, render: 191ms)
+ GET /dashboard 200 in 813ms (compile: 21ms, render: 792ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 1024ms (compile: 10ms, render: 1014ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 180ms (compile: 5ms, render: 175ms)
+ POST /admin/members 200 in 243ms (compile: 6ms, render: 237ms)
+ POST /admin/members 200 in 207ms (compile: 5ms, render: 203ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 1922ms (compile: 18ms, render: 1903ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 298ms (compile: 7ms, render: 290ms)
+ GET /dashboard 200 in 1059ms (compile: 12ms, render: 1048ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 402ms (compile: 5ms, render: 396ms)
+ POST /admin/members 200 in 373ms (compile: 4ms, render: 369ms)
+ POST /admin/members 200 in 327ms (compile: 4ms, render: 323ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 1273ms (compile: 33ms, render: 1240ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 425ms (compile: 14ms, render: 411ms)
+ GET /admin/members 200 in 31ms (compile: 7ms, render: 24ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 555ms (compile: 2ms, render: 552ms)
+ GET /dashboard 200 in 461ms (compile: 23ms, render: 439ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 304ms (compile: 5ms, render: 300ms)
+ POST /admin/members 200 in 252ms (compile: 8ms, render: 244ms)
+ POST /admin/members 200 in 324ms (compile: 5ms, render: 319ms)
+ GET /dashboard 200 in 397ms (compile: 15ms, render: 382ms)
+ GET /dashboard 200 in 1208ms (compile: 1865µs, render: 1206ms)
+ GET /dashboard 200 in 211ms (compile: 16ms, render: 195ms)
+⨯ ./src/components/NoticeList.tsx
+Error:   x Return statement is not allowed here
+    ,-[/Volumes/Lemon SSD/antigravity_scratch/choir-master/src/components/NoticeList.tsx:92:1]
+ 89 |     }
+ 90 |     
+ 91 |     if (!notices || notices.length === 0) {
+ 92 | ,->     return (
+ 93 | |           <div className="text-center py-8 text-slate-500 text-sm">
+ 94 | |               등록된 공지가 없습니다.
+ 95 | |           </div>
+ 96 | `->     )
+ 97 |     }
+ 98 |     
+ 99 |     return (
+    `----
+  x Return statement is not allowed here
+     ,-[/Volumes/Lemon SSD/antigravity_scratch/choir-master/src/components/NoticeList.tsx:99:1]
+  96 |         )
+  97 |     }
+  98 |     
+  99 | ,-> return (
+ 100 | |       <div className="space-y-3">
+ 101 | |           {notices.map((notice) => {
+ 102 | |               const isExpanded = expandedIds.includes(notice.id)
+ 103 | |               const isMusic = (notice as any).category === 'MUSIC'
+ 104 | |   
+ 105 | |               return (
+ 106 | |                   <div key={notice.id} className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700/50 transition-all hover:border-slate-600">
+ 107 | |                       <button
+ 108 | |                           onClick={() => toggleExpand(notice.id)}
+ 109 | |                           className="w-full flex items-center gap-3 p-4 text-left transition-colors hover:bg-slate-700/30"
+ 110 | |                       >
+ 111 | |                           <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${isMusic ? 'bg-rose-900/30 text-rose-500' : 'bg-amber-900/30 text-amber-500'}`}>
+ 112 | |                               {isMusic ? <Music2 size={20} /> : <Megaphone size={20} />}
+ 113 | |                           </div>
+ 114 | |   
+ 115 | |                           <div className="flex-1 min-w-0">
+ 116 | |                               <h4 className="font-bold text-slate-200 truncate pr-2">
+ 117 | |                                   {notice.title}
+ 118 | |                               </h4>
+ 119 | |                               <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+ 120 | |                                   <Calendar size={10} />
+ 121 | |                                   {format(new Date(notice.createdAt), 'yyyy.MM.dd')}
+ 122 | |                               </div>
+ 123 | |                           </div>
+ 124 | |   
+ 125 | |                           <div className="text-slate-500">
+ 126 | |                               {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+ 127 | |                           </div>
+ 128 | |                       </button>
+ 129 | |   
+ 130 | |                       {isExpanded && (
+ 131 | |                           <div className="p-4 pt-0 border-t border-slate-700/50 bg-slate-800/50">
+ 132 | |                               <div className="mt-4 text-slate-300 text-sm whitespace-pre-wrap leading-relaxed break-words">
+ 133 | |                                   {notice.content}
+ 134 | |                               </div>
+ 135 | |   
+ 136 | |                               {(notice as any).link && (
+ 137 | |                                   <a
+ 138 | |                                       href={(notice as any).link}
+ 139 | |                                       target="_blank"
+ 140 | |                                       rel="noopener noreferrer"
+ 141 | |                                       className="mt-4 flex items-center gap-2 text-xs text-indigo-400 hover:text-indigo-300 bg-indigo-900/20 p-3 rounded-lg border border-indigo-500/20 transition-all hover:bg-indigo-900/30 group"
+ 142 | |                                   >
+ 143 | |                                       <LinkIcon size={14} className="group-hover:rotate-45 transition-transform" />
+ 144 | |                                       <span className="truncate">{(notice as any).link}</span>
+ 145 | |                                   </a>
+ 146 | |                               )}
+ 147 | |   
+ 148 | |                               {/* Actions Footer - Visible to ALL */}
+ 149 | |                               <div className="mt-4 pt-4 border-t border-slate-700/50 flex justify-end gap-2">
+ 150 | |                                   {/* Kakao Share */}
+ 151 | |                                   <button
+ 152 | |                                       onClick={(e) => handleKakaoShare(e, notice)}
+ 153 | |                                       className="flex items-center gap-1.5 text-xs font-bold text-slate-900 bg-[#FEE500] hover:bg-[#FDD835] px-3 py-1.5 rounded-lg transition-all shadow-sm"
+ 154 | |                                   >
+ 155 | |                                       <MessageCircle size={12} className="fill-slate-900" />
+ 156 | |                                       카톡 공유
+ 157 | |                                   </button>
+ 158 | |   
+ 159 | |                                   <button
+ 160 | |                                       onClick={(e) => handleCopy(e, notice)}
+ 161 | |                                       className="flex items-center gap-1.5 text-xs font-bold text-amber-500 hover:text-amber-400 bg-amber-900/20 hover:bg-amber-900/30 px-3 py-1.5 rounded-lg transition-all border border-amber-500/20 shadow-sm"
+ 162 | |                                   >
+ 163 | |                                       <Copy size={12} />
+ 164 | |                                       복사
+ 165 | |                                   </button>
+ 166 | |   
+ 167 | |                                   {onEdit && (
+ 168 | |                                       <button
+ 169 | |                                           onClick={(e) => {
+ 170 | |                                               e.stopPropagation()
+ 171 | |                                               onEdit(notice)
+ 172 | |                                           }}
+ 173 | |                                           className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white bg-slate-700/50 hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-all"
+ 174 | |                                       >
+ 175 | |                                           <Pencil size={12} />
+ 176 | |                                           수정
+ 177 | |                                       </button>
+ 178 | |                                   )}
+ 179 | |                               </div>
+ 180 | |                           </div>
+ 181 | |                       )}
+ 182 | |                   </div>
+ 183 | |               )
+ 184 | |           })}
+ 185 | |       </div>
+ 186 | `-> )
+ 187 |     }
+     `----
+  x Expression expected
+     ,-[/Volumes/Lemon SSD/antigravity_scratch/choir-master/src/components/NoticeList.tsx:187:1]
+ 184 |         })}
+ 185 |     </div>
+ 186 | )
+ 187 | }
+     : ^
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/NoticeList.tsx
+./src/components/NoticeBoard.tsx
+./src/components/DashboardContent.tsx
+⨯ ./src/components/NoticeList.tsx
+Error:   x Return statement is not allowed here
+     ,-[/Volumes/Lemon SSD/antigravity_scratch/choir-master/src/components/NoticeList.tsx:98:1]
+  95 |     }
+  96 |     
+  97 |     if (!notices || notices.length === 0) {
+  98 | ,->     return (
+  99 | |           <div className="text-center py-8 text-slate-500 text-sm">
+ 100 | |               등록된 공지가 없습니다.
+ 101 | |           </div>
+ 102 | `->     )
+ 103 |     }
+ 104 |     
+ 105 |     return (
+     `----
+  x Return statement is not allowed here
+     ,-[/Volumes/Lemon SSD/antigravity_scratch/choir-master/src/components/NoticeList.tsx:105:1]
+ 102 |         )
+ 103 |     }
+ 104 |     
+ 105 | ,-> return (
+ 106 | |       <div className="space-y-3">
+ 107 | |           {notices.map((notice) => {
+ 108 | |               const isExpanded = expandedIds.includes(notice.id)
+ 109 | |               const isMusic = (notice as any).category === 'MUSIC'
+ 110 | |   
+ 111 | |               return (
+ 112 | |                   <div key={notice.id} className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700/50 transition-all hover:border-slate-600">
+ 113 | |                       <button
+ 114 | |                           onClick={() => toggleExpand(notice.id)}
+ 115 | |                           className="w-full flex items-center gap-3 p-4 text-left transition-colors hover:bg-slate-700/30"
+ 116 | |                       >
+ 117 | |                           <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${isMusic ? 'bg-rose-900/30 text-rose-500' : 'bg-amber-900/30 text-amber-500'}`}>
+ 118 | |                               {isMusic ? <Music2 size={20} /> : <Megaphone size={20} />}
+ 119 | |                           </div>
+ 120 | |   
+ 121 | |                           <div className="flex-1 min-w-0">
+ 122 | |                               <h4 className="font-bold text-slate-200 truncate pr-2">
+ 123 | |                                   {notice.title}
+ 124 | |                               </h4>
+ 125 | |                               <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+ 126 | |                                   <Calendar size={10} />
+ 127 | |                                   {format(new Date(notice.createdAt), 'yyyy.MM.dd')}
+ 128 | |                               </div>
+ 129 | |                           </div>
+ 130 | |   
+ 131 | |                           <div className="text-slate-500">
+ 132 | |                               {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+ 133 | |                           </div>
+ 134 | |                       </button>
+ 135 | |   
+ 136 | |                       {isExpanded && (
+ 137 | |                           <div className="p-4 pt-0 border-t border-slate-700/50 bg-slate-800/50">
+ 138 | |                               <div className="mt-4 text-slate-300 text-sm whitespace-pre-wrap leading-relaxed break-words">
+ 139 | |                                   {notice.content}
+ 140 | |                               </div>
+ 141 | |   
+ 142 | |                               {(notice as any).link && (
+ 143 | |                                   <a
+ 144 | |                                       href={(notice as any).link}
+ 145 | |                                       target="_blank"
+ 146 | |                                       rel="noopener noreferrer"
+ 147 | |                                       className="mt-4 flex items-center gap-2 text-xs text-indigo-400 hover:text-indigo-300 bg-indigo-900/20 p-3 rounded-lg border border-indigo-500/20 transition-all hover:bg-indigo-900/30 group"
+ 148 | |                                   >
+ 149 | |                                       <LinkIcon size={14} className="group-hover:rotate-45 transition-transform" />
+ 150 | |                                       <span className="truncate">{(notice as any).link}</span>
+ 151 | |                                   </a>
+ 152 | |                               )}
+ 153 | |   
+ 154 | |                               {/* Actions Footer - Visible to ALL */}
+ 155 | |                               <div className="mt-4 pt-4 border-t border-slate-700/50 flex justify-end gap-2">
+ 156 | |                                   {/* Kakao Share */}
+ 157 | |                                   <button
+ 158 | |                                       onClick={(e) => handleKakaoShare(e, notice)}
+ 159 | |                                       className="flex items-center gap-1.5 text-xs font-bold text-slate-900 bg-[#FEE500] hover:bg-[#FDD835] px-3 py-1.5 rounded-lg transition-all shadow-sm"
+ 160 | |                                   >
+ 161 | |                                       <MessageCircle size={12} className="fill-slate-900" />
+ 162 | |                                       카톡 공유
+ 163 | |                                   </button>
+ 164 | |   
+ 165 | |                                   <button
+ 166 | |                                       onClick={(e) => handleCopy(e, notice)}
+ 167 | |                                       className="flex items-center gap-1.5 text-xs font-bold text-amber-500 hover:text-amber-400 bg-amber-900/20 hover:bg-amber-900/30 px-3 py-1.5 rounded-lg transition-all border border-amber-500/20 shadow-sm"
+ 168 | |                                   >
+ 169 | |                                       <Copy size={12} />
+ 170 | |                                       복사
+ 171 | |                                   </button>
+ 172 | |   
+ 173 | |                                   {onEdit && (
+ 174 | |                                       <button
+ 175 | |                                           onClick={(e) => {
+ 176 | |                                               e.stopPropagation()
+ 177 | |                                               onEdit(notice)
+ 178 | |                                           }}
+ 179 | |                                           className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white bg-slate-700/50 hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-all"
+ 180 | |                                       >
+ 181 | |                                           <Pencil size={12} />
+ 182 | |                                           수정
+ 183 | |                                       </button>
+ 184 | |                                   )}
+ 185 | |                               </div>
+ 186 | |                           </div>
+ 187 | |                       )}
+ 188 | |                   </div>
+ 189 | |               )
+ 190 | |           })}
+ 191 | |       </div>
+ 192 | `-> )
+ 193 |     }
+     `----
+  x Expression expected
+     ,-[/Volumes/Lemon SSD/antigravity_scratch/choir-master/src/components/NoticeList.tsx:193:1]
+ 190 |         })}
+ 191 |     </div>
+ 192 | )
+ 193 | }
+     : ^
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/NoticeList.tsx
+./src/components/NoticeBoard.tsx
+./src/components/DashboardContent.tsx
+ ○ (pwa) PWA support is disabled.
+⨯ ./src/components/NoticeList.tsx
+Error:   x Return statement is not allowed here
+     ,-[/Volumes/Lemon SSD/antigravity_scratch/choir-master/src/components/NoticeList.tsx:98:1]
+  95 |     }
+  96 |     
+  97 |     if (!notices || notices.length === 0) {
+  98 | ,->     return (
+  99 | |           <div className="text-center py-8 text-slate-500 text-sm">
+ 100 | |               등록된 공지가 없습니다.
+ 101 | |           </div>
+ 102 | `->     )
+ 103 |     }
+ 104 |     
+ 105 |     return (
+     `----
+  x Return statement is not allowed here
+     ,-[/Volumes/Lemon SSD/antigravity_scratch/choir-master/src/components/NoticeList.tsx:105:1]
+ 102 |         )
+ 103 |     }
+ 104 |     
+ 105 | ,-> return (
+ 106 | |       <div className="space-y-3">
+ 107 | |           {notices.map((notice) => {
+ 108 | |               const isExpanded = expandedIds.includes(notice.id)
+ 109 | |               const isMusic = (notice as any).category === 'MUSIC'
+ 110 | |   
+ 111 | |               return (
+ 112 | |                   <div key={notice.id} className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700/50 transition-all hover:border-slate-600">
+ 113 | |                       <button
+ 114 | |                           onClick={() => toggleExpand(notice.id)}
+ 115 | |                           className="w-full flex items-center gap-3 p-4 text-left transition-colors hover:bg-slate-700/30"
+ 116 | |                       >
+ 117 | |                           <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${isMusic ? 'bg-rose-900/30 text-rose-500' : 'bg-amber-900/30 text-amber-500'}`}>
+ 118 | |                               {isMusic ? <Music2 size={20} /> : <Megaphone size={20} />}
+ 119 | |                           </div>
+ 120 | |   
+ 121 | |                           <div className="flex-1 min-w-0">
+ 122 | |                               <h4 className="font-bold text-slate-200 truncate pr-2">
+ 123 | |                                   {notice.title}
+ 124 | |                               </h4>
+ 125 | |                               <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+ 126 | |                                   <Calendar size={10} />
+ 127 | |                                   {format(new Date(notice.createdAt), 'yyyy.MM.dd')}
+ 128 | |                               </div>
+ 129 | |                           </div>
+ 130 | |   
+ 131 | |                           <div className="text-slate-500">
+ 132 | |                               {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+ 133 | |                           </div>
+ 134 | |                       </button>
+ 135 | |   
+ 136 | |                       {isExpanded && (
+ 137 | |                           <div className="p-4 pt-0 border-t border-slate-700/50 bg-slate-800/50">
+ 138 | |                               <div className="mt-4 text-slate-300 text-sm whitespace-pre-wrap leading-relaxed break-words">
+ 139 | |                                   {notice.content}
+ 140 | |                               </div>
+ 141 | |   
+ 142 | |                               {(notice as any).link && (
+ 143 | |                                   <a
+ 144 | |                                       href={(notice as any).link}
+ 145 | |                                       target="_blank"
+ 146 | |                                       rel="noopener noreferrer"
+ 147 | |                                       className="mt-4 flex items-center gap-2 text-xs text-indigo-400 hover:text-indigo-300 bg-indigo-900/20 p-3 rounded-lg border border-indigo-500/20 transition-all hover:bg-indigo-900/30 group"
+ 148 | |                                   >
+ 149 | |                                       <LinkIcon size={14} className="group-hover:rotate-45 transition-transform" />
+ 150 | |                                       <span className="truncate">{(notice as any).link}</span>
+ 151 | |                                   </a>
+ 152 | |                               )}
+ 153 | |   
+ 154 | |                               {/* Actions Footer - Visible to ALL */}
+ 155 | |                               <div className="mt-4 pt-4 border-t border-slate-700/50 flex justify-end gap-2">
+ 156 | |                                   {/* Kakao Share */}
+ 157 | |                                   <button
+ 158 | |                                       onClick={(e) => handleKakaoShare(e, notice)}
+ 159 | |                                       className="flex items-center gap-1.5 text-xs font-bold text-slate-900 bg-[#FEE500] hover:bg-[#FDD835] px-3 py-1.5 rounded-lg transition-all shadow-sm"
+ 160 | |                                   >
+ 161 | |                                       <MessageCircle size={12} className="fill-slate-900" />
+ 162 | |                                       카톡 공유
+ 163 | |                                   </button>
+ 164 | |   
+ 165 | |                                   <button
+ 166 | |                                       onClick={(e) => handleCopy(e, notice)}
+ 167 | |                                       className="flex items-center gap-1.5 text-xs font-bold text-amber-500 hover:text-amber-400 bg-amber-900/20 hover:bg-amber-900/30 px-3 py-1.5 rounded-lg transition-all border border-amber-500/20 shadow-sm"
+ 168 | |                                   >
+ 169 | |                                       <Copy size={12} />
+ 170 | |                                       복사
+ 171 | |                                   </button>
+ 172 | |   
+ 173 | |                                   {onEdit && (
+ 174 | |                                       <button
+ 175 | |                                           onClick={(e) => {
+ 176 | |                                               e.stopPropagation()
+ 177 | |                                               onEdit(notice)
+ 178 | |                                           }}
+ 179 | |                                           className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white bg-slate-700/50 hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-all"
+ 180 | |                                       >
+ 181 | |                                           <Pencil size={12} />
+ 182 | |                                           수정
+ 183 | |                                       </button>
+ 184 | |                                   )}
+ 185 | |                               </div>
+ 186 | |                           </div>
+ 187 | |                       )}
+ 188 | |                   </div>
+ 189 | |               )
+ 190 | |           })}
+ 191 | |       </div>
+ 192 | `-> )
+ 193 |     }
+     `----
+  x Expression expected
+     ,-[/Volumes/Lemon SSD/antigravity_scratch/choir-master/src/components/NoticeList.tsx:193:1]
+ 190 |         })}
+ 191 |     </div>
+ 192 | )
+ 193 | }
+     : ^
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/NoticeList.tsx
+./src/components/NoticeBoard.tsx
+./src/components/DashboardContent.tsx
+ GET /dashboard 500 in 2.3s (compile: 2.2s, render: 58ms)
+ GET /dashboard 500 in 598ms (compile: 544ms, render: 54ms)
+ GET /admin/members 500 in 576ms (compile: 522ms, render: 55ms)
+ GET /admin/members 500 in 566ms (compile: 511ms, render: 54ms)
+ GET /dashboard 500 in 9ms (compile: 3ms, render: 7ms)
+ GET /dashboard 500 in 7ms (compile: 3ms, render: 4ms)
+ GET /admin/members 500 in 9ms (compile: 4ms, render: 6ms)
+ GET /admin/members 500 in 10ms (compile: 4ms, render: 6ms)
+○ Compiling /_error ...
+⨯ ./src/components/NoticeList.tsx
+Error:   x Parenthesized expression cannot be empty
+     ,-[/Volumes/Lemon SSD/antigravity_scratch/choir-master/src/components/NoticeList.tsx:109:1]
+ 106 |             )
+ 107 |         }
+ 108 |     
+ 109 | ,->     return (
+ 110 | `->     )
+ 111 |     }
+ 112 |     
+ 113 |     return (
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/NoticeList.tsx
+./src/components/NoticeBoard.tsx
+./src/components/DashboardContent.tsx
+ GET /admin/members 500 in 45ms (compile: 14ms, render: 32ms)
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /dashboard 200 in 2.9s (compile: 930ms, render: 1937ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /dashboard 200 in 127ms (compile: 1597µs, render: 126ms)
+ GET /dashboard 200 in 397ms (compile: 1021µs, render: 395ms)
+ GET /dashboard 200 in 107ms (compile: 2ms, render: 105ms)
+ GET /dashboard 200 in 90ms (compile: 1847µs, render: 88ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 2.9s (compile: 1407µs, render: 2.9s)
+ GET /dashboard 200 in 199ms (compile: 8ms, render: 190ms)
+[?25h

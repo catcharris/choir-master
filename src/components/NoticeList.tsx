@@ -18,47 +18,38 @@ interface NoticeListProps {
 
 export default function NoticeList({ notices, onEdit }: NoticeListProps) {
     const [expandedIds, setExpandedIds] = useState<number[]>([])
-    const [kakaoKey, setKakaoKey] = useState('')
     const [isSdkLoaded, setIsSdkLoaded] = useState(false)
     const [isKakaoInitialized, setIsKakaoInitialized] = useState(false)
+    const KAKAO_KEY = '2d246c6c619b67ce0d182428f6e591a2' // JavaScript Key
 
-    // Load SDK and Key
+    // Load SDK and Initialize
     useEffect(() => {
-        // 1. Load saved key
-        const savedKey = localStorage.getItem('kakao_js_key')
-        if (savedKey) setKakaoKey(savedKey)
-
-        // 2. Load Kakao SDK
-        if (window.Kakao) {
-            setIsSdkLoaded(true)
-        } else {
+        // Load SDK if not present
+        if (!window.Kakao) {
             const script = document.createElement('script')
             script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js'
             script.onload = () => setIsSdkLoaded(true)
             document.head.appendChild(script)
+        } else {
+            setIsSdkLoaded(true)
         }
     }, [])
 
-    // Auto-init
+    // Initialize when SDK is ready
     useEffect(() => {
-        if (isSdkLoaded && kakaoKey && !isKakaoInitialized && window.Kakao) {
-            console.log("Attempting Kakao Init with key:", kakaoKey);
+        if (isSdkLoaded && window.Kakao && !isKakaoInitialized) {
             if (!window.Kakao.isInitialized()) {
                 try {
-                    window.Kakao.init(kakaoKey)
+                    window.Kakao.init(KAKAO_KEY)
                     setIsKakaoInitialized(true)
-                    console.log("Kakao Init Success");
                 } catch (e) {
                     console.error('Kakao init failed', e)
                 }
             } else {
-                console.log("Kakao already initialized");
                 setIsKakaoInitialized(true)
             }
-        } else {
-            console.log("Kakao Init Skipped. SDK:", isSdkLoaded, "Key:", !!kakaoKey, "Init:", isKakaoInitialized);
         }
-    }, [isSdkLoaded, kakaoKey, isKakaoInitialized])
+    }, [isSdkLoaded, isKakaoInitialized])
 
     const toggleExpand = (id: number) => {
         setExpandedIds(prev =>
@@ -84,20 +75,8 @@ export default function NoticeList({ notices, onEdit }: NoticeListProps) {
     const handleKakaoShare = (e: React.MouseEvent, notice: Notice) => {
         e.stopPropagation()
 
-        // Dynamic Key Input if missing
-        if (!isKakaoInitialized) {
-            const inputKey = prompt("카카오 자바스크립트 키를 입력해주세요 (최초 1회):\n\n[내 애플리케이션] > [앱 설정] > [요약 정보]에서 확인 가능")
-            if (inputKey) {
-                try {
-                    localStorage.setItem('kakao_js_key', inputKey)
-                    setKakaoKey(inputKey)
-                    window.Kakao.init(inputKey)
-                    setIsKakaoInitialized(true)
-                    alert("키가 등록되었습니다! 다시 버튼을 눌러 공유해주세요.")
-                } catch (err) {
-                    alert("키 등록 실패: " + err)
-                }
-            }
+        if (!isKakaoInitialized || !window.Kakao) {
+            alert("카카오톡 연결 중입니다... 잠시만 기다려주세요.")
             return
         }
 

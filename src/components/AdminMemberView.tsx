@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Search, Edit2, Trash2, Check, X, ShieldAlert } from 'lucide-react'
 import { deleteMember, updateMember } from '@/actions/members'
 import BirthdayListModal from './BirthdayListModal'
+import BulkMemberUpdate from './BulkMemberUpdate'
 
 interface Member {
     id: number
@@ -26,10 +27,12 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
     const router = useRouter()
     const [members, setMembers] = useState(initialMembers)
     const [showBirthdayModal, setShowBirthdayModal] = useState(false)
+    const [showBulkUpdateModal, setShowBulkUpdateModal] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [editingId, setEditingId] = useState<number | null>(null)
-    const [editForm, setEditForm] = useState<{ part: string, name: string }>({ part: '', name: '' })
+    const [editForm, setEditForm] = useState<{ part: string, name: string, churchTitle: string }>({ part: '', name: '', churchTitle: '' })
     const [deletingId, setDeletingId] = useState<number | null>(null)
+    const [password, setPassword] = useState('')
 
     // Filter members
     const filteredMembers = members.filter(m =>
@@ -38,14 +41,15 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
 
     const handleEditClick = (member: Member) => {
         setEditingId(member.id)
-        setEditForm({ part: member.part, name: member.name })
+        setEditForm({ part: member.part, name: member.name, churchTitle: member.churchTitle || '' })
     }
 
     const handleSave = async (id: number) => {
         try {
             await updateMember(id, {
                 part: editForm.part,
-                name: editForm.name
+                name: editForm.name,
+                churchTitle: editForm.churchTitle
             })
             setMembers(prev => prev.map(m => m.id === id ? { ...m, ...editForm } : m))
             setEditingId(null)
@@ -56,18 +60,22 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
     }
 
     const handleDelete = async (id: number) => {
+        if (!password) {
+            alert('관리자 비밀번호를 입력해주세요.')
+            return
+        }
+
         try {
-            await deleteMember(id)
+            await deleteMember(id, password)
             setMembers(prev => prev.filter(m => m.id !== id))
             setDeletingId(null)
+            setPassword('') // Clear password
             alert('삭제되었습니다.')
             router.refresh()
-        } catch (error) {
-            alert('삭제 실패: ' + error)
+        } catch (error: any) {
+            alert('삭제 실패: ' + (error.message || error))
         }
     }
-
-
 
     return (
         <div className="max-w-4xl mx-auto p-4 pb-20">
@@ -80,6 +88,12 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
                     ← 돌아가기
                 </button>
                 <div className="flex gap-2">
+                    <button
+                        onClick={() => setShowBulkUpdateModal(true)}
+                        className="bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all active:scale-95"
+                    >
+                        📤 정보 일괄 등록
+                    </button>
                     <button
                         onClick={() => setShowBirthdayModal(true)}
                         className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-lg shadow-amber-900/20 transition-all active:scale-95"
@@ -117,13 +131,27 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
                                 {/* Name Column */}
                                 <td className="p-4 font-medium text-slate-200">
                                     {editingId === member.id ? (
-                                        <input
-                                            value={editForm.name}
-                                            onChange={e => setEditForm(prev => ({ ...prev, name: e.target.value }))}
-                                            className="bg-slate-700 rounded px-2 py-1 w-full text-slate-100 outline-none focus:ring-1 focus:ring-amber-500"
-                                        />
+                                        <div className="flex flex-col gap-1">
+                                            <input
+                                                value={editForm.name}
+                                                onChange={e => setEditForm(prev => ({ ...prev, name: e.target.value }))}
+                                                className="bg-slate-700 rounded px-2 py-1 w-full text-slate-100 outline-none focus:ring-1 focus:ring-amber-500"
+                                                placeholder="이름"
+                                            />
+                                            <input
+                                                value={editForm.churchTitle}
+                                                onChange={e => setEditForm(prev => ({ ...prev, churchTitle: e.target.value }))}
+                                                className="bg-slate-700 rounded px-2 py-1 w-full text-xs text-slate-300 outline-none focus:ring-1 focus:ring-amber-500"
+                                                placeholder="직분 (선택)"
+                                            />
+                                        </div>
                                     ) : (
-                                        <span>{member.name}</span>
+                                        <div className="flex flex-col">
+                                            <span className="whitespace-nowrap font-bold text-base">{member.name}</span>
+                                            {member.churchTitle && (
+                                                <span className="text-xs text-slate-500 whitespace-nowrap">{member.churchTitle}</span>
+                                            )}
+                                        </div>
                                     )}
                                 </td>
 
@@ -140,7 +168,7 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
                                             ))}
                                         </select>
                                     ) : (
-                                        <span className={`px-2 py-1 rounded-full text-xs font-bold 
+                                        <span className={`px-2 py-1 rounded-full text-xs font-bold whitespace-nowrap
                                             ${member.part.includes('Sop') ? 'bg-pink-900/40 text-pink-300' :
                                                 member.part.includes('Alto') ? 'bg-purple-900/40 text-purple-300' :
                                                     member.part === 'Tenor' ? 'bg-blue-900/40 text-blue-300' :
@@ -164,11 +192,19 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
                                         </>
                                     ) : deletingId === member.id ? (
                                         <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2 duration-200">
-                                            <span className="text-xs text-rose-400 font-bold hidden sm:inline">삭제?</span>
+                                            <input
+                                                type="password"
+                                                value={password}
+                                                onChange={e => setPassword(e.target.value)}
+                                                className="w-24 bg-slate-900 border border-slate-600 rounded px-2 py-1 text-xs text-white outline-none focus:border-rose-500 transition-colors"
+                                                placeholder="비번(0000)"
+                                                autoFocus
+                                                onKeyDown={e => e.key === 'Enter' && handleDelete(member.id)}
+                                            />
                                             <button onClick={() => handleDelete(member.id)} className="px-3 py-1.5 bg-rose-600 text-white text-xs font-bold rounded-lg hover:bg-rose-500 shadow-lg shadow-rose-900/20 active:scale-95 transition-all">
-                                                네
+                                                삭제
                                             </button>
-                                            <button onClick={() => setDeletingId(null)} className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-bold rounded-lg hover:bg-slate-600 active:scale-95 transition-all">
+                                            <button onClick={() => { setDeletingId(null); setPassword('') }} className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-bold rounded-lg hover:bg-slate-600 active:scale-95 transition-all">
                                                 취소
                                             </button>
                                         </div>
@@ -201,7 +237,12 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
             {showBirthdayModal && (
                 <BirthdayListModal onClose={() => setShowBirthdayModal(false)} />
             )}
+            {showBulkUpdateModal && (
+                <BulkMemberUpdate onClose={() => {
+                    setShowBulkUpdateModal(false)
+                    router.refresh()
+                }} />
+            )}
         </div>
     )
 }
-

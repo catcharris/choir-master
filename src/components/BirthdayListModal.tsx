@@ -27,30 +27,24 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
     const [members, setMembers] = useState<BirthdayMember[]>([])
     const [months, setMonths] = useState<number[]>([])
     const [copied, setCopied] = useState(false)
-    const [kakaoKey, setKakaoKey] = useState('')
     const [isKakaoInitialized, setIsKakaoInitialized] = useState(false)
     const [isSdkLoaded, setIsSdkLoaded] = useState(false)
 
-    useEffect(() => {
-        // 1. Load saved key
-        const savedKey = localStorage.getItem('kakao_js_key')
-        if (savedKey) {
-            setKakaoKey(savedKey)
-        }
+    const KAKAO_JS_KEY = '2d246c6c619b67ce0d182428f6e591a2'
 
-        // 2. Load Kakao SDK
+    useEffect(() => {
+        // 1. Load Kakao SDK
         if (window.Kakao) {
             setIsSdkLoaded(true)
-            return
+        } else {
+            const script = document.createElement('script')
+            script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js'
+            script.onload = () => {
+                console.log('Kakao SDK loaded')
+                setIsSdkLoaded(true)
+            }
+            document.head.appendChild(script)
         }
-
-        const script = document.createElement('script')
-        script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js'
-        script.onload = () => {
-            console.log('Kakao SDK loaded')
-            setIsSdkLoaded(true)
-        }
-        document.head.appendChild(script)
 
         const fetchBirthdays = async () => {
             const today = new Date()
@@ -63,10 +57,22 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
             setMonths([startMonth, endMonth])
 
             try {
-                const data = await getBirthdayMembers([startMonth, endMonth])
+                // Timeout promise
+                const timeoutPromise = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Timeout')), 5000)
+                )
+
+                // Race between fetch and timeout
+                const data = await Promise.race([
+                    getBirthdayMembers([startMonth, endMonth]),
+                    timeoutPromise
+                ]) as BirthdayMember[]
+
                 setMembers(data)
             } catch (error) {
                 console.error("Failed to fetch birthdays", error)
+                // Optional: set empty state explicit
+                setMembers([])
             } finally {
                 setLoading(false)
             }
@@ -75,47 +81,22 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
         fetchBirthdays()
     }, [])
 
-    // Auto-initialize if key exists and SDK is loaded
+    // Auto-initialize when SDK is loaded
     useEffect(() => {
-        if (isSdkLoaded && kakaoKey && !isKakaoInitialized) {
+        if (isSdkLoaded && !isKakaoInitialized) {
             if (window.Kakao && !window.Kakao.isInitialized()) {
                 try {
-                    window.Kakao.init(kakaoKey)
+                    window.Kakao.init(KAKAO_JS_KEY)
                     setIsKakaoInitialized(true)
-                    console.log('Kakao SDK auto-initialized')
+                    console.log('Kakao SDK initialized with hardcoded key')
                 } catch (e) {
-                    console.error('Auto-init failed', e)
+                    console.error('Init failed', e)
                 }
             } else if (window.Kakao && window.Kakao.isInitialized()) {
                 setIsKakaoInitialized(true)
             }
         }
-    }, [isSdkLoaded, kakaoKey, isKakaoInitialized])
-
-    const initKakao = () => {
-        if (!kakaoKey) {
-            alert('API 키를 입력해주세요!')
-            return
-        }
-
-        if (window.Kakao && !window.Kakao.isInitialized()) {
-            try {
-                window.Kakao.init(kakaoKey)
-                setIsKakaoInitialized(true)
-                localStorage.setItem('kakao_js_key', kakaoKey) // Save key
-                alert('카카오 SDK 초기화 성공! (키가 저장되었습니다)')
-            } catch (e) {
-                alert('키가 올바르지 않거나 초기화 실패: ' + e)
-            }
-        } else if (window.Kakao && window.Kakao.isInitialized()) {
-            setIsKakaoInitialized(true)
-            localStorage.setItem('kakao_js_key', kakaoKey) // Save key
-            alert('이미 초기화되었습니다. (키 저장 완료)')
-        } else {
-            alert('카카오 SDK가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.')
-            console.error('Kakao SDK not found on window object')
-        }
-    }
+    }, [isSdkLoaded, isKakaoInitialized])
 
     const getMonthMembers = (month: number) => {
         return members.filter(m => {
@@ -209,32 +190,8 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
                                 이번 달({months[0]}월)과 다음 달({months[1]}월) 생일자를 자동으로 모았습니다. 아래 버튼을 눌러 복사하세요.
                             </div>
 
-                            {/* Kakao Test Section */}
-                            <div className="bg-yellow-400/10 border border-yellow-400/30 p-4 rounded-lg">
-                                <label className="block text-xs font-bold text-yellow-500 mb-2 flex justify-between">
-                                    <span>🟡 카카오 API 키 (브라우저 저장됨)</span>
-                                    <span className={isSdkLoaded ? "text-green-400" : "text-red-400"}>
-                                        {isSdkLoaded ? "SDK 준비됨" : "SDK 로딩중..."}
-                                    </span>
-                                </label>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="text"
-                                        value={kakaoKey}
-                                        onChange={(e) => setKakaoKey(e.target.value)}
-                                        placeholder="JavaScript 키를 붙여넣으세요"
-                                        className="flex-1 bg-slate-900 border border-slate-600 rounded px-2 py-1 text-sm text-white"
-                                        disabled={isKakaoInitialized}
-                                    />
-                                    <button
-                                        onClick={initKakao}
-                                        disabled={isKakaoInitialized}
-                                        className="bg-yellow-600 text-white text-xs px-3 py-1 rounded font-bold disabled:opacity-50"
-                                    >
-                                        {isKakaoInitialized ? '완료' : '등록'}
-                                    </button>
-                                </div>
-                            </div>
+                            {/* Kakao Status (Hidden, just internal log) */}
+                            {/* Key input removed for seamless UX */}
 
                             {months.map(month => {
                                 const list = getMonthMembers(month)
@@ -295,16 +252,29 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
                         )}
                     </button>
 
-                    {/* Kakao Share Button */}
-                    {isKakaoInitialized && (
-                        <button
-                            onClick={handleKakaoShare}
-                            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-slate-900 bg-[#FEE500] hover:bg-[#FDD835] shadow-lg transition-all active:scale-95"
-                        >
-                            <MessageCircle size={18} className="fill-slate-900" />
-                            카카오톡으로 공유하기
-                        </button>
-                    )}
+                    {/* Kakao Share Button - Always visible but disabled if not ready */}
+                    <button
+                        onClick={handleKakaoShare}
+                        disabled={!isKakaoInitialized}
+                        className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-slate-900 shadow-lg transition-all active:scale-95
+                            ${isKakaoInitialized
+                                ? 'bg-[#FEE500] hover:bg-[#FDD835]'
+                                : 'bg-slate-700 text-slate-500 cursor-not-allowed'
+                            }
+                        `}
+                    >
+                        {isKakaoInitialized ? (
+                            <>
+                                <MessageCircle size={18} className="fill-slate-900" />
+                                카카오톡으로 공유하기
+                            </>
+                        ) : (
+                            <>
+                                <Loader2 size={18} className="animate-spin" />
+                                카카오톡 연결 중...
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
         </div>

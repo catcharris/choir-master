@@ -299,12 +299,14 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                                     {member.name.charAt(0)}
                                 </div>
                                 <div className="flex-1">
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-bold text-lg text-slate-200">{member.name}</span>
-                                        <span className="text-xs text-slate-500 font-medium px-1.5 py-0.5 bg-slate-800 rounded">
-                                            {member.churchTitle}
-                                        </span>
-                                        {isNew && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30">신입</span>}
+                                    <div className="flex items-center gap-2 flex-wrap min-w-0">
+                                        <span className="font-bold text-lg text-slate-200 leading-none">{member.name}</span>
+                                        {member.churchTitle && (
+                                            <span className="text-xs text-slate-500 font-medium px-1.5 py-0.5 bg-slate-800 rounded whitespace-nowrap">
+                                                {member.churchTitle}
+                                            </span>
+                                        )}
+                                        {isNew && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30 whitespace-nowrap">신입</span>}
 
                                         {/* Admin Edit Button - Stops Propagation */}
                                         {isAdmin && (
@@ -313,7 +315,7 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                                                     e.stopPropagation();
                                                     setViewingMember({ id: member.id, name: member.name });
                                                 }}
-                                                className="ml-2 p-1.5 text-slate-500 hover:text-amber-400 hover:bg-slate-700/50 rounded-full transition-colors"
+                                                className="p-1 text-slate-500 hover:text-amber-400 hover:bg-slate-700/50 rounded-full transition-colors shrink-0"
                                             >
                                                 <Settings size={14} />
                                             </button>

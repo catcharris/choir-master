@@ -218,28 +218,28 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-2 bg-slate-800 p-1 rounded-xl w-fit mx-auto border border-slate-700 overflow-x-auto max-w-full">
+            <div className="grid grid-cols-2 md:flex gap-2 bg-slate-800 p-1 rounded-xl w-full md:w-fit mx-auto border border-slate-700">
                 <button
                     onClick={() => setActiveTab('weekly')}
-                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'weekly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+                    className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'weekly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
                     📝 주간 리포트
                 </button>
                 <button
                     onClick={() => setActiveTab('monthly')}
-                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'monthly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+                    className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'monthly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
                     📆 월간 통계
                 </button>
                 <button
                     onClick={() => setActiveTab('yearly')}
-                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'yearly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+                    className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'yearly' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
                     📈 연간 흐름
                 </button>
                 <button
                     onClick={() => setActiveTab('soloist')}
-                    className={`px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${activeTab === 'soloist' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+                    className={`w-full md:w-auto px-4 py-3 md:py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1 ${activeTab === 'soloist' ? 'bg-amber-500 text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
                 >
                     🎤 솔리스트
                 </button>
@@ -515,6 +515,17 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                 </div>
             )}
 
+            {/* Hidden Report Template for Printing */}
+            <div style={{ display: 'none' }}>
+                <ReportTemplate
+                    ref={componentRef}
+                    data={data}
+                    year={year}
+                    month={month}
+                    author={reportAuthor}
+                    date={format(new Date(), 'yyyy년 M월 d일')}
+                />
+            </div>
         </div>
     )
 }

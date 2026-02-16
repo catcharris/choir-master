@@ -14,7 +14,7 @@ export interface User {
 
 interface AuthContextType {
     user: User | null
-    login: (password: string) => boolean
+    login: (password: string, expectedRoleValue?: string) => boolean
     logout: () => void
     loading: boolean
 }
@@ -50,9 +50,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false)
     }, [])
 
-    const login = (password: string) => {
+    const login = (password: string, expectedRoleValue?: string) => {
         const matched = CREDENTIALS[password]
         if (matched) {
+            // Validate that the password matches the selected role/part
+            if (expectedRoleValue) {
+                if (matched.role === 'ADMIN') {
+                    if (expectedRoleValue !== 'ADMIN') return false
+                } else {
+                    // Start of Part Leader check
+                    if (matched.part !== expectedRoleValue) return false
+                }
+            }
+
             const userData: User = {
                 id: password, // using pw as id for simplicity here
                 ...matched

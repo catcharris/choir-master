@@ -32,18 +32,17 @@ export default function Home() {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        // Pass both password and selected role/part context if needed
-        // But currently login() only takes password and finds user.
-        // The Role Select UI is kind of a hint or just a filter?
-        // Actually the credentials define the role.
-        // Let's assume the user selects role just for UX, but password determines identity.
 
-        if (login(password)) {
+        // Pass selected role to validate password against intent
+        if (login(password, selectedRole)) {
             router.push('/dashboard');
         } else {
             setError(true);
             setShake(true);
             setTimeout(() => setShake(false), 500);
+
+            // Optional: Alert specifically if password was correct but role wrong?
+            // For now, generic error shake is safer security-wise.
         }
     };
 

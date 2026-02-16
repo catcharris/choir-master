@@ -283,3 +283,113 @@ Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Prom
   12 |     return (
   13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
  GET /admin/members 200 in 1002ms (compile: 21ms, render: 981ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 396ms (compile: 19ms, render: 377ms)
+ POST /admin/members 200 in 248ms (compile: 4ms, render: 245ms)
+ POST /admin/members 200 in 194ms (compile: 5ms, render: 189ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 971ms (compile: 28ms, render: 944ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 288ms (compile: 7ms, render: 280ms)
+ POST /admin/members 200 in 367ms (compile: 9ms, render: 358ms)
+ POST /admin/members 200 in 230ms (compile: 4ms, render: 226ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 458ms (compile: 17ms, render: 441ms)
+ GET /dashboard 200 in 868ms (compile: 26ms, render: 842ms)
+ GET /dashboard 200 in 141ms (compile: 3ms, render: 138ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 271ms (compile: 51ms, render: 219ms)
+ POST /admin/members 200 in 168ms (compile: 6ms, render: 163ms)
+ POST /admin/members 200 in 198ms (compile: 4ms, render: 194ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 472ms (compile: 19ms, render: 453ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 284ms (compile: 4ms, render: 279ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 873ms (compile: 20ms, render: 853ms)
+ POST /admin/members 200 in 317ms (compile: 8ms, render: 309ms)
+ POST /admin/members 200 in 169ms (compile: 5ms, render: 163ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 979ms (compile: 28ms, render: 951ms)
+Error: Route "/admin/members" used `searchParams.back`. `searchParams` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at AdminMemberPage (src/app/admin/members/page.tsx:10:34)
+   8 | export default async function AdminMemberPage({ searchParams }: { searchParams: { back?: string } }) {
+   9 |     const members = await getAllMembers()
+> 10 |     const backUrl = searchParams.back || '/dashboard'
+     |                                  ^
+  11 |
+  12 |     return (
+  13 |         <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+ GET /admin/members 200 in 941ms (compile: 21ms, render: 920ms)

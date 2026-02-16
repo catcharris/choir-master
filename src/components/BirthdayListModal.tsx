@@ -32,7 +32,13 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
     const [isSdkLoaded, setIsSdkLoaded] = useState(false)
 
     useEffect(() => {
-        // Load Kakao SDK
+        // 1. Load saved key
+        const savedKey = localStorage.getItem('kakao_js_key')
+        if (savedKey) {
+            setKakaoKey(savedKey)
+        }
+
+        // 2. Load Kakao SDK
         if (window.Kakao) {
             setIsSdkLoaded(true)
             return
@@ -79,13 +85,15 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
             try {
                 window.Kakao.init(kakaoKey)
                 setIsKakaoInitialized(true)
-                alert('카카오 SDK 초기화 성공!')
+                localStorage.setItem('kakao_js_key', kakaoKey) // Save key
+                alert('카카오 SDK 초기화 성공! (키가 저장되었습니다)')
             } catch (e) {
                 alert('키가 올바르지 않거나 초기화 실패: ' + e)
             }
         } else if (window.Kakao && window.Kakao.isInitialized()) {
             setIsKakaoInitialized(true)
-            alert('이미 초기화되었습니다.')
+            localStorage.setItem('kakao_js_key', kakaoKey) // Save key
+            alert('이미 초기화되었습니다. (키 저장 완료)')
         } else {
             alert('카카오 SDK가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.')
             console.error('Kakao SDK not found on window object')
@@ -187,7 +195,7 @@ export default function BirthdayListModal({ onClose }: BirthdayListModalProps) {
                             {/* Kakao Test Section */}
                             <div className="bg-yellow-400/10 border border-yellow-400/30 p-4 rounded-lg">
                                 <label className="block text-xs font-bold text-yellow-500 mb-2 flex justify-between">
-                                    <span>🟡 카카오 API 키 테스트 (저장안됨)</span>
+                                    <span>🟡 카카오 API 키 (브라우저 저장됨)</span>
                                     <span className={isSdkLoaded ? "text-green-400" : "text-red-400"}>
                                         {isSdkLoaded ? "SDK 준비됨" : "SDK 로딩중..."}
                                     </span>

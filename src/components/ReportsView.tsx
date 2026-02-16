@@ -1,11 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { useReactToPrint } from 'react-to-print'
 import * as XLSX from 'xlsx'
-import { Download, ChevronLeft, ChevronRight, FileSpreadsheet, Trophy, Calendar, Search } from 'lucide-react'
+import { Download, ChevronLeft, ChevronRight, FileSpreadsheet, Trophy, Calendar, Search, Printer } from 'lucide-react'
 import { getSoloistStats, getYearlyReport } from '@/actions/stats'
 import MemberStatsModal from './MemberStatsModal'
+import { ReportTemplate } from './ReportTemplate'
 
 interface ReportData {
     overall: {
@@ -60,6 +62,14 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
             getYearlyReport(year).then(setYearlyStats)
         }
     }, [activeTab, year, month])
+
+    // Printing Setup
+    const [reportAuthor, setReportAuthor] = useState('서기 김준구')
+    const componentRef = useRef<HTMLDivElement>(null)
+    const handlePrint = useReactToPrint({
+        contentRef: componentRef,
+        documentTitle: `갈보리찬양대_출석보고_${year}년${month}월`,
+    })
 
     // Month Navigation
     const handlePrevMonth = () => {
@@ -150,6 +160,24 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                 </div>
 
                 <div className="flex gap-2">
+                    {/* Print Report */}
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="text"
+                            className="bg-slate-700 text-white px-3 py-2 rounded-lg text-sm border border-slate-600 focus:outline-none focus:border-amber-500 w-32 placeholder-slate-400"
+                            placeholder="담당자 이름"
+                            value={reportAuthor}
+                            onChange={(e) => setReportAuthor(e.target.value)}
+                        />
+                        <button
+                            onClick={() => handlePrint()}
+                            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg transition-all active:scale-95 text-sm"
+                        >
+                            <Printer size={18} />
+                            보고서 출력
+                        </button>
+                    </div>
+
                     <button
                         onClick={handleDownloadExcel}
                         className="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg transition-all active:scale-95 text-sm"
@@ -157,6 +185,18 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                         <FileSpreadsheet size={18} />
                         엑셀 저장
                     </button>
+
+                    {/* Hidden Template for Printing */}
+                    <div style={{ display: 'none' }}>
+                        <ReportTemplate
+                            ref={componentRef}
+                            data={data}
+                            year={year}
+                            month={month}
+                            author={reportAuthor}
+                            date={new Date().toLocaleDateString()}
+                        />
+                    </div>
                 </div>
             </div>
 

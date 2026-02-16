@@ -117,12 +117,19 @@ export default function AttendanceList({ members: initialMembers, part, initialD
         setOptimisticStatus(prev => ({ ...prev, [memberId]: nextStatus }))
 
         try {
+            // dbDateString is "YYYY-MM-DD" from client local time selectedDate
+            // This is what we want!
             await toggleAttendance(memberId, dbDateString, nextStatus === null ? 'DELETE' : nextStatus)
         } catch (e) {
             console.error("Failed to update attendance", e)
             setOptimisticStatus(prev => {
                 const newState = { ...prev }
-                delete newState[memberId]
+                // Revert to original status if failed
+                if (member.todayStatus) {
+                    newState[memberId] = member.todayStatus
+                } else {
+                    delete newState[memberId]
+                }
                 return newState
             })
             alert("저장에 실패했습니다.")

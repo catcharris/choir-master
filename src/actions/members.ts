@@ -204,7 +204,7 @@ export async function toggleAttendance(memberId: number, dateObj: Date, status: 
                 where: { id: existing.id },
                 data: {
                     status: status!,
-                    updatedAt: new Date()
+                    checkTime: new Date() // Update check time on modification
                 }
             })
         } else {
@@ -214,7 +214,7 @@ export async function toggleAttendance(memberId: number, dateObj: Date, status: 
                         memberId: memberId,
                         date: targetDate,
                         status: status!,
-                        type: 'REGULAR' // default
+                        checkTime: new Date()
                     }
                 })
             }

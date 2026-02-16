@@ -51,94 +51,62 @@ export default function DashboardHeader() {
 
     return (
         <>
-            <header className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                {/* Mobile: Top Row (Title + Logout/Login Icon) */}
-                <div className="flex items-center justify-between w-full md:w-auto">
-                    <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-yellow-400">
-                        갈보리 찬양대
-                    </h1>
+            <header className="mb-4 mt-4 flex items-center justify-between">
+                <h1 className="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-yellow-400 truncate mr-2">
+                    갈보리 찬양대
+                </h1>
 
-                    {/* Logout/Login Icon for Mobile Only (to save space in row 2) */}
-                    <div className="md:hidden">
-                        {user ? (
-                            <button
-                                onClick={handleLogout}
-                                className="text-slate-400 hover:text-rose-400 p-2 rounded-full active:bg-slate-800"
-                            >
-                                <LogOut size={20} />
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => setShowLoginModal(true)}
-                                className="text-slate-400 hover:text-white p-2 rounded-full active:bg-slate-800"
-                            >
-                                <User size={20} />
-                            </button>
-                        )}
-                    </div>
-                </div>
-
-                {/* Action Buttons Row */}
-                <div className="flex items-center gap-2 self-end md:self-auto">
+                <div className="flex items-center gap-2 shrink-0">
                     {user ? (
                         <>
-                            {/* KakaoTalk Group Button */}
-                            <div className="flex items-center bg-[#FAE100] text-[#371D1E] rounded-full shadow-sm">
-                                <button
-                                    onClick={() => {
-                                        const key = `kakao_link_${user.part || 'default'}`
-                                        const saved = localStorage.getItem(key)
-                                        if (saved) {
-                                            window.location.href = saved
-                                        } else {
-                                            const link = prompt("단톡방 링크를 입력해주세요 (예: https://open.kakao.com/...)")
-                                            if (link) {
-                                                localStorage.setItem(key, link)
-                                                window.location.href = link
-                                            }
+                            {/* KakaoTalk Group Button (Right-click to edit) */}
+                            <button
+                                onClick={() => {
+                                    const key = `kakao_link_${user.part || 'default'}`
+                                    const saved = localStorage.getItem(key)
+                                    if (saved) {
+                                        window.location.href = saved
+                                    } else {
+                                        const link = prompt("단톡방 링크를 입력해주세요 (예: https://open.kakao.com/...)")
+                                        if (link) {
+                                            localStorage.setItem(key, link)
+                                            window.location.href = link
                                         }
-                                    }}
-                                    className="pl-3 pr-2 py-1.5 hover:bg-[#F9E000] rounded-l-full transition-colors flex items-center gap-1.5 font-bold text-xs"
-                                    title="카톡방 열기"
-                                >
-                                    <MessageCircle size={14} fill="currentColor" />
-                                    카톡
-                                </button>
-                                <div className="w-[1px] h-3 bg-[#371D1E]/20"></div>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation()
-                                        const key = `kakao_link_${user.part || 'default'}`
-                                        const saved = localStorage.getItem(key) || ''
-                                        const link = prompt("단톡방 링크 수정:", saved)
-                                        if (link !== null) {
-                                            if (link) localStorage.setItem(key, link)
-                                            else localStorage.removeItem(key)
-                                            alert("링크가 수정되었습니다.")
-                                        }
-                                    }}
-                                    className="pl-1.5 pr-2 py-1.5 hover:bg-[#F9E000] rounded-r-full transition-colors flex items-center justify-center"
-                                    title="링크 설정"
-                                >
-                                    <Settings size={12} className="opacity-70" />
-                                </button>
-                            </div>
+                                    }
+                                }}
+                                onContextMenu={(e) => {
+                                    e.preventDefault()
+                                    const key = `kakao_link_${user.part || 'default'}`
+                                    const saved = localStorage.getItem(key) || ''
+                                    const link = prompt("단톡방 링크 수정:", saved)
+                                    if (link !== null) {
+                                        if (link) localStorage.setItem(key, link)
+                                        else localStorage.removeItem(key)
+                                        alert("링크가 수정되었습니다.")
+                                    }
+                                }}
+                                className="bg-[#FAE100] hover:bg-[#F9E000] text-[#371D1E] px-3 py-1.5 rounded-full text-xs font-bold shadow-sm flex items-center gap-1.5 active:scale-95 transition-all"
+                                title="터치: 열기 / 길게: 링크수정"
+                            >
+                                <MessageCircle size={14} fill="currentColor" />
+                                <span className="hidden md:inline">단톡방</span>
+                                <span className="md:hidden">카톡</span>
+                            </button>
 
                             {user.role === 'ADMIN' && (
                                 <button
                                     onClick={() => router.push('/reports')}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all bg-amber-900/30 border-amber-500/30 text-amber-500 hover:bg-amber-800/40"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all bg-amber-900/30 border-amber-500/30 text-amber-500 hover:bg-amber-800/40 active:scale-95"
                                     title="관리 및 통계"
                                 >
                                     <Settings size={14} className="fill-current" />
-                                    <span className="text-xs font-bold">관리/통계</span>
+                                    <span className="text-xs font-bold">관리</span>
                                 </button>
                             )}
 
-                            {/* Desktop Logout (Hidden on mobile as it's in top row) */}
                             <button
                                 onClick={handleLogout}
-                                className="hidden md:block text-slate-400 hover:text-rose-400 transition-colors p-2 hover:bg-slate-800 rounded-full"
+                                className="text-slate-400 hover:text-rose-400 transition-colors p-2 hover:bg-slate-800 rounded-full active:scale-95"
                                 title="로그아웃"
                             >
                                 <LogOut size={20} />
@@ -151,12 +119,11 @@ export default function DashboardHeader() {
                                 className="bg-teal-700/50 hover:bg-teal-600/50 text-teal-300 px-3 py-1.5 rounded-full text-xs font-bold border border-teal-500/30 flex items-center gap-1.5 transition-all"
                                 title="전체 통계 보기"
                             >
-                                📊 출석 통계
+                                📊 통계
                             </button>
-                            {/* Desktop Login */}
                             <button
                                 onClick={() => setShowLoginModal(true)}
-                                className="hidden md:block text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-full"
+                                className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-full"
                                 title="관리자 로그인"
                             >
                                 <User size={20} />

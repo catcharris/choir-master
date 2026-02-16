@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Lock, Settings, LogOut, Check, User } from 'lucide-react'
+import { Lock, Settings, LogOut, Check, User, MessageCircle } from 'lucide-react'
 
 const ROLES = [
     { label: '관리자', value: 'ADMIN' },
@@ -58,13 +58,22 @@ export default function DashboardHeader() {
 
                 {user ? (
                     <div className="flex items-center gap-1.5">
+                        {/* KakaoTalk Shortcut */}
+                        <button
+                            onClick={() => window.location.href = 'kakaotalk://'}
+                            className="bg-yellow-400/90 text-black p-2 rounded-full hover:bg-yellow-300 transition-colors shadow-lg active:scale-95"
+                            title="카카오톡 실행"
+                        >
+                            <MessageCircle size={18} fill="currentColor" />
+                        </button>
+
                         <button
                             onClick={() => router.push('/reports')}
                             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${user.role === 'ADMIN' ? 'bg-amber-900/30 border-amber-500/30 text-amber-500 hover:bg-amber-800/40' : 'bg-indigo-900/30 border-indigo-500/30 text-indigo-400 hover:bg-indigo-800/40'}`}
-                            title="관리 및 통계"
+                            title={user.role === 'ADMIN' ? "관리 및 통계" : "통계 보기"}
                         >
                             <User size={14} className="fill-current" />
-                            <span className="text-xs font-bold">관리/통계</span>
+                            <span className="text-xs font-bold">{user.role === 'ADMIN' ? '관리/통계' : '통계 보기'}</span>
                         </button>
                         <button
                             onClick={handleLogout}

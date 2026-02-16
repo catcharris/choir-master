@@ -116,3 +116,111 @@ export async function getBirthdayMembers(targetMonths: number[]) {
         day: m.birthDate?.substring(4, 6) // DD
     }));
 }
+
+// --- Attendance Actions ---
+
+// 5. Get Attendance for a Part on specific Date
+// Returns: List of members with their status for the given date (default: today)
+export async function getMemberAttendanceStats(part: string, dateString: string) {
+    // 1. Get Part Members (Active)
+    const members = await prisma.member.findMany({
+        where: {
+            part: part,
+            isActive: true
+        },
+        orderBy: { name: 'asc' }
+    })
+
+    // 2. Get Attendance Records for that Date
+    // dateString format: "YYYY-MM-DD"
+    // We need to match precise date or range depending on DB storage.
+    // Assuming DB stores DateTime.
+    const targetDateStart = new Date(dateString)
+    targetDateStart.setHours(0, 0, 0, 0);
+
+    const targetDateEnd = new Date(dateString)
+    targetDateEnd.setHours(23, 59, 59, 999);
+
+    const attendances = await prisma.attendance.findMany({
+        where: {
+            date: {
+                gte: targetDateStart,
+                lte: targetDateEnd
+            },
+            member: {
+                part: part
+            }
+        }
+    })
+
+    // 3. Merge Data
+    return members.map(m => {
+        const todayRecord = attendances.find(a => a.memberId === m.id)
+        return {
+            ...m,
+            todayStatus: todayRecord ? todayRecord.status : null // P, A, or null
+        }
+    })
+}
+
+// 6. Toggle Attendance
+export async function toggleAttendance(memberId: number, dateObj: Date, status: string | null) {
+    // status: 'P', 'A', 'L', or 'DELETE' (to remove record)
+
+    // Safety check date
+    const targetDate = new Date(dateObj)
+    // Normalize time to noon to avoid timezone shift issues on day boundary
+    targetDate.setHours(12, 0, 0, 0);
+
+    // We want to upsert based on (memberId, date).
+    // Prisma composite key is usually ID. But here we might check existence first.
+
+    // Calculate Search Range for "That Day"
+    const startOfDay = new Date(targetDate)
+    startOfDay.setHours(0, 0, 0, 0)
+    const endOfDay = new Date(targetDate)
+    endOfDay.setHours(23, 59, 59, 999)
+
+    // Check existing record
+    const existing = await prisma.attendance.findFirst({
+        where: {
+            memberId: memberId,
+            date: {
+                gte: startOfDay,
+                lte: endOfDay
+            }
+        }
+    })
+
+    if (status === 'DELETE') {
+        if (existing) {
+            await prisma.attendance.delete({
+                where: { id: existing.id }
+            })
+        }
+    } else {
+        if (existing) {
+            await prisma.attendance.update({
+                where: { id: existing.id },
+                data: {
+                    status: status!,
+                    updatedAt: new Date()
+                }
+            })
+        } else {
+            if (status) {
+                await prisma.attendance.create({
+                    data: {
+                        memberId: memberId,
+                        date: targetDate,
+                        status: status!,
+                        type: 'REGULAR' // default
+                    }
+                })
+            }
+        }
+    }
+
+    revalidatePath('/attendance/[part]')
+    revalidatePath('/reports')
+}

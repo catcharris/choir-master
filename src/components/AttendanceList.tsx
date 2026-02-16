@@ -407,7 +407,10 @@ export default function AttendanceList({ members: initialMembers, part, initialD
             )}
 
             {showBirthday && (
-                <BirthdayModal onClose={() => setShowBirthday(false)} />
+                <BirthdayModal
+                    part={part}
+                    onClose={() => setShowBirthday(false)}
+                />
             )}
         </div>
     )

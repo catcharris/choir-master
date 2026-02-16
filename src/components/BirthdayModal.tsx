@@ -6,9 +6,10 @@ import { X, Copy, Check, Cake, Printer } from 'lucide-react'
 
 interface BirthdayModalProps {
     onClose: () => void
+    part?: string // Optional: if provided, filters by part
 }
 
-export default function BirthdayModal({ onClose }: BirthdayModalProps) {
+export default function BirthdayModal({ onClose, part }: BirthdayModalProps) {
     const [loading, setLoading] = useState(true)
     const [members, setMembers] = useState<any[]>([])
     const [partyMonth, setPartyMonth] = useState<number>(0)
@@ -34,7 +35,7 @@ export default function BirthdayModal({ onClose }: BirthdayModalProps) {
             const targetMonths = [targetPartyMonth - 1, targetPartyMonth]
 
             try {
-                const data = await getBirthdayMembers(targetMonths)
+                const data = await getBirthdayMembers(targetMonths, part)
                 setMembers(data)
             } catch (e) {
                 console.error("Failed to fetch birthdays", e)
@@ -44,7 +45,7 @@ export default function BirthdayModal({ onClose }: BirthdayModalProps) {
         }
 
         fetchBirthdays()
-    }, [])
+    }, [part])
 
     const handleCopy = () => {
         if (members.length === 0) return

@@ -118,12 +118,22 @@ export async function getAllMembers() {
     })
 }
 // 4. Get Birthday Members
-export async function getBirthdayMembers(targetMonths: number[]) {
+export async function getBirthdayMembers(targetMonths: number[], part?: string) {
     // targetMonths: array of 1-indexed months (e.g. [1, 2] for Jan, Feb)
 
-    // Fetch all active members
+    // Build Where Clause
+    const whereClause: any = { isActive: true }
+    if (part) {
+        if (part === 'Soprano B') {
+            whereClause.part = { in: ['Soprano B', 'Soprano B+'] }
+        } else {
+            whereClause.part = part
+        }
+    }
+
+    // Fetch active members (filtered if part provided)
     const members = await prisma.member.findMany({
-        where: { isActive: true },
+        where: whereClause,
         orderBy: { part: 'asc' } // or name
     }) as any[]
 

@@ -190,28 +190,25 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
             {/* Header / Month Nav */}
             <div className="flex flex-col gap-4 bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
                 {/* Date Navigation - Always Visible */}
-                <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-2">
-                        <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 border border-slate-600 shadow-sm transition-colors">
-                            <ChevronLeft size={20} /> <span className="sr-only">뒤로가기</span>
+                <div className="flex items-center justify-between w-full relative">
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
+                        <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 border border-slate-600 shadow-sm transition-colors flex items-center gap-1 group">
+                            <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
+                            <span className="hidden md:inline text-sm font-medium">뒤로</span>
                         </button>
-
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <button onClick={handlePrevMonth} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400">
-                            <ChevronLeft />
+                    <div className="flex items-center justify-center gap-6 w-full">
+                        <button onClick={handlePrevMonth} className="p-2 hover:bg-slate-700/50 rounded-full text-slate-400 hover:text-white transition-all active:scale-95">
+                            <ChevronLeft size={24} />
                         </button>
-                        <h1 className="text-xl md:text-2xl font-bold text-amber-100 min-w-[140px] text-center whitespace-nowrap">
+                        <h1 className="text-2xl md:text-3xl font-bold text-amber-100 min-w-[160px] text-center whitespace-nowrap tracking-tight">
                             {year}년 {month}월
                         </h1>
-                        <button onClick={handleNextMonth} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400">
-                            <ChevronRight />
+                        <button onClick={handleNextMonth} className="p-2 hover:bg-slate-700/50 rounded-full text-slate-400 hover:text-white transition-all active:scale-95">
+                            <ChevronRight size={24} />
                         </button>
                     </div>
-
-                    {/* Spacer for centering */}
-                    <div className="w-[42px] hidden md:block"></div>
                 </div>
 
                 {/* Admin Tools - Only for ADMIN */}
@@ -281,11 +278,11 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
             {activeTab === 'weekly' && (
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
                     <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                            <h3 className="font-bold text-lg text-slate-200 flex items-center gap-2">
-                                📅 일일/주간 출석 현황
+                        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-6 border-b border-slate-700 pb-6">
+                            <h3 className="font-bold text-xl text-slate-100 flex items-center gap-2">
+                                <span className="text-2xl">📅</span> 일일/주간 출석 현황
                             </h3>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-3 bg-slate-900/50 p-2 rounded-xl border border-slate-700/50">
                                 <input
                                     type="date"
                                     value={format(reportDate, 'yyyy-MM-dd')}
@@ -294,13 +291,15 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                                         setReportDate(d)
                                         fetchDailyReport(d)
                                     }}
-                                    className="bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
+                                    className="bg-transparent border-none text-white text-base focus:ring-0 cursor-pointer text-center font-bold tracking-wide"
                                 />
+                                <div className="h-6 w-px bg-slate-700"></div>
                                 <button
                                     onClick={() => fetchDailyReport(reportDate)}
-                                    className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-lg text-sm font-bold"
+                                    className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-indigo-500/20 active:scale-95 transition-all flex items-center gap-2"
                                 >
-                                    새로고침
+                                    <span>조회</span>
+                                    <Search size={16} />
                                 </button>
                             </div>
                         </div>

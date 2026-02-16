@@ -61,10 +61,11 @@ export default function DashboardHeader() {
                         {/* KakaoTalk Shortcut */}
                         <button
                             onClick={() => window.location.href = 'kakaotalk://'}
-                            className="bg-yellow-400/90 text-black p-2 rounded-full hover:bg-yellow-300 transition-colors shadow-lg active:scale-95"
+                            className="bg-[#FAE100] text-[#371D1E] px-3 py-1.5 rounded-full hover:bg-[#F9E000] transition-colors shadow-sm active:scale-95 flex items-center gap-1.5 font-bold text-xs"
                             title="카카오톡 실행"
                         >
-                            <MessageCircle size={18} fill="currentColor" />
+                            <MessageCircle size={14} fill="currentColor" />
+                            카톡
                         </button>
 
                         <button

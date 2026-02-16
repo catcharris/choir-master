@@ -47,7 +47,13 @@ export default function DashboardContent({ notices }: DashboardContentProps) {
     if (!user) return null // Will redirect
 
     const isAdmin = user.role === 'ADMIN'
-    const visibleParts = isAdmin ? ADMIN_PARTS : PARTS.filter(p => p.name === user.part).map(p => ({ ...p, label: p.name }))
+    const visibleParts = isAdmin ? ADMIN_PARTS : PARTS.filter(p => {
+        // Special case: Soprano B leader sees both Soprano B and Soprano B+
+        if (user.part === 'Soprano B') {
+            return p.name === 'Soprano B' || p.name === 'Soprano B+'
+        }
+        return p.name === user.part
+    }).map(p => ({ ...p, label: p.name }))
 
     return (
         <div className={`min-h-screen bg-slate-900 text-white ${!isAdmin ? 'h-[100dvh] flex flex-col px-3 pt-2 overflow-hidden' : 'p-3 pb-32 md:p-6 md:pb-24'}`}>

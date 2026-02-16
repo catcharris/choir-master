@@ -89,25 +89,27 @@ export default function MemberStatsModal({ memberId, memberName, onClose }: Memb
                 </div>
 
                 {/* Body - Scrollable */}
-                <div className="p-6 pt-6 space-y-6 overflow-y-auto">
-                    {/* Member Profile Info */}
+                <div className="p-4 space-y-4 overflow-y-auto">
+                    {/* Member Profile Info (Compact) */}
                     {stats?.member && (
-                        <div className="bg-slate-700/30 p-4 rounded-xl border border-slate-700 grid grid-cols-2 gap-4">
-                            <div>
-                                <span className="text-xs text-slate-400 block mb-1">직분</span>
-                                <span className="text-slate-200 font-medium block">{stats.member.churchTitle || '-'}</span>
+                        <div className="bg-slate-700/30 p-3 rounded-xl border border-slate-700 flex flex-col sm:flex-row gap-2 sm:items-center justify-between text-sm">
+                            <div className="flex items-center gap-2">
+                                <span className="px-2 py-0.5 bg-slate-600/50 rounded text-slate-300 text-xs">
+                                    {stats.member.churchTitle || '-'}
+                                </span>
+                                <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded text-xs border border-indigo-500/30">
+                                    {stats.member.role === 'Regular' ? '정대원' : stats.member.role === 'Soloist' ? '솔리스트' : stats.member.role}
+                                </span>
                             </div>
-                            <div>
-                                <span className="text-xs text-slate-400 block mb-1">역할</span>
-                                <span className="text-slate-200 font-medium block">{stats.member.role === 'Regular' ? '정대원' : stats.member.role === 'Soloist' ? '솔리스트' : stats.member.role}</span>
-                            </div>
-                            <div>
-                                <span className="text-xs text-slate-400 block mb-1">전화번호</span>
-                                <span className="text-slate-200 font-medium block text-sm">{stats.member.phone || '-'}</span>
-                            </div>
-                            <div>
-                                <span className="text-xs text-slate-400 block mb-1">생년월일</span>
-                                <span className="text-slate-200 font-medium block">{stats.member.birthDate || '-'}</span>
+                            <div className="flex items-center gap-4 text-xs sm:text-sm text-slate-400">
+                                <div className="flex items-center gap-1">
+                                    <span>📞</span>
+                                    <span className="text-slate-200">{stats.member.phone || '-'}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <span>🎂</span>
+                                    <span className="text-slate-200">{stats.member.birthDate || '-'}</span>
+                                </div>
                             </div>
                         </div>
                     )}

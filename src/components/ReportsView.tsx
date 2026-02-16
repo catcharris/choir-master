@@ -465,7 +465,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
 
                     <div className="grid md:grid-cols-2 gap-6">
                         {/* Resting List */}
-                        <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 h-64 flex flex-col">
+                        <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 min-h-[160px] h-fit flex flex-col">
                             <h3 className="font-bold text-slate-300 mb-4 flex items-center gap-2">
                                 💤 휴식 대원 명단
                             </h3>
@@ -484,7 +484,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                         </div>
 
                         {/* Withdrawn List */}
-                        <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 h-64 flex flex-col">
+                        <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 min-h-[160px] h-fit flex flex-col">
                             <h3 className="font-bold text-slate-300 mb-4 flex items-center gap-2">
                                 👋 제적/탈퇴 명단
                             </h3>

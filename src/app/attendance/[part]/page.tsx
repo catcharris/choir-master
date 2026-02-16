@@ -92,18 +92,7 @@ export default async function AttendancePage({
 
     return (
         <div className="min-h-screen bg-slate-900 text-white p-4 pb-20">
-            <header className="mb-6 flex items-center justify-between sticky top-0 bg-slate-900/90 backdrop-blur-md z-20 py-4 -mt-4 border-b border-slate-800">
-                <Link href="/dashboard" className="text-slate-400 hover:text-white flex items-center gap-2 font-medium px-2 py-1 rounded-lg hover:bg-slate-800 transition-colors">
-                    ← 뒤로가기
-                </Link>
-                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-yellow-400">
-                    {decodedPart}
-                </h1>
-                <div className="w-auto text-right text-xs text-slate-500 font-mono bg-slate-800 px-2 py-1 rounded border border-slate-700">
-                    {presentCount} / {members.length} 명
-                </div>
-            </header>
-
+            {/* Header moved to AttendanceList for dynamic count */}
             <AttendanceList
                 members={sortedMembers}
                 part={decodedPart}

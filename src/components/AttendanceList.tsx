@@ -339,16 +339,20 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                                         )}
                                         {isNew && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30 whitespace-nowrap">신입</span>}
 
-                                        {/* Missing Data Indicators (Edit Mode Only) */}
-                                        {isEditMode && !member.phone && (
-                                            <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
-                                                <Phone size={10} /> <span className="text-[9px]">미등록</span>
-                                            </span>
-                                        )}
-                                        {isEditMode && !member.birthDate && (
-                                            <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
-                                                <Cake size={10} /> <span className="text-[9px]">미등록</span>
-                                            </span>
+                                        {/* Missing Data Indicators (Edit Mode Only - Stacked) */}
+                                        {isEditMode && (!member.phone || !member.birthDate) && (
+                                            <div className="flex flex-col gap-1 ml-1">
+                                                {!member.phone && (
+                                                    <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
+                                                        <Phone size={10} /> <span className="text-[9px]">미등록</span>
+                                                    </span>
+                                                )}
+                                                {!member.birthDate && (
+                                                    <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
+                                                        <Cake size={10} /> <span className="text-[9px]">미등록</span>
+                                                    </span>
+                                                )}
+                                            </div>
                                         )}
 
                                         {/* Admin Edit Button - Stops Propagation */}

@@ -1,0 +1,30 @@
+
+> choir-master@0.1.0 dev
+> next dev -p 3005
+
+⚠ `eslint` configuration in next.config.js is no longer supported. See more info here: https://nextjs.org/docs/app/api-reference/cli/next#next-lint-options
+⚠ Invalid next.config.js options detected: 
+⚠     Unrecognized key(s) in object: 'eslint'
+⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3005
+- Network:       http://192.168.0.8:3005
+- Environments: .env.local, .env
+
+✓ Starting...
+✓ Ready in 2.4s
+⨯ ERROR: This build is using Turbopack, with a `webpack` config and no `turbopack` config.
+   This may be a mistake.
+
+   As of Next.js 16 Turbopack is enabled by default and
+   custom webpack configurations may need to be migrated to Turbopack.
+
+   NOTE: your `webpack` config may have been added by a configuration plugin.
+
+   To configure Turbopack, see https://nextjs.org/docs/app/api-reference/next-config-js/turbopack
+
+   TIP: Many applications work fine under Turbopack with no configuration,
+   if that is the case for you, you can silence this error by passing the
+   `--turbopack` or `--webpack` flag explicitly or simply setting an 
+   empty turbopack config in your Next config file (e.g. `turbopack: {}`).
+[?25h

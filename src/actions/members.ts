@@ -83,6 +83,34 @@ export async function deactivateMember(id: number, reason: string = 'WITHDRAWN')
 
     revalidatePath('/reports')
 }
+
+// 3.5 Completely Delete Member (For cleanup)
+export async function deleteMember(id: number) {
+    // 1. Delete Attendance First
+    await prisma.attendance.deleteMany({
+        where: { memberId: id }
+    })
+
+    // 2. Delete Member
+    await prisma.member.delete({
+        where: { id }
+    })
+
+    revalidatePath('/dashboard')
+    revalidatePath('/attendance/[part]')
+    revalidatePath('/reports')
+    revalidatePath('/admin/members')
+}
+
+// 3.6 Get All Members for Admin
+export async function getAllMembers() {
+    return await prisma.member.findMany({
+        orderBy: [
+            { part: 'asc' },
+            { name: 'asc' }
+        ]
+    })
+}
 // 4. Get Birthday Members
 export async function getBirthdayMembers(targetMonths: number[]) {
     // targetMonths: array of 1-indexed months (e.g. [1, 2] for Jan, Feb)

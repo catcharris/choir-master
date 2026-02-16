@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useReactToPrint } from 'react-to-print'
 import * as XLSX from 'xlsx'
-import { Download, ChevronLeft, ChevronRight, FileSpreadsheet, Trophy, Calendar, Search, Printer } from 'lucide-react'
+import { Download, ChevronLeft, ChevronRight, FileSpreadsheet, Trophy, Calendar, Search, Printer, Users } from 'lucide-react'
 import { getSoloistStats, getYearlyReport } from '@/actions/stats'
 import { getDailyReport, DailyReportData } from '@/actions/reports'
 import { format } from 'date-fns'
@@ -186,9 +186,18 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                 {/* Date Navigation - Always Visible */}
                 <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-2">
-                        <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 border border-slate-600">
+                        <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 border border-slate-600 shadow-sm transition-colors">
                             <ChevronLeft size={20} /> <span className="sr-only">뒤로가기</span>
                         </button>
+                        {isAdmin && (
+                            <button
+                                onClick={() => router.push('/admin/members')}
+                                className="flex items-center gap-2 px-3 py-2 bg-slate-700 hover:bg-slate-600 text-amber-500 rounded-lg border border-slate-600 hover:border-amber-500/50 shadow-sm transition-all"
+                            >
+                                <Users size={18} />
+                                <span className="text-xs font-bold hidden sm:inline">대원 관리</span>
+                            </button>
+                        )}
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -375,13 +384,20 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
 
             {activeTab === 'monthly' && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-                    {/* Refresh Control */}
-                    <div className="flex justify-end -mb-4">
+                    {/* Refresh Control & Admin Link */}
+                    <div className="flex justify-end mb-2 gap-2">
+                        <button
+                            onClick={() => router.push('/admin/members')}
+                            className="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                        >
+                            <Users size={14} />
+                            대원 관리
+                        </button>
                         <button
                             onClick={() => router.refresh()}
-                            className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                            className="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-indigo-500/30 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                         >
-                            <span className="text-lg leading-none">↻</span>
+                            <span className="text-sm font-bold animate-spin-slow">↻</span>
                             통계 새로고침
                         </button>
                     </div>

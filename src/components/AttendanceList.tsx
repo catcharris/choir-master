@@ -232,24 +232,31 @@ export default function AttendanceList({ members: initialMembers, part, initialD
             </div>
 
             {/* Header */}
-            <header className="flex items-center justify-between px-1">
-                <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-200 to-indigo-400">
-                    {part} 대원 명단
-                </h2>
+            <header className="flex items-center justify-between px-1 mb-2">
+                <div className="flex flex-col">
+                    <h2 className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-200 to-indigo-400 flex items-center gap-2">
+                        <span>{part.replace('Soprano', 'Sop')}</span>
+                        <span className="hidden sm:inline">대원 명단</span>
+                        <span className="text-sm font-medium text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded-full border border-slate-700">
+                            {members.length}명
+                        </span>
+                    </h2>
+                </div>
                 <div className="flex gap-2">
                     <button
                         onClick={() => setShowBirthday(true)}
-                        className="p-2 bg-slate-800 text-pink-400 rounded-lg border border-slate-700 hover:bg-slate-700"
+                        className="p-2 bg-slate-800 text-pink-400 rounded-lg border border-slate-700 hover:bg-slate-700 active:scale-95 transition-all"
                     >
                         <Cake size={18} />
                     </button>
                     {isAdmin && (
                         <button
                             onClick={() => setShowAddMember(true)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow-lg active:scale-95 transition-all"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow-lg active:scale-95 transition-all whitespace-nowrap"
                         >
                             <UserPlus size={14} />
-                            대원 추가
+                            <span className="hidden xs:inline">추가</span>
+                            <span className="inline xs:hidden">+</span>
                         </button>
                     )}
                 </div>

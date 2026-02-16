@@ -64,6 +64,29 @@ export default function DashboardContent({ notices }: DashboardContentProps) {
                         </h2>
                     )}
                     {isAdmin && (
+                        <div className="mb-6 px-1">
+                            <h2 className="text-lg font-bold text-slate-300 mb-4 px-1 flex items-center gap-2">
+                                <span>🛡️ 관리자 메뉴</span>
+                            </h2>
+                            <Link
+                                href="/admin/members"
+                                className="flex items-center justify-between p-4 bg-slate-800 border border-amber-500/30 rounded-xl hover:bg-slate-750 active:scale-[0.98] transition-all shadow-lg hover:shadow-amber-500/10 group"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="h-10 w-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500">
+                                        <span className="text-xl">👥</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-amber-100 text-lg group-hover:text-amber-400 transition-colors">대원 관리</h3>
+                                        <p className="text-xs text-slate-400">대원 추가, 수정, 삭제 및 파트 이동</p>
+                                    </div>
+                                </div>
+                                <span className="text-slate-500 text-lg">→</span>
+                            </Link>
+                        </div>
+                    )}
+
+                    {isAdmin && (
                         <h2 className="text-lg font-bold text-slate-300 mb-4 px-1">
                             출석부 (파트 선택)
                         </h2>

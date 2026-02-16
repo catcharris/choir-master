@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { format, isToday } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { Calendar, ChevronLeft, ChevronRight, Cake, UserPlus, Check, X, Settings } from 'lucide-react'
@@ -48,26 +48,13 @@ export default function AttendanceList({ members: initialMembers, part, initialD
     const dbDateString = format(selectedDate, 'yyyy-MM-dd')
     const isAdmin = user?.role === 'ADMIN'
 
+    // Track first render to avoid double fetching on mount
+    const isFirstRun = useRef(true)
+
     // Fetch Data on Date Change
     useEffect(() => {
         const fetchAttendance = async () => {
             if (!user) return
-
-            // Skip fetch if we just mounted and the date matches initialDate 
-            // (Use server data for first render)
-            const initialDateStr = initialDate ? format(new Date(initialDate), 'yyyy-MM-dd') : ''
-            if (dbDateString === initialDateStr && members.length > 0) {
-                // But wait, if we navigate to another date and come back, we need to fetch?
-                // Actually the server data already has the attendance for that date.
-                // So we only need to fetch if the date is DIFFERENT from initial one.
-                // BUT: initialMembers are static. If we switch date, we need to refetch.
-                // If we switch back to initial date, we might need to refetch if updates happened?
-                // Minimal conflict: Only skip if this is the VERY FIRST run? 
-                // React strict mode runs twice.
-
-                // Let's rely on a check: if `members` state already seems to match the date?
-                // No, `members` state doesn't store date.
-            }
 
             try {
                 // @ts-ignore
@@ -79,17 +66,16 @@ export default function AttendanceList({ members: initialMembers, part, initialD
             }
         }
 
-        // Only fetch if date is different from initial or if we need to refresh
-        if (initialDate) {
-            const current = format(selectedDate, 'yyyy-MM-dd')
-            const init = format(new Date(initialDate), 'yyyy-MM-dd')
-            if (current !== init) {
-                fetchAttendance()
-            }
-        } else {
-            fetchAttendance()
+        // Skip the very first run because we have initialMembers from server
+        if (isFirstRun.current) {
+            isFirstRun.current = false
+            return
         }
-    }, [part, user, dbDateString, initialDate]) // Logic refined below
+
+        // For any subsequent change in date (or part), fetch fresh data
+        fetchAttendance()
+
+    }, [part, user, dbDateString])
 
     // Date Navigation
     const handlePrevDay = () => {

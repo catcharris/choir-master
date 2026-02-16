@@ -75,11 +75,8 @@ export default async function AttendancePage({
 
     const presentCount = members.filter(m => {
         const status = m.attendance?.[0]?.status
-        return status === 'PRESENT' || status === 'LATE' // Include LATE as Present? Usually yes for count. Or strict?
-        // Let's stick to PRESENT only or strict. Simple count: Present only usually.
-        // User requested "Mistake Correction", implies status changes.
-        // Let's count PRESENT + LATE as "Attended"?
-        // Usually LATE is attended.
+        // DB stores 'P' for Present, 'L' for Late. Both should count as attended.
+        return status === 'P' || status === 'L'
     }).length
 
     return (

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Megaphone, Music2, Calendar, Link as LinkIcon, ChevronDown, ChevronUp, Pencil } from 'lucide-react'
+import { Megaphone, Music2, Calendar, Link as LinkIcon, ChevronDown, ChevronUp, Pencil, Copy } from 'lucide-react'
 import { format } from 'date-fns'
 
 import { Notice } from '@prisma/client'
@@ -18,6 +18,21 @@ export default function NoticeList({ notices, onEdit }: NoticeListProps) {
         setExpandedIds(prev =>
             prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
         )
+    }
+
+    const handleCopy = (e: React.MouseEvent, notice: Notice) => {
+        e.stopPropagation()
+        let text = `[${notice.title}]\n\n${notice.content}`
+        if ((notice as any).link) {
+            text += `\n\n📌 링크: ${(notice as any).link}`
+        }
+
+        navigator.clipboard.writeText(text).then(() => {
+            alert("공지가 복사되었습니다. 📋\n카톡방에 붙여넣기 하세요.")
+        }).catch(err => {
+            console.error('Failed to copy:', err)
+            alert("복사에 실패했습니다.")
+        })
     }
 
     if (!notices || notices.length === 0) {
@@ -78,8 +93,17 @@ export default function NoticeList({ notices, onEdit }: NoticeListProps) {
                                 )}
 
                                 {/* Actions Footer */}
-                                {onEdit && (
-                                    <div className="mt-4 pt-4 border-t border-slate-700/50 flex justify-end">
+                                {/* Actions Footer - Visible to ALL */}
+                                <div className="mt-4 pt-4 border-t border-slate-700/50 flex justify-end gap-2">
+                                    <button
+                                        onClick={(e) => handleCopy(e, notice)}
+                                        className="flex items-center gap-1.5 text-xs font-bold text-amber-500 hover:text-amber-400 bg-amber-900/20 hover:bg-amber-900/30 px-3 py-1.5 rounded-lg transition-all border border-amber-500/20 shadow-sm"
+                                    >
+                                        <Copy size={12} />
+                                        공지 복사
+                                    </button>
+
+                                    {onEdit && (
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation()
@@ -90,8 +114,8 @@ export default function NoticeList({ notices, onEdit }: NoticeListProps) {
                                             <Pencil size={12} />
                                             수정
                                         </button>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
                         )}
                     </div>

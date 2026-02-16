@@ -92,7 +92,7 @@ export default function PartMonthlyStatsModal({ part, onClose }: PartMonthlyStat
                                             이름
                                         </th>
                                         <th className="sticky top-0 z-10 bg-slate-800 p-3 text-center font-bold text-amber-400 border-b border-slate-600 min-w-[60px]">
-                                            율(%)
+                                            (%)
                                         </th>
                                         {stats.serviceDays.map((day: string) => {
                                             const d = new Date(day)
@@ -119,7 +119,7 @@ export default function PartMonthlyStatsModal({ part, onClose }: PartMonthlyStat
                                             </td>
                                             <td className="p-2 text-center">
                                                 <span className={`font-bold ${member.rate >= 80 ? 'text-green-400' :
-                                                        member.rate >= 50 ? 'text-yellow-400' : 'text-rose-400'
+                                                    member.rate >= 50 ? 'text-yellow-400' : 'text-rose-400'
                                                     }`}>
                                                     {member.rate}%
                                                 </span>

@@ -417,23 +417,42 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                         </button>
                     </div>
 
-                    {/* Overview Cards */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-                            <div className="text-slate-400 text-sm mb-1">종합 출석률</div>
-                            <div className="text-3xl font-bold text-amber-400">{data.overall.rate}%</div>
+                    {/* Overview Section */}
+                    <div className="space-y-4">
+                        {/* 1. Overall Rate - Hero Card */}
+                        <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700 shadow-lg flex flex-col items-center justify-center relative overflow-hidden group">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-amber-600"></div>
+                            <div className="text-slate-400 font-bold mb-2 uppercase tracking-widest text-sm">종합 출석률</div>
+                            <div className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-300 to-amber-500 drop-shadow-sm">
+                                {data.overall.rate}%
+                            </div>
                         </div>
-                        <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-                            <div className="text-slate-400 text-sm mb-1">활동 대원</div>
-                            <div className="text-3xl font-bold text-white">{data.overall.totalActive}명</div>
-                        </div>
-                        <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-                            <div className="text-slate-400 text-sm mb-1">휴식 대원</div>
-                            <div className="text-3xl font-bold text-slate-300">{data.overall.totalResting}명</div>
-                        </div>
-                        <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-                            <div className="text-slate-400 text-sm mb-1">전체 재적</div>
-                            <div className="text-3xl font-bold text-slate-500">{data.overall.totalActive + data.overall.totalResting}명</div>
+
+                        {/* 2. Stats Grid */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {/* Active */}
+                            <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-1 hover:bg-slate-700/50 transition-colors">
+                                <div className="text-slate-400 text-xs font-bold">활동 대원</div>
+                                <div className="text-2xl font-bold text-white">{data.overall.totalActive}명</div>
+                            </div>
+                            {/* New - Highlighted */}
+                            <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-1 relative overflow-hidden hover:bg-slate-700/50 transition-colors">
+                                <div className="absolute top-2 right-2">
+                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
+                                </div>
+                                <div className="text-green-400 text-xs font-bold">신입 대원</div>
+                                <div className="text-2xl font-bold text-green-300">{data.overall.totalNew}명</div>
+                            </div>
+                            {/* Resting */}
+                            <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-1 hover:bg-slate-700/50 transition-colors">
+                                <div className="text-slate-500 text-xs font-bold">휴식 대원</div>
+                                <div className="text-2xl font-bold text-slate-400">{data.overall.totalResting}명</div>
+                            </div>
+                            {/* Total */}
+                            <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-1 hover:bg-slate-700/50 transition-colors">
+                                <div className="text-slate-500 text-xs font-bold">전체 재적</div>
+                                <div className="text-2xl font-bold text-slate-500">{data.overall.totalActive + data.overall.totalResting}명</div>
+                            </div>
                         </div>
                     </div>
 

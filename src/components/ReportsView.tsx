@@ -198,6 +198,17 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                     <span>대시보드</span>
                 </button>
 
+                {/* Naver Band Link - Right Side Balance */}
+                <a
+                    href="https://band.us/band/2806346"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute -top-10 right-0 flex items-center gap-1.5 bg-green-600/20 hover:bg-green-600/30 text-green-400 border border-green-500/30 px-3 py-1.5 rounded-full shadow-sm transition-all active:scale-95 text-xs font-bold"
+                >
+                    <span>찬양대 밴드</span>
+                    <Download size={14} strokeWidth={3} className="rotate-[-90deg]" />
+                </a>
+
                 <div className="flex flex-col gap-2 bg-slate-800 px-4 py-3 rounded-xl border border-slate-700 shadow-xl mt-8">
                     {/* Date Navigation - Compact */}
                     <div className="flex items-center justify-center gap-4 w-full relative">

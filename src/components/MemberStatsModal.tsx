@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getMemberAttendanceStats } from '@/actions/stats'
-import { X, Calendar, Sun, Moon, Pencil } from 'lucide-react'
+import { X, Calendar, Sun, Moon, Pencil, ChevronLeft, ChevronRight } from 'lucide-react'
 import confetti from 'canvas-confetti'
 import AddMemberModal from './AddMemberModal'
 
@@ -111,22 +111,22 @@ export default function MemberStatsModal({ memberId, memberName, onClose }: Memb
 
                 {/* Body - Compact Layout */}
                 <div className="p-4 space-y-3 overflow-y-auto">
-                    {/* Month Selector */}
-                    <div className="flex justify-between items-center bg-slate-800/50 rounded-lg p-1 border border-slate-700/50">
+                    {/* Month Selector (Larger) */}
+                    <div className="flex justify-between items-center bg-slate-800/50 rounded-xl p-2 border border-slate-700/50">
                         <button
                             onClick={() => setMonthOffset(prev => prev - 1)}
-                            className="p-1 px-3 hover:bg-slate-700 rounded text-slate-400 transition-colors"
+                            className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 transition-colors"
                         >
-                            ◀
+                            <ChevronLeft size={24} />
                         </button>
-                        <span className="font-bold text-amber-400 text-sm tracking-wide">
+                        <span className="font-black text-amber-400 text-xl tracking-wide">
                             {stats?.month || 'Loading...'}
                         </span>
                         <button
                             onClick={() => setMonthOffset(prev => prev + 1)}
-                            className="p-1 px-3 hover:bg-slate-700 rounded text-slate-400 transition-colors"
+                            className="p-2 hover:bg-slate-700 rounded-lg text-slate-400 transition-colors"
                         >
-                            ▶
+                            <ChevronRight size={24} />
                         </button>
                     </div>
 
@@ -136,35 +136,35 @@ export default function MemberStatsModal({ memberId, memberName, onClose }: Memb
                         </div>
                     ) : (
                         <>
-                            {/* Stats Summary Card */}
-                            <div className="bg-slate-800/40 rounded-xl border border-slate-700/50 p-3 flex items-center justify-between">
+                            {/* Stats Summary Card (Larger) */}
+                            <div className="bg-slate-800/40 rounded-2xl border border-slate-700/50 p-5 flex items-center justify-between">
                                 {/* Circular Progress */}
-                                <div className="flex items-center gap-3">
-                                    <div className="relative w-12 h-12 flex items-center justify-center">
+                                <div className="flex items-center gap-4">
+                                    <div className="relative w-16 h-16 flex items-center justify-center">
                                         <svg className="absolute w-full h-full -rotate-90" viewBox="0 0 36 36">
                                             <path className="text-slate-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" />
-                                            <path className="text-amber-500 drop-shadow-[0_0_2px_rgba(245,158,11,0.5)] transition-all duration-1000 ease-out" strokeDasharray={`${stats?.totalRate || 0}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" />
+                                            <path className="text-amber-500 drop-shadow-[0_0_4px_rgba(245,158,11,0.6)] transition-all duration-1000 ease-out" strokeDasharray={`${stats?.totalRate || 0}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" />
                                         </svg>
-                                        <span className="text-[10px] font-bold text-white">{stats?.totalRate}%</span>
+                                        <span className="text-sm font-black text-white">{stats?.totalRate}%</span>
                                     </div>
                                     <div className="flex flex-col">
-                                        <span className="text-xs font-bold text-slate-300">통합 출석률</span>
-                                        <span className="text-[10px] text-slate-500">이번 달 전체</span>
+                                        <span className="text-base font-bold text-slate-200">통합 출석률</span>
+                                        <span className="text-xs text-slate-500">이번 달 전체</span>
                                     </div>
                                 </div>
 
-                                {/* Sat/Sun Mini Stats */}
-                                <div className="flex gap-2">
-                                    <div className="flex flex-col items-center justify-center bg-indigo-950/30 border border-indigo-500/20 rounded px-2 py-1 min-w-[50px]">
-                                        <span className="text-[9px] text-indigo-400 mb-0.5 flex items-center gap-0.5"><Moon size={8} /> 토</span>
-                                        <span className="text-xs font-bold text-indigo-100">
-                                            {stats?.stats.sat.attended}<span className="text-[9px] text-indigo-500/70 font-normal">/{stats?.stats.sat.total}</span>
+                                {/* Sat/Sun Mini Stats (Larger) */}
+                                <div className="flex gap-3">
+                                    <div className="flex flex-col items-center justify-center bg-indigo-950/40 border border-indigo-500/30 rounded-lg px-3 py-2 min-w-[60px]">
+                                        <span className="text-[10px] text-indigo-300 mb-1 flex items-center gap-1 font-bold"><Moon size={10} /> 토</span>
+                                        <span className="text-lg font-bold text-indigo-100 leading-none">
+                                            {stats?.stats.sat.attended}<span className="text-xs text-indigo-500/70 font-normal">/{stats?.stats.sat.total}</span>
                                         </span>
                                     </div>
-                                    <div className="flex flex-col items-center justify-center bg-rose-950/30 border border-rose-500/20 rounded px-2 py-1 min-w-[50px]">
-                                        <span className="text-[9px] text-rose-400 mb-0.5 flex items-center gap-0.5"><Sun size={8} /> 주일</span>
-                                        <span className="text-xs font-bold text-rose-100">
-                                            {stats?.stats.sun.attended}<span className="text-[9px] text-rose-500/70 font-normal">/{stats?.stats.sun.total}</span>
+                                    <div className="flex flex-col items-center justify-center bg-rose-950/40 border border-rose-500/30 rounded-lg px-3 py-2 min-w-[60px]">
+                                        <span className="text-[10px] text-rose-300 mb-1 flex items-center gap-1 font-bold"><Sun size={10} /> 주일</span>
+                                        <span className="text-lg font-bold text-rose-100 leading-none">
+                                            {stats?.stats.sun.attended}<span className="text-xs text-rose-500/70 font-normal">/{stats?.stats.sun.total}</span>
                                         </span>
                                     </div>
                                 </div>

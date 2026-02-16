@@ -180,6 +180,9 @@ export async function getMemberAttendanceStats(part: string, dateString: string)
     const targetDateStart = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
     const targetDateEnd = new Date(Date.UTC(year, month, day, 23, 59, 59, 999));
 
+    // Debug log
+    console.log(`[DEBUG] getMemberAttendanceStats: ${year}-${month + 1}-${day} UTC Range: ${targetDateStart.toISOString()} ~ ${targetDateEnd.toISOString()}`);
+
     const attendances = await prisma.attendance.findMany({
         where: {
             date: {
@@ -232,15 +235,15 @@ export async function toggleAttendance(memberId: number, dateInput: string | Dat
     }
 
     // Construct dates using UTC to avoid any server local time offset
-    // 00:00:00 UTC
+    // 00:00:00.000 UTC
     const startOfDay = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
-    // 23:59:59 UTC
+    // 23:59:59.999 UTC
     const endOfDay = new Date(Date.UTC(year, month, day, 23, 59, 59, 999));
 
     // Save at Noon UTC to be safe
     const saveDate = new Date(Date.UTC(year, month, day, 12, 0, 0, 0));
 
-    // Check existing record
+    // Check existing record strictly within this UTC day
     const existing = await prisma.attendance.findFirst({
         where: {
             memberId: memberId,

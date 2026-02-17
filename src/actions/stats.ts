@@ -402,10 +402,10 @@ export async function getWeeklyReport(year: number, month: number) {
 
     for (const [weekNum, dates] of sortedWeeks) {
         if (dates.sat) {
-            resultRows.push(getStatsForDate(dates.sat, `연습 (${getDate(dates.sat)})`))
+            resultRows.push(getStatsForDate(dates.sat, `${weekNum}주차 연습 (${getDate(dates.sat)}일)`))
         }
         if (dates.sun) {
-            resultRows.push(getStatsForDate(dates.sun, `주일 (${getDate(dates.sun)})`))
+            resultRows.push(getStatsForDate(dates.sun, `${weekNum}주차 주일 (${getDate(dates.sun)}일)`))
         }
     }
 

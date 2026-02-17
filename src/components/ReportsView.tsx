@@ -145,8 +145,44 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
         setGeneratedText(text)
     }
 
-    const handleCopySoloistText = () => {
+    // Kakao Share Setup
+    const [isKakaoInitialized, setIsKakaoInitialized] = useState(false)
+    const [isSdkLoaded, setIsSdkLoaded] = useState(false)
+    const KAKAO_JS_KEY = '2d246c6c619b67ce0d182428f6e591a2'
+
+    useEffect(() => {
+        // Load Kakao SDK
+        if ((window as any).Kakao) {
+            setIsSdkLoaded(true)
+        } else {
+            const script = document.createElement('script')
+            script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js'
+            script.onload = () => {
+                setIsSdkLoaded(true)
+            }
+            document.head.appendChild(script)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (isSdkLoaded && !isKakaoInitialized) {
+            const Kakao = (window as any).Kakao
+            if (Kakao && !Kakao.isInitialized()) {
+                try {
+                    Kakao.init(KAKAO_JS_KEY)
+                    setIsKakaoInitialized(true)
+                } catch (e) {
+                    console.error('Kakao Init failed', e)
+                }
+            } else if (Kakao && Kakao.isInitialized()) {
+                setIsKakaoInitialized(true)
+            }
+        }
+    }, [isSdkLoaded, isKakaoInitialized])
+
+    const handleKakaoShare = () => {
         if (soloistStats.length === 0) return alert('데이터가 없습니다.')
+        if (!isKakaoInitialized) return alert('카카오톡 SDK가 아직 로드되지 않았습니다.')
 
         let text = `[${month}월 솔리스트 토요연습]\n\n`
 
@@ -156,10 +192,19 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
 
         text += `\n총 ${soloistStats.length}명`
 
-        navigator.clipboard.writeText(text)
-        alert("솔리스트 명단이 복사되었습니다!")
+        const Kakao = (window as any).Kakao
+        Kakao.Share.sendDefault({
+            objectType: 'text',
+            text: text,
+            link: {
+                mobileWebUrl: 'https://choir-master.vercel.app',
+                webUrl: 'https://choir-master.vercel.app',
+            },
+            buttonTitle: '앱에서 보기',
+        })
     }
 
+    // Previous Copy Text Function (kept for Admin tab if needed, but Soloist uses Kakao now)
     const handleCopyText = () => {
         navigator.clipboard.writeText(generatedText)
         alert("리포트가 복사되었습니다! 카톡방에 붙여넣으세요.")

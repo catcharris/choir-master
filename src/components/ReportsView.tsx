@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation'
 import { useReactToPrint } from 'react-to-print'
 import * as XLSX from 'xlsx'
 import { Download, ChevronLeft, ChevronRight, FileSpreadsheet, Trophy, Calendar, Search, Printer, Users } from 'lucide-react'
-import { getSoloistStats, getYearlyReport } from '@/actions/stats'
+import { getSoloistStats, getYearlyReport, WeeklyStat } from '@/actions/stats'
 import { getDailyReport, DailyReportData } from '@/actions/reports'
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import MemberStatsModal from './MemberStatsModal'
 import { ReportTemplate } from './ReportTemplate'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface ReportData {
     overall: {
@@ -40,8 +41,15 @@ interface ReportData {
     newMemberList: { name: string; part: string }[];
 }
 
+export interface WeeklyReportData {
+    registeredRow: WeeklyStat;
+    weeklyRows: WeeklyStat[];
+    monthlyStats: WeeklyStat[];
+}
+
 interface ReportsViewProps {
     data: ReportData;
+    weeklyData: WeeklyReportData;
     year: number;
     month: number;
 }
@@ -53,9 +61,7 @@ const shortenPartName = (name: string) => {
         .replace('Tenor', 'Ten')
 }
 
-import { useAuth } from '@/contexts/AuthContext'
-
-export default function ReportsView({ data, year, month }: ReportsViewProps) {
+export default function ReportsView({ data, weeklyData, year, month }: ReportsViewProps) {
     const { user } = useAuth()
     const router = useRouter()
 
@@ -613,6 +619,7 @@ export default function ReportsView({ data, year, month }: ReportsViewProps) {
                 <ReportTemplate
                     ref={componentRef}
                     data={data}
+                    weeklyData={weeklyData}
                     year={year}
                     month={month}
                     author={reportAuthor}

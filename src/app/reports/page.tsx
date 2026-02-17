@@ -1,4 +1,4 @@
-import { getMonthlyReport } from '@/actions/stats'
+import { getMonthlyReport, getWeeklyReport } from '@/actions/stats'
 import ReportsView from '@/components/ReportsView'
 
 interface PageProps {
@@ -14,10 +14,11 @@ export default async function ReportsPage({ searchParams }: PageProps) {
     const month = params.month ? parseInt(params.month) : now.getMonth() + 1
 
     const data = await getMonthlyReport(year, month)
+    const weeklyData = await getWeeklyReport(year, month)
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 pb-20">
-            <ReportsView data={data} year={year} month={month} />
+            <ReportsView data={data} weeklyData={weeklyData} year={year} month={month} />
         </div>
     )
 }

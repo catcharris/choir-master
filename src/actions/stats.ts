@@ -273,7 +273,198 @@ export async function getMonthlyReport(year: number, month: number) {
         newMemberList: members.filter(m => m.role === 'New').map(m => ({ name: m.name, part: m.part }))
     }
 }
-// Fetch Monthly Stats for a Specific Part (for Part Leaders)
+// ... (existing functions)
+
+import { getWeekOfMonth, getDate } from 'date-fns'
+
+export interface WeeklyStat {
+    label: string
+    soprano: number
+    alto: number
+    tenor: number
+    bass: number
+    newCount: number
+    registered: number
+    total: number
+    rate: number | null
+}
+
+export async function getWeeklyReport(year: number, month: number) {
+    const start = startOfMonth(new Date(year, month - 1))
+    const end = endOfMonth(new Date(year, month - 1))
+
+    // 1. Fetch All Enrolled Members (Active + Resting)
+    // "Registered" row usually implies total potential attendance pool.
+    // We include Resting members as "Registered" members.
+    const enrolledMembers = await prisma.member.findMany({
+        where: {
+            OR: [
+                { isActive: true },
+                { role: 'Resting' }
+            ]
+        },
+        orderBy: { part: 'asc' }
+    })
+
+    // Separate New members
+    // Check if 'New' role members are considered "Enrolled" in main parts or separate?
+    // User: "New members count is separate."
+    // So "Registered" = Regular Members (Excluding New).
+    const regularMembers = enrolledMembers.filter(m => m.role !== 'New')
+    const newMembers = enrolledMembers.filter(m => m.role === 'New')
+
+    // 2. Fetch Attendance
+    const attendance = await prisma.attendance.findMany({
+        where: {
+            date: { gte: start, lte: end },
+            status: { in: ['PRESENT', 'LATE', 'P', 'L'] }
+        },
+        include: { member: true }
+    })
+
+    // 3. Define Weeks
+    const allDays = eachDayOfInterval({ start, end })
+    const serviceDays = allDays.filter(d => getDay(d) === 6 || getDay(d) === 0)
+
+    const weeksMap = new Map<number, { sat?: Date, sun?: Date }>()
+
+    serviceDays.forEach(d => {
+        // Week starts on Monday (1)
+        const weekNum = getWeekOfMonth(d, { weekStartsOn: 1 })
+
+        if (!weeksMap.has(weekNum)) {
+            weeksMap.set(weekNum, {})
+        }
+
+        const w = weeksMap.get(weekNum)!
+        if (getDay(d) === 6) w.sat = d
+        if (getDay(d) === 0) w.sun = d
+    })
+
+    const resultRows: WeeklyStat[] = []
+
+    // Helper to calculate stats for a specific date
+    const getStatsForDate = (date: Date, label: string): WeeklyStat => {
+        const targetDateStart = new Date(date)
+        targetDateStart.setHours(0, 0, 0, 0)
+        const targetDateEnd = new Date(date)
+        targetDateEnd.setHours(23, 59, 59, 999)
+
+        // Filter attendance for this date
+        const dayAttendance = attendance.filter(a => {
+            const d = new Date(a.date)
+            return d >= targetDateStart && d <= targetDateEnd
+        })
+
+        // Counts by Member Type
+        // Attendance of Regular Members
+        const regAttendance = dayAttendance.filter(a => a.member.role !== 'New')
+
+        // Count by Part (Regular Only)
+        const getCount = (partName: string) => regAttendance.filter(a => a.member.part.includes(partName)).length
+        const sop = getCount('Soprano')
+        const alt = getCount('Alto')
+        const ten = getCount('Tenor')
+        const bass = getCount('Bass')
+
+        // Attendance of New Members
+        const newAtt = dayAttendance.filter(a => a.member.role === 'New').length
+
+        // "Registered" Column in Weekly Stats = Sum of Regular Attendance
+        // User: "Registered seems to be the sum of attendance (of parts)"
+        const registeredSum = sop + alt + ten + bass
+
+        // "Total" Column in Weekly Stats = Registered Sum + New Sum
+        // User: "Total seems to be Registered + New"
+        const totalSum = registeredSum + newAtt
+
+        // Rate Calculation
+        // Denominator: Total Regular Members (Active + Resting)
+        // Rate = (Regular Attendance / Total Regular Members) * 100
+        const totalRegularCount = regularMembers.length
+        const rate = totalRegularCount > 0 ? Math.round((registeredSum / totalRegularCount) * 100) : 0
+
+        return {
+            label,
+            soprano: sop,
+            alto: alt,
+            tenor: ten,
+            bass: bass,
+            newCount: newAtt,
+            registered: registeredSum,
+            total: totalSum,
+            rate
+        }
+    }
+
+    // Generate Rows
+    const sortedWeeks = Array.from(weeksMap.entries()).sort((a, b) => a[0] - b[0])
+
+    for (const [weekNum, dates] of sortedWeeks) {
+        if (dates.sat) {
+            resultRows.push(getStatsForDate(dates.sat, `연습 (${getDate(dates.sat)})`))
+        }
+        if (dates.sun) {
+            resultRows.push(getStatsForDate(dates.sun, `주일 (${getDate(dates.sun)})`))
+        }
+    }
+
+    // Averages (Monthly)
+    const calcAvg = (rows: WeeklyStat[], label: string): WeeklyStat => {
+        if (rows.length === 0) return { label, soprano: 0, alto: 0, tenor: 0, bass: 0, newCount: 0, registered: 0, total: 0, rate: 0 }
+
+        const sum = (field: keyof WeeklyStat) => rows.reduce((acc, r) => acc + (r[field] as number || 0), 0)
+        // Use 1 decimal for averages as per convention, but interface is number. 
+        // Let's round to 1 decimal place but keep as number.
+        const avg = (field: keyof WeeklyStat) => parseFloat((sum(field) / rows.length).toFixed(1))
+
+        return {
+            label,
+            soprano: avg('soprano'),
+            alto: avg('alto'),
+            tenor: avg('tenor'),
+            bass: avg('bass'),
+            newCount: avg('newCount'),
+            registered: avg('registered'),
+            total: avg('total'),
+            rate: avg('rate')
+        }
+    }
+
+    const pracRows = resultRows.filter(r => r.label.includes('연습'))
+    const servRows = resultRows.filter(r => r.label.includes('주일'))
+
+    const monthlyPrac = calcAvg(pracRows, '월평균 연습')
+    const monthlyServ = calcAvg(servRows, '월평균 주일')
+
+    // Initial Registered Row (Top Row - Enrollment Counts)
+    const getRegCount = (partName: string) => regularMembers.filter(m => m.part.includes(partName)).length
+
+    // "Registered" Column in Top Row = Total Regular Enrolled Members
+    const totalRegularEnrolled = regularMembers.length
+
+    // "Total" Column in Top Row = Total Regular + Total New Enrolled
+    const totalNewEnrolled = newMembers.length
+    const grandTotalEnrolled = totalRegularEnrolled + totalNewEnrolled
+
+    const registeredRow: WeeklyStat = {
+        label: '재적',
+        soprano: getRegCount('Soprano'),
+        alto: getRegCount('Alto'),
+        tenor: getRegCount('Tenor'),
+        bass: getRegCount('Bass'),
+        newCount: totalNewEnrolled,
+        registered: totalRegularEnrolled,
+        total: grandTotalEnrolled,
+        rate: null
+    }
+
+    return {
+        registeredRow,
+        weeklyRows: resultRows,
+        monthlyStats: [monthlyPrac, monthlyServ]
+    }
+}
 export async function getPartMonthlyStats(part: string, year: number, month: number) {
     const start = startOfMonth(new Date(year, month - 1))
     const end = endOfMonth(new Date(year, month - 1))

@@ -244,7 +244,7 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
             { wch: 10 }  // Rate
         ]
 
-        XLSX.utils.book_append_sheet(wb, ws, "주간보고")
+        XLSX.utils.book_append_sheet(wb, ws, "월간보고")
 
         // Optional: Additional Sheet for Lists (Resting, New, Withdrawn)
         const listData = [
@@ -260,7 +260,7 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
             XLSX.utils.book_append_sheet(wb, wsLists, "명단관리")
         }
 
-        XLSX.writeFile(wb, `갈보리찬양대_주간보고_${year}년_${month}월.xlsx`)
+        XLSX.writeFile(wb, `갈보리찬양대_월간보고_${year}년_${month}월.xlsx`)
     }
 
     return (

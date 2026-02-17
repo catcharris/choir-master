@@ -88,23 +88,26 @@ export async function importAttendanceData(formData: FormData) {
                 let status = 'ABSENT' // Default? Or null?
 
                 // Logic:
-                // O, 1, Y, Present -> PRESENT
-                // X, 0, N, Absent -> ABSENT
-                // L, Late -> LATE
-                // Empty -> Don't touch? Or Absent? -> Let's say if empty, we ignore (don't create record)
+                // O, 1, Y, Present, 출석 -> PRESENT
+                // X, 0, N, Absent, 결석 -> ABSENT
+                // L, Late, 지각 -> LATE
 
                 if (!cellValue) continue
 
-                const valStr = cellValue.toString().trim().toUpperCase()
+                const valStr = String(cellValue).trim().toUpperCase()
 
-                if (['O', '1', 'Y', 'PRESENT', '출석'].includes(valStr)) {
+                if (['O', '0', 'OX', 'YES', 'Y', '1', 'PRESENT', '출석', '참석'].includes(valStr)) {
                     status = 'PRESENT'
-                } else if (['X', '0', 'N', 'ABSENT', '결석'].includes(valStr)) {
+                } else if (['X', 'NO', 'N', 'ABSENT', '결석', '불참', '2'].includes(valStr)) {
                     status = 'ABSENT'
-                } else if (['L', 'LATE', '지각'].includes(valStr)) {
+                } else if (['L', 'LATE', '지각', '조퇴'].includes(valStr)) {
                     status = 'LATE'
+                } else if (['R', 'REST', '휴식'].includes(valStr)) {
+                    // Maybe handle resting status update? 
+                    // For now, let's treat as Absent but maybe note it?
+                    // Or ignore?
+                    status = 'ABSENT'
                 } else {
-                    // Unknown value, maybe skip?
                     continue
                 }
 

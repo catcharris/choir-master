@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Lock, Settings, LogOut, Check, User, MessageCircle, ClipboardList, BarChart2 } from 'lucide-react'
+import { Lock, Settings, LogOut, Check, User, MessageCircle, ClipboardList, BarChart } from 'lucide-react'
 import PartMonthlyStatsModal from './PartMonthlyStatsModal'
 
 const ROLES = [
@@ -114,7 +114,7 @@ export default function DashboardHeader() {
                                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all bg-amber-900/30 border-amber-500/30 text-amber-500 hover:bg-amber-800/40 active:scale-95"
                                     title="관리 및 통계"
                                 >
-                                    <BarChart2 size={14} className="fill-current" />
+                                    <BarChart size={14} className="fill-current" />
                                     <span className="text-xs font-bold">통계</span>
                                 </button>
                             )}

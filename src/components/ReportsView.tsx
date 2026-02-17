@@ -12,6 +12,7 @@ import { ko } from 'date-fns/locale'
 import MemberStatsModal from './MemberStatsModal'
 import { ReportTemplate } from './ReportTemplate'
 import { useAuth } from '@/contexts/AuthContext'
+import AttendanceImportModal from './AttendanceImportModal'
 
 interface ReportData {
     overall: {
@@ -76,6 +77,8 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
         // Admin prefers Monthly view
         setActiveTab('monthly')
     }, [])
+
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
     // Filter data for Leaders
     const filteredByPart = isAdmin
@@ -479,6 +482,15 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
                     {/* Refresh Control & Admin Link */}
                     <div className="flex justify-end mb-2 gap-2">
+                        {user?.role === 'ADMIN' && (
+                            <button
+                                onClick={() => setIsImportModalOpen(true)}
+                                className="bg-green-600/20 hover:bg-green-600/30 text-green-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-green-500/30 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                            >
+                                <FileSpreadsheet size={14} />
+                                이전 출석 일괄 등록
+                            </button>
+                        )}
                         <button
                             onClick={() => router.push('/admin/members?back=/reports')}
                             className="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
@@ -494,6 +506,15 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
                             통계 새로고침
                         </button>
                     </div>
+
+                    <AttendanceImportModal
+                        isOpen={isImportModalOpen}
+                        onClose={() => setIsImportModalOpen(false)}
+                        onSuccess={() => {
+                            setIsImportModalOpen(false)
+                            router.refresh()
+                        }}
+                    />
 
                     {/* Overview Section */}
                     <div className="space-y-4">

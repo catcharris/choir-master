@@ -488,7 +488,7 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
                                 className="bg-green-600/20 hover:bg-green-600/30 text-green-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-green-500/30 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                             >
                                 <FileSpreadsheet size={14} />
-                                이전 출석 일괄 등록
+                                이전출석등록
                             </button>
                         )}
                         <button

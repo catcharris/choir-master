@@ -26,3 +26,39 @@ export async function resetAttendance(password: string) {
         throw new Error("초기화 중 오류가 발생했습니다.")
     }
 }
+
+export async function getBackupData() {
+    try {
+        const members = await prisma.member.findMany({
+            orderBy: [
+                { part: 'asc' },
+                { name: 'asc' }
+            ]
+        })
+
+        const attendance = await prisma.attendance.findMany({
+            orderBy: { date: 'desc' },
+            include: {
+                member: {
+                    select: {
+                        name: true,
+                        part: true
+                    }
+                }
+            }
+        })
+
+        const flatAttendance = attendance.map(a => ({
+            date: a.date.toISOString().split('T')[0],
+            name: a.member.name,
+            part: a.member.part,
+            status: a.status,
+            checkTime: a.checkTime ? a.checkTime.toISOString() : ''
+        }))
+
+        return { members: members, attendance: flatAttendance }
+    } catch (error: any) {
+        console.error("Backup Error:", error)
+        throw new Error("백업 데이터 조회 중 오류가 발생했습니다.")
+    }
+}

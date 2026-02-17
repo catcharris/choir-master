@@ -271,6 +271,60 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
                 }} />
             )}
 
+            {/* Backup Section */}
+            <div className="mt-12 pt-8 border-t border-slate-800">
+                <h3 className="text-indigo-400 font-bold mb-4 flex items-center gap-2">
+                    <Download size={20} />
+                    데이터 백업
+                </h3>
+                <div className="bg-indigo-900/10 border border-indigo-900/30 rounded-xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <h4 className="text-indigo-200 font-bold mb-1">전체 데이터 엑셀 다운로드</h4>
+                        <p className="text-indigo-300/60 text-sm">
+                            현재 시점의 대원 명단과 모든 출석 기록을 하나의 파일로 저장합니다.<br />
+                            정기적으로 백업하여 데이터를 안전하게 보관하세요.
+                        </p>
+                    </div>
+                    <button
+                        onClick={async () => {
+                            try {
+                                // 1. Fetch all members
+                                const { getAllMembers } = await import('@/actions/members')
+                                const members = await getAllMembers()
+
+                                // 2. Fetch all attendance? 
+                                // Better to have a dedicated server action for backup that returns clean JSON.
+                                // Or since `getAllMembers` is optimized, maybe add `include: { attendance: true }`?
+                                // Let's try to fetch separate or create a new action `getBackupData`.
+                                // For now, let's use a dynamic import of a new action or just fetch via existing if possible.
+                                // Actually, I'll create `getBackupData` in `src/actions/system.ts`.
+                                const { getBackupData } = await import('@/actions/system')
+                                const data = await getBackupData()
+
+                                // 3. Generate Excel
+                                const wb = XLSX.utils.book_new()
+
+                                // Sheet 1: Members
+                                const wsMembers = XLSX.utils.json_to_sheet(data.members)
+                                XLSX.utils.book_append_sheet(wb, wsMembers, "대원명단")
+
+                                // Sheet 2: Attendance
+                                const wsAttendance = XLSX.utils.json_to_sheet(data.attendance)
+                                XLSX.utils.book_append_sheet(wb, wsAttendance, "출석기록")
+
+                                XLSX.writeFile(wb, `갈보리찬양대_전체백업_${new Date().toISOString().split('T')[0]}.xlsx`)
+                            } catch (e: any) {
+                                alert('백업 실패: ' + e.message)
+                            }
+                        }}
+                        className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl text-sm font-bold shadow-lg shadow-indigo-900/20 active:scale-95 transition-all flex items-center gap-2 whitespace-nowrap"
+                    >
+                        <Download size={18} />
+                        전체 데이터 내려받기
+                    </button>
+                </div>
+            </div>
+
             {/* Danger Zone */}
             <div className="mt-12 pt-8 border-t border-slate-800">
                 <h3 className="text-rose-500 font-bold mb-4 flex items-center gap-2">

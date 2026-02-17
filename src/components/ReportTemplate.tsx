@@ -52,10 +52,10 @@ export const ReportTemplate = forwardRef<HTMLDivElement, ReportProps>(({ data, w
             {/* Print Styles */}
             <style type="text/css" media="print">
                 {`
-                @page { size: A4 landscape; margin: 15mm; }
+                @page { size: A4; margin: 20mm; }
                 body { -webkit-print-color-adjust: exact; }
-                table { border-collapse: collapse; width: 100%; font-size: 11pt; margin-bottom: 20px; }
-                th, td { border: 1px solid #000; padding: 6px 4px; text-align: center; }
+                table { border-collapse: collapse; width: 100%; font-size: 10pt; margin-bottom: 20px; }
+                th, td { border: 1px solid #000; padding: 5px 3px; text-align: center; }
                 th { background-color: #f0f0f0; font-weight: bold; }
                 .title { font-size: 24pt; font-weight: bold; text-align: center; margin-bottom: 30px; }
                 .header-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11pt; }

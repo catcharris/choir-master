@@ -250,6 +250,18 @@ export async function toggleAttendance(memberId: number, dateInput: string | Dat
         day = dateInput.getDate();
     }
 
+    // Check for Weekday Lock
+    // CHANGE THIS TO TRUE to enable weekday lock (Mon-Fri)
+    const ENABLE_WEEKDAY_LOCK = false
+
+    const today = new Date()
+    const currentDay = today.getDay() // 0: Sun, 1: Mon, ..., 6: Sat
+
+    // Allow only Saturday (6) and Sunday (0) if lock is enabled
+    if (ENABLE_WEEKDAY_LOCK && currentDay !== 0 && currentDay !== 6) {
+        throw new Error("평일(월~금)에는 출석을 입력할 수 없습니다. (잠금 설정됨)")
+    }
+
     // Construct dates using UTC to avoid any server local time offset
     // 00:00:00.000 UTC
     const startOfDay = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));

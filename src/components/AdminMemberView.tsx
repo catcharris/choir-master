@@ -276,6 +276,49 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
                     router.refresh()
                 }} />
             )}
+
+            {/* Danger Zone */}
+            <div className="mt-12 pt-8 border-t border-slate-800">
+                <h3 className="text-rose-500 font-bold mb-4 flex items-center gap-2">
+                    <ShieldAlert size={20} />
+                    시스템 초기화 (Danger Zone)
+                </h3>
+                <div className="bg-rose-900/10 border border-rose-900/30 rounded-xl p-6">
+                    <p className="text-rose-200 text-sm mb-4">
+                        모든 출석 데이터를 삭제합니다. 이 작업은 되돌릴 수 없습니다.<br />
+                        새로운 학기나 연도가 시작될 때 초기화 용도로 사용하세요.
+                    </p>
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="password"
+                            placeholder="관리자 비밀번호"
+                            className="bg-slate-900 border border-rose-900/50 rounded px-3 py-2 text-white outline-none focus:border-rose-500 w-40 text-sm"
+                            id="reset-password"
+                        />
+                        <button
+                            onClick={async () => {
+                                const pwdInput = document.getElementById('reset-password') as HTMLInputElement
+                                const pwd = pwdInput.value
+                                if (!pwd) return alert('비밀번호를 입력하세요.')
+
+                                if (confirm('정말 모든 출석 데이터를 삭제하시겠습니까?\n이 작업은 복구할 수 없습니다.')) {
+                                    try {
+                                        const { resetAttendance } = await import('@/actions/system')
+                                        await resetAttendance(pwd)
+                                        alert('초기화되었습니다.')
+                                        window.location.reload()
+                                    } catch (e: any) {
+                                        alert(e.message)
+                                    }
+                                }
+                            }}
+                            className="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-rose-900/20 active:scale-95 transition-all"
+                        >
+                            모든 출석 기록 삭제
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

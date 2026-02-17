@@ -350,58 +350,61 @@ export default function AttendanceList({ members: initialMembers, part, initialD
                                         : status === 'P' ? 'bg-slate-800/80 border-slate-700 shadow-md' : 'bg-slate-900 border-slate-800'}
                             `}
                         >
-                            <div className="flex items-center gap-4 flex-1">
+                            <div className="flex items-center gap-4 flex-1 min-w-0">
                                 <div className={`
-                                    w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-inner
+                                    w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-inner shrink-0
                                     ${member.role === 'Soloist' ? 'bg-amber-900/50 text-amber-500 border border-amber-500/30' :
                                         member.role === 'PartLeader' ? 'bg-indigo-900/50 text-indigo-400 border border-indigo-500/30' :
                                             'bg-slate-800 text-slate-400'}
                                 `}>
                                     {member.name.charAt(0)}
                                 </div>
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-2 flex-wrap min-w-0">
-                                        <span className="font-bold text-lg text-slate-200 leading-none">{member.name}</span>
-                                        {member.churchTitle && (
-                                            <span className="text-xs text-slate-500 font-medium px-1.5 py-0.5 bg-slate-800 rounded whitespace-nowrap">
-                                                {member.churchTitle}
+                                <div className="flex-1 min-w-0 flex justify-between items-center gap-2">
+                                    <div className="flex flex-col min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap min-w-0">
+                                            <span className="font-bold text-lg text-slate-200 leading-none">{member.name}</span>
+                                            {member.churchTitle && (
+                                                <span className="text-xs text-slate-500 font-medium px-1.5 py-0.5 bg-slate-800 rounded whitespace-nowrap">
+                                                    {member.churchTitle}
+                                                </span>
+                                            )}
+                                            {/* Admin Edit Button */}
+                                            {isAdmin && isEditMode && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setViewingMember({ id: member.id, name: member.name });
+                                                    }}
+                                                    className="p-1 text-amber-400 hover:bg-amber-900/30 rounded-full transition-colors shrink-0"
+                                                >
+                                                    <Pencil size={14} />
+                                                </button>
+                                            )}
+                                        </div>
+                                        <div className="flex items-center gap-2 mt-1 min-w-0">
+                                            {isNew && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30 whitespace-nowrap">신입</span>}
+                                            <span className="text-xs text-slate-500">
+                                                {member.role === 'Soloist' && '솔리스트'}
+                                                {member.role === 'PartLeader' && '파트장'}
                                             </span>
-                                        )}
-                                        {isNew && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30 whitespace-nowrap">신입</span>}
-
-                                        {/* Missing Data Indicators (Edit Mode Only - Stacked) */}
-                                        {isEditMode && (!member.phone || !member.birthDate) && (
-                                            <div className="flex flex-col gap-1 ml-1">
-                                                {!member.phone && (
-                                                    <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
-                                                        <Phone size={10} /> <span className="text-[9px]">연락처</span>
-                                                    </span>
-                                                )}
-                                                {!member.birthDate && (
-                                                    <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
-                                                        <Cake size={10} /> <span className="text-[9px]">생일</span>
-                                                    </span>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {/* Admin Edit Button - Stops Propagation */}
-                                        {isAdmin && isEditMode && (
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setViewingMember({ id: member.id, name: member.name });
-                                                }}
-                                                className="p-1 text-amber-400 hover:bg-amber-900/30 rounded-full transition-colors shrink-0"
-                                            >
-                                                <Pencil size={14} />
-                                            </button>
-                                        )}
+                                        </div>
                                     </div>
-                                    <div className="text-xs text-slate-500 mt-0.5">
-                                        {member.role === 'Soloist' && '솔리스트'}
-                                        {member.role === 'PartLeader' && '파트장'}
-                                    </div>
+
+                                    {/* Missing Data Indicators (Right Aligned) */}
+                                    {isEditMode && (!member.phone || !member.birthDate) && (
+                                        <div className="flex flex-col gap-1 shrink-0 items-end ml-1">
+                                            {!member.phone && (
+                                                <span className="text-[10px] text-rose-400 bg-rose-950/30 px-1.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-rose-500/50">
+                                                    <Phone size={10} /> <span className="text-[9px]">미등록</span>
+                                                </span>
+                                            )}
+                                            {!member.birthDate && (
+                                                <span className="text-[10px] text-pink-400 bg-pink-950/30 px-1.5 py-0.5 rounded border border-pink-500/20 flex items-center gap-1 whitespace-nowrap opacity-80 decoration-pink-500/50">
+                                                    <Cake size={10} /> <span className="text-[9px]">미등록</span>
+                                                </span>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

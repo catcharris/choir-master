@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useReactToPrint } from 'react-to-print'
 import * as XLSX from 'xlsx'
-import { Download, ChevronLeft, ChevronRight, FileSpreadsheet, Trophy, Calendar, Search, Printer, Users } from 'lucide-react'
+import { Download, ChevronLeft, ChevronRight, FileSpreadsheet, Trophy, Calendar, Search, Printer, Users, MessageCircle } from 'lucide-react'
 import { getSoloistStats, getYearlyReport, WeeklyStat } from '@/actions/stats'
 import { getDailyReport, DailyReportData } from '@/actions/reports'
 import { format } from 'date-fns'
@@ -705,7 +705,7 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
 
 
 
-            // ... (rest of component) ...
+
 
             {activeTab === 'soloist' && (
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
@@ -713,10 +713,12 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
                         <div className="flex items-center gap-3">
                             <h3 className="font-bold text-lg text-amber-200 whitespace-nowrap">🎤 솔리스트 출석 현황 ({month}월)</h3>
                             <button
-                                onClick={handleCopySoloistText}
-                                className="bg-amber-500 hover:bg-amber-400 text-black px-2 py-1 rounded text-xs font-bold transition-colors active:scale-95 flex items-center gap-1"
+                                onClick={handleKakaoShare}
+                                disabled={!isKakaoInitialized}
+                                className="bg-[#FAE100] hover:bg-[#F9E000] text-[#371D1E] px-2 py-1 rounded text-xs font-bold transition-colors active:scale-95 flex items-center gap-1 disabled:opacity-50"
                             >
-                                <span>복사</span>
+                                <MessageCircle size={14} className="fill-[#371D1E]" />
+                                <span>카톡공유</span>
                             </button>
                         </div>
                         <div className="text-xs text-slate-500">※ 토요일 연습 횟수 포함</div>

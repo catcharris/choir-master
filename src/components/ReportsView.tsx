@@ -145,6 +145,21 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
         setGeneratedText(text)
     }
 
+    const handleCopySoloistText = () => {
+        if (soloistStats.length === 0) return alert('데이터가 없습니다.')
+
+        let text = `[${month}월 솔리스트 토요연습]\n\n`
+
+        soloistStats.forEach((s, index) => {
+            text += `${index + 1}. ${s.name}(${shortenPartName(s.part)}): ${s.saturdayCount}회\n`
+        })
+
+        text += `\n총 ${soloistStats.length}명`
+
+        navigator.clipboard.writeText(text)
+        alert("솔리스트 명단이 복사되었습니다!")
+    }
+
     const handleCopyText = () => {
         navigator.clipboard.writeText(generatedText)
         alert("리포트가 복사되었습니다! 카톡방에 붙여넣으세요.")
@@ -643,21 +658,7 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
                 </div>
             )}
 
-    const handleCopySoloistText = () => {
-        if (soloistStats.length === 0) return alert('데이터가 없습니다.')
 
-            let text = `[${month}월 솔리스트 토요연습]\n\n`
-        
-        soloistStats.forEach((s, index) => {
-                // 1. 홍길동(Ten): 3회
-                text += `${index + 1}. ${s.name}(${shortenPartName(s.part)}): ${s.saturdayCount}회\n`
-            })
-
-            text += `\n총 ${soloistStats.length}명`
-
-            navigator.clipboard.writeText(text)
-            alert("솔리스트 명단이 복사되었습니다!")
-    }
 
             // ... (rest of component) ...
 

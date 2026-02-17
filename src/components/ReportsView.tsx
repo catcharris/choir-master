@@ -643,10 +643,36 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
                 </div>
             )}
 
+    const handleCopySoloistText = () => {
+        if (soloistStats.length === 0) return alert('데이터가 없습니다.')
+
+            let text = `[${month}월 솔리스트 토요연습]\n\n`
+        
+        soloistStats.forEach((s, index) => {
+                // 1. 홍길동(Ten): 3회
+                text += `${index + 1}. ${s.name}(${shortenPartName(s.part)}): ${s.saturdayCount}회\n`
+            })
+
+            text += `\n총 ${soloistStats.length}명`
+
+            navigator.clipboard.writeText(text)
+            alert("솔리스트 명단이 복사되었습니다!")
+    }
+
+            // ... (rest of component) ...
+
             {activeTab === 'soloist' && (
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
                     <div className="p-4 border-b border-slate-700 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-slate-900/30">
-                        <h3 className="font-bold text-lg text-amber-200 whitespace-nowrap">🎤 솔리스트 출석 현황 ({month}월)</h3>
+                        <div className="flex items-center gap-3">
+                            <h3 className="font-bold text-lg text-amber-200 whitespace-nowrap">🎤 솔리스트 출석 현황 ({month}월)</h3>
+                            <button
+                                onClick={handleCopySoloistText}
+                                className="bg-amber-500 hover:bg-amber-400 text-black px-2 py-1 rounded text-xs font-bold transition-colors active:scale-95 flex items-center gap-1"
+                            >
+                                <span>복사</span>
+                            </button>
+                        </div>
                         <div className="text-xs text-slate-500">※ 토요일 연습 횟수 포함</div>
                     </div>
                     <div className="overflow-x-auto">

@@ -172,23 +172,95 @@ export default function ReportsView({ data, weeklyData, year, month }: ReportsVi
 
     const handleDownloadExcel = () => {
         const wb = XLSX.utils.book_new()
-        // ... (Excel logic same as before, omitted for brevity but preserved in real file) ...
-        // Re-implementing simplified for this replacement block context
-        const summaryData = [
-            ["월간 요약 리포트", `${year}년 ${month}월`],
+
+        // 1. Prepare Data ROWS matches PDF Table
+        // Header Row
+        const wsData: (string | number | null)[][] = [
+            [`${year}년 ${month}월 갈보리찬양대 출석통계`],
             [],
-            ["구분", "값"],
-            ["전체 재적 대원", data.overall.totalActive + data.overall.totalResting],
-            ["활동 대원", data.overall.totalActive],
-            ["종합 출석률", `${data.overall.rate}%`],
-            [],
-            ["파트별 현황"],
-            ["파트", "재적", "활동", "휴식", "출석률"],
-            ...data.byPart.map(p => [p.part, p.totalMembers, p.activeMembers, p.restingMembers, `${p.rate}%`])
+            ["구분", "소프라노", "알토", "테너", "베이스", "신입", "재적", "계", "%"],
         ]
-        const wsSummary = XLSX.utils.aoa_to_sheet(summaryData)
-        XLSX.utils.book_append_sheet(wb, wsSummary, "요약")
-        XLSX.writeFile(wb, `Choir_Report_${year}_${month}.xlsx`)
+
+        // 2. Registered Row (Top)
+        wsData.push([
+            weeklyData.registeredRow.label,
+            weeklyData.registeredRow.soprano,
+            weeklyData.registeredRow.alto,
+            weeklyData.registeredRow.tenor,
+            weeklyData.registeredRow.bass,
+            weeklyData.registeredRow.newCount,
+            weeklyData.registeredRow.registered,
+            weeklyData.registeredRow.total,
+            '-'
+        ])
+
+        // 3. Weekly Rows
+        weeklyData.weeklyRows.forEach(row => {
+            wsData.push([
+                row.label,
+                row.soprano,
+                row.alto,
+                row.tenor,
+                row.bass,
+                row.newCount,
+                row.registered,
+                row.total,
+                row.rate !== null ? `${row.rate}%` : '-'
+            ])
+        })
+
+        // 4. Monthly Averages
+        weeklyData.monthlyStats.forEach(row => {
+            wsData.push([
+                row.label,
+                row.soprano,
+                row.alto,
+                row.tenor,
+                row.bass,
+                row.newCount,
+                row.registered,
+                row.total,
+                row.rate !== null ? `${row.rate}%` : '-'
+            ])
+        })
+
+        // 5. Create Sheet
+        const ws = XLSX.utils.aoa_to_sheet(wsData)
+
+        // 6. Merge Title (A1:I1)
+        if (!ws['!merges']) ws['!merges'] = []
+        ws['!merges'].push({ s: { r: 0, c: 0 }, e: { r: 0, c: 8 } })
+
+        // 7. Column Widths
+        ws['!cols'] = [
+            { wch: 15 }, // 구분
+            { wch: 10 }, // Sop
+            { wch: 10 }, // Alt
+            { wch: 10 }, // Ten
+            { wch: 10 }, // Bass
+            { wch: 10 }, // New
+            { wch: 10 }, // Reg
+            { wch: 10 }, // Total
+            { wch: 10 }  // Rate
+        ]
+
+        XLSX.utils.book_append_sheet(wb, ws, "주간보고")
+
+        // Optional: Additional Sheet for Lists (Resting, New, Withdrawn)
+        const listData = [
+            ["구분", "이름", "파트", "날짜/비고"],
+            ...data.newMemberList.map(m => ["신입", m.name, m.part, ""]),
+            ...data.restingList.map(m => ["휴식", m.name, m.part, ""]),
+            ...data.withdrawnList.map(m => ["제적/탈퇴", m.name, m.part, format(new Date(m.date), 'yyyy-MM-dd')])
+        ]
+
+        if (listData.length > 1) {
+            const wsLists = XLSX.utils.aoa_to_sheet(listData)
+            wsLists['!cols'] = [{ wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 20 }]
+            XLSX.utils.book_append_sheet(wb, wsLists, "명단관리")
+        }
+
+        XLSX.writeFile(wb, `갈보리찬양대_주간보고_${year}년_${month}월.xlsx`)
     }
 
     return (

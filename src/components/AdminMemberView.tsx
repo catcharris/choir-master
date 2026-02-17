@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, Edit2, Trash2, Check, X, ShieldAlert, FileSpreadsheet, Upload } from 'lucide-react'
+import { Search, Edit2, Trash2, Check, X, ShieldAlert, FileSpreadsheet, Upload, Download } from 'lucide-react'
 import * as XLSX from 'xlsx'
 import { deleteMember, updateMember } from '@/actions/members'
 import BirthdayListModal from './BirthdayListModal'

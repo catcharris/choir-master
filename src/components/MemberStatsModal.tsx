@@ -148,7 +148,7 @@ export default function MemberStatsModal({ memberId, memberName, onClose }: Memb
                                         <span className="text-sm font-black text-white">{stats?.totalRate}%</span>
                                     </div>
                                     <div className="flex flex-col">
-                                        <span className="text-base font-bold text-slate-200 whitespace-nowrap">통합 출석률</span>
+                                        <span className="text-base font-bold text-slate-200 whitespace-nowrap">출석률</span>
                                         <span className="text-xs text-slate-500 whitespace-nowrap">이번 달 전체</span>
                                     </div>
                                 </div>

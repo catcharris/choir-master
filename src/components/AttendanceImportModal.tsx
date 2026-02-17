@@ -27,17 +27,59 @@ export default function AttendanceImportModal({ isOpen, onClose, onSuccess }: At
         }
     }
 
-    const handleDownloadTemplate = () => {
-        // Create a simple template
-        const wb = XLSX.utils.book_new()
-        const wsData = [
-            ['이름', '파트', '직분', '2024-01-01', '2024-01-07', '2024-01-14'], // Example headers
-            ['홍길동', 'Tenor', '대원', 'O', 'X', 'L'], // Example row
-            ['김철수', 'Bass', '대원', 'PRESENT', 'ABSENT', 'LATE'], // Example row 2
-        ]
-        const ws = XLSX.utils.aoa_to_sheet(wsData)
-        XLSX.utils.book_append_sheet(wb, ws, "출석기록")
-        XLSX.writeFile(wb, "출석일괄등록_템플릿.xlsx")
+    const handleDownloadTemplate = async () => {
+        try {
+            // 1. Fetch current members
+            const { getAllMembers } = await import('@/actions/members')
+            const members = await getAllMembers()
+
+            // 2. Generate Dates (Jan 1 - Feb 15, Sat & Sun only)
+            const dates: string[] = []
+            const start = new Date(2025, 0, 1) // Jan 1 2025? Or 2024? User said "1월 부터...". Assuming current year contexts.
+            // Current date is 2026-02-17. So "Jan 1" likely means 2026.
+            // Wait, "1월 부터 ... 2월 15일까지".
+            // If today is Feb 2026, user likely means Jan 2026 - Feb 2026.
+            const year = new Date().getFullYear()
+            const startDate = new Date(year, 0, 1) // Jan 1
+            const endDate = new Date(year, 1, 15) // Feb 15
+
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                const day = d.getDay()
+                if (day === 0 || day === 6) { // Sun or Sat
+                    dates.push(d.toISOString().split('T')[0])
+                }
+            }
+
+            // 3. Build Body
+            // Sort by Part then Name
+            members.sort((a, b) => a.part.localeCompare(b.part) || a.name.localeCompare(b.name))
+
+            const wsData = [
+                ['이름', '파트', '직분', '교회직분', ...dates], // Header
+                ...members.map(m => [
+                    m.name,
+                    m.part,
+                    m.role === 'Regular' ? '정대원' : m.role,
+                    m.churchTitle || '',
+                    ...Array(dates.length).fill('') // Empty cells for attendance
+                ])
+            ]
+
+            const wb = XLSX.utils.book_new()
+            const ws = XLSX.utils.aoa_to_sheet(wsData)
+
+            // Auto-width
+            const cols = [{ wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }]
+            dates.forEach(() => cols.push({ wch: 12 }))
+            ws['!cols'] = cols
+
+            XLSX.utils.book_append_sheet(wb, ws, "출석일괄등록")
+            XLSX.writeFile(wb, `출석일괄등록_템플릿_${year}.xlsx`)
+
+        } catch (error) {
+            console.error(error)
+            alert('템플릿 생성 실패. 관리자에게 문의하세요.')
+        }
     }
 
     const handleUpload = async () => {

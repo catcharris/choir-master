@@ -113,13 +113,7 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
                     ← 돌아가기
                 </button>
                 <div className="flex gap-2">
-                    <button
-                        onClick={handleDownloadList}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-lg shadow-green-900/20 transition-all active:scale-95"
-                    >
-                        <FileSpreadsheet size={16} />
-                        명단 엑셀 다운
-                    </button>
+
                     <button
                         onClick={() => setShowBulkUpdateModal(true)}
                         className="bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all active:scale-95"

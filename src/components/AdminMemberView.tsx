@@ -360,7 +360,7 @@ export default function AdminMemberView({ initialMembers, backUrl }: AdminMember
                                     }
                                 }
                             }}
-                            className="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-rose-900/20 active:scale-95 transition-all"
+                            className="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-rose-900/20 active:scale-95 transition-all whitespace-nowrap shrink-0"
                         >
                             모든 출석 기록 삭제
                         </button>
